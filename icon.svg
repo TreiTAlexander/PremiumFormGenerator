@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#02030c"/>
+  <rect x="60" y="60" width="392" height="392" rx="50" fill="none" stroke="#ffd438" stroke-width="8"/>
+  <text x="256" y="200" font-family="serif" font-size="120" font-weight="900" fill="#ffd438" text-anchor="middle" dominant-baseline="middle">FP</text>
+  <text x="256" y="340" font-family="monospace" font-size="48" fill="#40c8ff" text-anchor="middle" dominant-baseline="middle">FORM PORN</text>
+</svg>
