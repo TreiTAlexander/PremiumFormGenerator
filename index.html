@@ -55,7 +55,7 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 /* ── HERO ── */
 .hero{position:relative;z-index:2;text-align:center;padding:36px 20px 24px;max-width:700px;margin:0 auto;}
 .hero-mascot{
-  width:180px;height:180px;
+  width:240px;height:240px;
   object-fit:contain;margin:0 auto 20px;display:block;
   filter:drop-shadow(0 0 32px rgba(255,212,56,0.45));
   animation:float 4s ease-in-out infinite;
@@ -220,12 +220,12 @@ footer{position:relative;z-index:2;text-align:center;padding:16px 16px 40px;bord
 </footer>
 
 <script>
-// ═══ STAR FIELD — FIXED & ENHANCED ═══
+// ═══ EPIC SPACE BACKGROUND ═══
 (function() {
   const canvas = document.getElementById('star-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  let W, H, stars = [], golds = [], ships = [];
+  let W, H, stars = [], golds = [], ships = [], asteroids = [], planets = [];
 
   function resize() {
     W = canvas.width = window.innerWidth;
@@ -234,114 +234,241 @@ footer{position:relative;z-index:2;text-align:center;padding:16px 16px 40px;bord
   }
 
   function rand(a, b) { return a + Math.random() * (b - a); }
+  function randInt(a, b) { return Math.floor(rand(a, b)); }
 
   function init() {
-    // Stars
+    // Stars — lots of them
     stars = [];
-    for (let i = 0; i < 280; i++) {
+    for (let i = 0; i < 350; i++) {
+      const big = Math.random() < 0.05;
       stars.push({
         x: rand(0, W), y: rand(0, H),
-        r: Math.random() < 0.04 ? rand(1.6, 2.8) : rand(0.1, 1.1),
-        hue: Math.random() < 0.08 ? 44 : rand(208, 230),
-        sat: rand(0, 18),
+        r: big ? rand(2, 3.5) : rand(0.1, 1.2),
+        hue: Math.random() < 0.1 ? 44 : Math.random() < 0.5 ? rand(208, 230) : 0,
+        sat: Math.random() < 0.1 ? 80 : rand(0, 20),
         brightness: rand(0.3, 1),
-        speed: rand(0.002, 0.012),
-        phase: rand(0, Math.PI * 2)
+        speed: rand(0.001, 0.01),
+        phase: rand(0, Math.PI * 2),
+        twinkle: Math.random() < 0.3
       });
     }
 
-    // Gold dust
+    // Gold/cyan dust particles
     golds = [];
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 30; i++) {
       golds.push({
         x: rand(0, W), y: rand(0, H),
-        r: rand(0.4, 1.8),
-        brightness: rand(0.1, 0.5),
-        speed: rand(0.004, 0.016),
+        r: rand(0.3, 2),
+        brightness: rand(0.05, 0.4),
+        speed: rand(0.003, 0.015),
         phase: rand(0, Math.PI * 2),
-        dx: rand(-0.06, 0.06),
-        dy: rand(-0.05, 0.05)
+        dx: rand(-0.08, 0.08),
+        dy: rand(-0.06, 0.06),
+        gold: Math.random() < 0.6
       });
     }
 
-    // Flying spaceships / shooting stars
+    // Shooting stars / spaceships flying across
     ships = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 6; i++) {
       ships.push(newShip());
     }
+
+    // Asteroids — tumbling rocks
+    asteroids = [];
+    for (let i = 0; i < 8; i++) {
+      asteroids.push(newAsteroid());
+    }
+
+    // Planets — big glowing orbs in background
+    planets = [
+      { x: W * 0.85, y: H * 0.15, r: rand(30, 50), hue: 220, glow: 0.15, speed: 0.0008, phase: 0 },
+      { x: W * 0.1, y: H * 0.7, r: rand(20, 35), hue: 280, glow: 0.1, speed: 0.0005, phase: 1 },
+      { x: W * 0.6, y: H * 0.85, r: rand(15, 25), hue: 180, glow: 0.08, speed: 0.001, phase: 2 },
+    ];
   }
 
   function newShip() {
+    const fromLeft = Math.random() < 0.7;
     return {
-      x: rand(-200, -50),
-      y: rand(0, H * 0.6),
-      speed: rand(1.5, 4),
-      size: rand(1.5, 3),
-      tail: rand(20, 60),
-      opacity: rand(0.4, 0.9),
-      angle: rand(-0.15, 0.15)
+      x: fromLeft ? rand(-300, -50) : rand(W + 50, W + 300),
+      y: rand(H * 0.05, H * 0.65),
+      speed: rand(2, 5) * (fromLeft ? 1 : -1),
+      size: rand(1.5, 3.5),
+      tail: rand(30, 80),
+      opacity: rand(0.5, 1),
+      angle: rand(-0.1, 0.1),
+      color: Math.random() < 0.7 ? 'white' : Math.random() < 0.5 ? 'cyan' : 'gold'
     };
+  }
+
+  function newAsteroid() {
+    return {
+      x: rand(-50, W + 50),
+      y: rand(-50, H + 50),
+      r: rand(2, 6),
+      dx: rand(-0.3, 0.3),
+      dy: rand(-0.2, 0.2),
+      rotation: 0,
+      rotSpeed: rand(-0.02, 0.02),
+      opacity: rand(0.2, 0.5),
+      sides: randInt(5, 8)
+    };
+  }
+
+  function drawPlanet(p, t) {
+    const pulse = 0.85 + 0.15 * Math.sin(t * p.speed + p.phase);
+    // Glow
+    const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3);
+    grd.addColorStop(0, `hsla(${p.hue}, 80%, 70%, ${p.glow * pulse})`);
+    grd.addColorStop(0.4, `hsla(${p.hue}, 60%, 50%, ${p.glow * 0.5 * pulse})`);
+    grd.addColorStop(1, 'transparent');
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2);
+    ctx.fill();
+    // Planet body
+    const body = ctx.createRadialGradient(p.x - p.r*0.3, p.y - p.r*0.3, 0, p.x, p.y, p.r);
+    body.addColorStop(0, `hsla(${p.hue}, 60%, 80%, 0.3)`);
+    body.addColorStop(0.6, `hsla(${p.hue}, 70%, 40%, 0.2)`);
+    body.addColorStop(1, `hsla(${p.hue}, 80%, 20%, 0.15)`);
+    ctx.fillStyle = body;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fill();
+    // Ring on some planets
+    if (p.hue === 220) {
+      ctx.strokeStyle = `hsla(${p.hue}, 70%, 70%, 0.12)`;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.ellipse(p.x, p.y, p.r * 1.8, p.r * 0.4, 0.3, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+
+  function drawAsteroid(a) {
+    a.x += a.dx; a.y += a.dy; a.rotation += a.rotSpeed;
+    if (a.x < -60) a.x = W + 50;
+    if (a.x > W + 60) a.x = -50;
+    if (a.y < -60) a.y = H + 50;
+    if (a.y > H + 60) a.y = -50;
+    ctx.save();
+    ctx.translate(a.x, a.y);
+    ctx.rotate(a.rotation);
+    ctx.fillStyle = `rgba(140, 120, 100, ${a.opacity})`;
+    ctx.beginPath();
+    for (let i = 0; i < a.sides; i++) {
+      const angle = (i / a.sides) * Math.PI * 2;
+      const r = a.r * (0.8 + 0.2 * Math.sin(i * 2.3));
+      if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
+      else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawShip(s) {
+    s.x += s.speed;
+    s.y += Math.sin(s.angle) * Math.abs(s.speed) * 0.2;
+    const gone = s.speed > 0 ? s.x > W + 200 : s.x < -200;
+    if (gone) Object.assign(s, newShip());
+
+    const colors = { white: [255,255,255], cyan: [64,200,255], gold: [255,212,56] };
+    const [r,g,b] = colors[s.color] || [255,255,255];
+
+    const x1 = s.x, x2 = s.x - s.tail * Math.sign(s.speed);
+    const grad = ctx.createLinearGradient(x2, s.y, x1, s.y);
+    grad.addColorStop(0, `rgba(${r},${g},${b},0)`);
+    grad.addColorStop(0.6, `rgba(${r},${g},${b},${s.opacity * 0.4})`);
+    grad.addColorStop(1, `rgba(${r},${g},${b},${s.opacity})`);
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = s.size;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x2, s.y);
+    ctx.lineTo(x1, s.y);
+    ctx.stroke();
+
+    // Glowing head
+    const grd = ctx.createRadialGradient(x1, s.y, 0, x1, s.y, s.size * 3);
+    grd.addColorStop(0, `rgba(${r},${g},${b},${s.opacity})`);
+    grd.addColorStop(1, 'transparent');
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.arc(x1, s.y, s.size * 3, 0, Math.PI * 2);
+    ctx.fill();
   }
 
   function draw(t) {
     ctx.clearRect(0, 0, W, H);
 
-    // Background gradient
-    const bg = ctx.createRadialGradient(W/2, 0, 0, W/2, H * 0.6, Math.max(W, H));
-    bg.addColorStop(0, '#0c1840');
-    bg.addColorStop(0.35, '#060c20');
+    // Deep space gradient background
+    const bg = ctx.createRadialGradient(W * 0.4, 0, 0, W * 0.5, H * 0.5, Math.max(W, H) * 1.2);
+    bg.addColorStop(0, '#0e1f4a');
+    bg.addColorStop(0.25, '#080f28');
+    bg.addColorStop(0.6, '#050814');
     bg.addColorStop(1, '#02030c');
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, W, H);
 
+    // Nebula cloud effects
+    const neb1 = ctx.createRadialGradient(W * 0.2, H * 0.3, 0, W * 0.2, H * 0.3, W * 0.4);
+    neb1.addColorStop(0, 'rgba(26, 127, 255, 0.04)');
+    neb1.addColorStop(1, 'transparent');
+    ctx.fillStyle = neb1; ctx.fillRect(0, 0, W, H);
+
+    const neb2 = ctx.createRadialGradient(W * 0.8, H * 0.6, 0, W * 0.8, H * 0.6, W * 0.35);
+    neb2.addColorStop(0, 'rgba(120, 40, 200, 0.05)');
+    neb2.addColorStop(1, 'transparent');
+    ctx.fillStyle = neb2; ctx.fillRect(0, 0, W, H);
+
+    // Planets
+    planets.forEach(p => drawPlanet(p, t));
+
     // Stars
     stars.forEach(s => {
-      const alpha = s.brightness * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
-      ctx.fillStyle = `hsla(${s.hue},${s.sat}%,96%,${alpha})`;
+      let alpha = s.brightness;
+      if (s.twinkle) alpha *= (0.4 + 0.6 * Math.sin(t * s.speed * 3 + s.phase));
+      const col = s.hue === 44 ? `rgba(255,212,56,${alpha})` 
+                : s.hue === 0 ? `rgba(255,255,255,${alpha})`
+                : `hsla(${s.hue},${s.sat}%,96%,${alpha})`;
+      ctx.fillStyle = col;
       ctx.beginPath();
       ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
       ctx.fill();
+      // Sparkle cross on big stars
+      if (s.r > 2) {
+        ctx.strokeStyle = col;
+        ctx.lineWidth = 0.5;
+        ctx.globalAlpha = alpha * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(s.x - s.r * 2, s.y);
+        ctx.lineTo(s.x + s.r * 2, s.y);
+        ctx.moveTo(s.x, s.y - s.r * 2);
+        ctx.lineTo(s.x, s.y + s.r * 2);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
     });
 
-    // Gold dust
+    // Gold/cyan dust
     golds.forEach(g => {
       g.x += g.dx; g.y += g.dy;
-      if (g.x < -5) g.x = W + 5;
-      if (g.x > W + 5) g.x = -5;
-      if (g.y < -5) g.y = H + 5;
-      if (g.y > H + 5) g.y = -5;
+      if (g.x < -5) g.x = W + 5; if (g.x > W + 5) g.x = -5;
+      if (g.y < -5) g.y = H + 5; if (g.y > H + 5) g.y = -5;
       const alpha = g.brightness * (0.4 + 0.6 * Math.sin(t * g.speed + g.phase));
-      ctx.fillStyle = `rgba(255,212,56,${alpha})`;
+      ctx.fillStyle = g.gold ? `rgba(255,212,56,${alpha})` : `rgba(64,200,255,${alpha})`;
       ctx.beginPath();
       ctx.arc(g.x, g.y, g.r, 0, Math.PI * 2);
       ctx.fill();
     });
 
-    // Shooting stars / spaceships
-    ships.forEach(s => {
-      s.x += s.speed;
-      s.y += Math.sin(s.angle) * s.speed * 0.3;
-      if (s.x > W + 100) Object.assign(s, newShip());
+    // Asteroids
+    asteroids.forEach(a => drawAsteroid(a));
 
-      // Draw tail
-      const grad = ctx.createLinearGradient(s.x - s.tail, s.y, s.x, s.y);
-      grad.addColorStop(0, `rgba(255,255,255,0)`);
-      grad.addColorStop(0.7, `rgba(200,220,255,${s.opacity * 0.5})`);
-      grad.addColorStop(1, `rgba(255,255,255,${s.opacity})`);
-      ctx.strokeStyle = grad;
-      ctx.lineWidth = s.size;
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.moveTo(s.x - s.tail, s.y);
-      ctx.lineTo(s.x, s.y);
-      ctx.stroke();
-
-      // Draw head dot
-      ctx.fillStyle = `rgba(255,255,255,${s.opacity})`;
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.size * 0.8, 0, Math.PI * 2);
-      ctx.fill();
-    });
+    // Spaceships / shooting stars
+    ships.forEach(s => drawShip(s));
 
     requestAnimationFrame(draw);
   }

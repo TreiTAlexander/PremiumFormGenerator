@@ -961,14 +961,7 @@ function handlePhoto(inp){
   r.readAsDataURL(inp.files[0]);
 }
 
-function downloadPDF(){
-  const card=document.getElementById('license-card');
-  const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html><head><title>Driver License</title><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Mono:wght@400;500&family=Oswald:wght@400;600;700&family=Libre+Baskerville:ital,wght@0,700;1,700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box;margin:0;padding:0;}body{margin:0;padding:40px;background:#ddd;display:flex;justify-content:center;align-items:center;min-height:100vh;}</style></head><body>`);
-  w.document.write(card.outerHTML);
-  w.document.write('</body></html>');
-  w.document.close();w.focus();setTimeout(()=>w.print(),900);
-}
+function downloadPDF(id) { window.print(); }
 
 document.getElementById('f-city').addEventListener('input',function(){this.dataset.edited='1';});
 update();

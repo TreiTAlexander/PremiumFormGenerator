@@ -129,10 +129,7 @@ function rnd(a,b){return a+Math.random()*(b-a);}
 function ini(){st=[];for(let i=0;i<180;i++){const r=Math.random()<0.04?rnd(1.4,2.4):rnd(0.15,1.1);st.push({x:rnd(0,W),y:rnd(0,H),r,h:Math.random()<0.08?44:rnd(210,230),s:rnd(0,14),b:rnd(0.3,1),ts:rnd(0.003,0.011),tp:rnd(0,Math.PI*2)});}gd=[];for(let i=0;i<14;i++){gd.push({x:rnd(0,W),y:rnd(0,H),r:rnd(0.5,1.4),b:rnd(0.1,0.45),ts:rnd(0.004,0.014),tp:rnd(0,Math.PI*2),dx:rnd(-0.04,0.04),dy:rnd(-0.03,0.03)});}}
 function drawBg(t){ct.clearRect(0,0,W,H);const bg=ct.createRadialGradient(W/2,0,0,W/2,H/2,Math.max(W,H));bg.addColorStop(0,'#091230');bg.addColorStop(0.35,'#050818');bg.addColorStop(1,'#02030c');ct.fillStyle=bg;ct.fillRect(0,0,W,H);st.forEach(s=>{const a=s.b*(0.5+0.5*Math.sin(t*s.ts+s.tp));ct.fillStyle='hsla('+s.h+','+s.s+'%,96%,'+a+')';ct.beginPath();ct.arc(s.x,s.y,s.r,0,Math.PI*2);ct.fill();});gd.forEach(g=>{g.x+=g.dx;g.y+=g.dy;if(g.x<-5)g.x=W+5;if(g.x>W+5)g.x=-5;if(g.y<-5)g.y=H+5;if(g.y>H+5)g.y=-5;const a=g.b*(0.4+0.6*Math.sin(t*g.ts+g.tp));ct.fillStyle='rgba(255,218,56,'+a+')';ct.beginPath();ct.arc(g.x,g.y,g.r,0,Math.PI*2);ct.fill();});requestAnimationFrame(drawBg);}
 window.addEventListener('resize',rsz);rsz();requestAnimationFrame(drawBg);
-function dlPDF(id) {
-  id = id || 'doc-out';
-  downloadPDF(id);
-}@media print{body{padding:0;background:white;}}</style></head><body>');w.document.write(el.outerHTML);w.document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+function dlPDF() { window.print(); }@media print{body{padding:0;background:white;}}</style></head><body>');w.document.write(el.outerHTML);w.document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body></html>');w.document.close();w.focus();setTimeout(()=>w.print(),900);}
 function v(id){return document.getElementById(id)?document.getElementById(id).value:'';}
 function c(id){return document.getElementById(id)?document.getElementById(id).value:'#000';}
@@ -183,21 +180,7 @@ function update(){
 }
 update();
 
-function downloadPDF(docId) {
-  const el = document.getElementById(docId);
-  if (!el) return;
-  const allStyles = Array.from(document.styleSheets).map(s => {
-    try { return Array.from(s.cssRules).map(r=>r.cssText).join('\n'); } catch(e){ return ''; }
-  }).join('\n');
-  const fontLink = document.querySelector('link[href*="fonts.googleapis"]');
-  const w = window.open('','_blank','width=900,height=700');
-  w.document.write('<!DOCTYPE html><html><head><title>Form Porn</title>');
-  if(fontLink) w.document.write(fontLink.outerHTML);
-  w.document.write('<style>*{box-sizing:border-box;margin:0;padding:0;}body{background:#ddd;display:flex;justify-content:center;padding:30px;}@media print{body{background:white;padding:0;}}' + allStyles + '</style></head><body>');
-  w.document.write(el.outerHTML);
-  w.document.write('<scr'+'ipt>document.fonts.ready.then(()=>{setTimeout(()=>window.print(),1000)});<\/scr'+'ipt></body></html>');
-  w.document.close();
-}
+function downloadPDF(id) { window.print(); }
 function downloadPNG(docId) {
   const el = document.getElementById(docId);
   if(!el){alert('Generate a document first.');return;}

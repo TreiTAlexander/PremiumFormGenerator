@@ -232,15 +232,7 @@ function renderTxnEditor(){
 function addTxn(){txns.push({desc:'',amount:''});renderTxnEditor();renderTxns();}
 function removeTxn(i){txns.splice(i,1);renderTxnEditor();renderTxns();}
 
-function downloadPDF(){
-  var stmt=document.getElementById('statement');
-  var w=window.open('','_blank');
-  w.document.write('<!DOCTYPE html><html><head><title>Account Statement</title><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"><style>body{margin:0;padding:40px;background:#f5f4f0;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;}</style></head><body>');
-  w.document.write(stmt.outerHTML);
-  w.document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-</body></html>');
-  w.document.close();w.focus();setTimeout(()=>w.print(),800);
-}
+function downloadPDF(id) { window.print(); }
 
 renderTxnEditor();
 update();
