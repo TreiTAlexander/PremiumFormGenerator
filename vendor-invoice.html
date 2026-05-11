@@ -95,10 +95,28 @@ function draw(t){
 window.addEventListener('resize',rsz);rsz();requestAnimationFrame(draw);
 })();
 function dlPDF(){window.print();}
+
+function checkAccess(){
+  var exp=localStorage.getItem('fp_premium_exp');
+  if(exp && parseInt(exp)>Date.now()) return true;
+  return false;
+}
+function requireAccess(action){
+  if(checkAccess()){ action(); return; }
+  if(confirm('This feature requires a Form Porn account.\n\nClick OK to sign up or use a promo code — from $3 per form!')){
+    window.location.href='/pricing.html';
+  }
+}
+
 function dlPNG(id){var el=document.getElementById(id);if(!el)return;
-  if(typeof html2canvas==='undefined'){var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';s.onload=()=>_cap(el,'png');document.head.appendChild(s);}else _cap(el,'png');}
+  requireAccess(function(){
+  if(typeof html2canvas==='undefined'){var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';s.onload=()=>_cap(el,'png');document.head.appendChild(s);}else _cap(el,'png');
+  });
+}
 function dlJPEG(id){var el=document.getElementById(id);if(!el)return;
-  if(typeof html2canvas==='undefined'){var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';s.onload=()=>_cap(el,'jpg');document.head.appendChild(s);}else _cap(el,'jpg');}
+  if(typeof html2canvas==='undefined'){var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';s.onload=()=>_cap(el,'jpg');document.head.appendChild(s);}else _cap(el,'jpg');
+  });
+}
 function _cap(el,fmt){html2canvas(el,{scale:fmt==='png'?3:2,useCORS:true,backgroundColor:'#fff',logging:false}).then(c=>{var a=document.createElement('a');a.download='formporn.'+fmt;a.href=c.toDataURL(fmt==='png'?'image/png':'image/jpeg',.95);a.click();});}
 
 function v(id){return(document.getElementById(id)||{}).value||'';}

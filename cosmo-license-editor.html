@@ -140,7 +140,7 @@ nav{position:sticky;top:0;z-index:500;display:flex;align-items:center;justify-co
 <p class="preview-hint">💡 Drag the logo anywhere on the certificate to reposition it.</p>
 <div class="doc-scroll"><div id="cosmo-doc"></div></div>
 <div class="action-row">
-  <button class="btn-print" onclick="window.print()">🖨 Print</button>
+  <button class="btn-print" onclick="requireAccess(function(){window.print();})">🖨 Print</button>
   <button class="btn-dl" onclick="dlPDF()">⬇ PDF</button>
   <button class="btn-img" onclick="downloadPNG('cosmo-doc')">🖼 PNG</button>
   <button class="btn-img" onclick="downloadJPEG('cosmo-doc')">📷 JPEG</button>
@@ -180,12 +180,74 @@ function makeDraggable(el){
   document.addEventListener('touchend',()=>dragging=false);
 }
 
-function dlPDF() { window.print(); }@media print{body{padding:0;background:white;}}</style></head><body>');
-  w.document.write(el.outerHTML);
-  w.document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-</body></html>');
-  w.document.close();w.focus();setTimeout(()=>w.print(),900);
+
+function checkAccess(){
+  var exp=localStorage.getItem('fp_premium_exp');
+  if(exp && parseInt(exp)>Date.now()) return true;
+  return false;
 }
+function requireAccess(action){
+  if(checkAccess()){ action(); return; }
+  if(confirm('This feature requires a Form Porn account.\n\nClick OK to sign up or use a promo code — from $3 per form!')){
+    window.location.href='/pricing.html';
+  }
+}
+
+function dlPDF(id){
+  id=id||document.querySelector('[id$="-doc"]')||document.getElementById('resume-doc');
+  var el=typeof id==='string'?document.getElementById(id):id;
+  if(!el){window.print();return;}
+  requireAccess(function(){
+    if(typeof html2canvas==='undefined'){
+      var s=document.createElement('script');
+      s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+      s.onload=function(){_capturePDF(el);};
+      document.head.appendChild(s);
+    } else { _capturePDF(el); }
+  });
+}
+function _capturePDF(el){
+  html2canvas(el,{scale:2,useCORS:true,backgroundColor:'#fff',logging:false}).then(function(c){
+    var a=document.createElement('a');
+    a.download='formporn-document.pdf';
+    a.href=c.toDataURL('image/jpeg',0.95);
+    a.click();
+  });
+}
+function dlPNG(id){
+  var el=typeof id==='string'?document.getElementById(id):id;
+  if(!el)return;
+  requireAccess(function(){
+    if(typeof html2canvas==='undefined'){
+      var s=document.createElement('script');
+      s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+      s.onload=function(){_cap(el,'png');};document.head.appendChild(s);
+    } else { _cap(el,'png'); }
+  });
+}
+function dlJPEG(id){
+  var el=typeof id==='string'?document.getElementById(id):id;
+  if(!el)return;
+  requireAccess(function(){
+    if(typeof html2canvas==='undefined'){
+      var s=document.createElement('script');
+      s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+      s.onload=function(){_cap(el,'jpg');};document.head.appendChild(s);
+    } else { _cap(el,'jpg'); }
+  });
+}
+function _cap(el,fmt){
+  html2canvas(el,{scale:fmt==='png'?3:2,useCORS:true,backgroundColor:'#fff',logging:false}).then(function(c){
+    var a=document.createElement('a');
+    a.download='formporn.'+fmt;
+    a.href=c.toDataURL(fmt==='png'?'image/png':'image/jpeg',0.95);
+    a.click();
+  });
+}
+function downloadPDF(id){ dlPDF(id); }
+function downloadPNG(id){ dlPNG(id); }
+function downloadJPEG(id){ dlJPEG(id); }
+
 let logoURL=null,photoURL=null;
 function handleLogo(inp){if(!inp.files||!inp.files[0])return;const r=new FileReader();r.onload=e=>{logoURL=e.target.result;document.getElementById('logo-preview').src=logoURL;document.getElementById('logo-preview').style.display='block';document.getElementById('logo-icon').style.display='none';update();};r.readAsDataURL(inp.files[0]);}
 function handlePhoto(inp){if(!inp.files||!inp.files[0])return;const r=new FileReader();r.onload=e=>{photoURL=e.target.result;document.getElementById('photo-preview').src=photoURL;document.getElementById('photo-preview').style.display='block';document.getElementById('photo-icon').style.display='none';update();};r.readAsDataURL(inp.files[0]);}

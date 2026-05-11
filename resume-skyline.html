@@ -127,7 +127,7 @@ nav{position:sticky;top:0;z-index:500;display:flex;align-items:center;justify-co
 <div class="preview-panel"><h3>Live Preview</h3>
 <div class="doc-scroll"><div id="resume-doc"></div></div>
 <div class="action-row">
-  <button class="btn-print" onclick="window.print()">🖨 Print</button>
+  <button class="btn-print" onclick="requireAccess(function(){window.print();})">🖨 Print</button>
   <button class="btn-dl" onclick="dlPDF()">⬇ PDF</button>
   <button class="btn-img" onclick="downloadPNG('resume-doc')">🖼 PNG</button>
   <button class="btn-img" onclick="downloadJPEG('resume-doc')">📷 JPEG</button>
@@ -141,8 +141,74 @@ function rnd(a,b){return a+Math.random()*(b-a);}
 function ini(){st=[];for(let i=0;i<180;i++){const r=Math.random()<0.04?rnd(1.4,2.4):rnd(0.15,1.1);st.push({x:rnd(0,W),y:rnd(0,H),r,h:Math.random()<0.08?44:rnd(210,230),s:rnd(0,14),b:rnd(0.3,1),ts:rnd(0.003,0.011),tp:rnd(0,Math.PI*2)});}gd=[];for(let i=0;i<14;i++){gd.push({x:rnd(0,W),y:rnd(0,H),r:rnd(0.5,1.4),b:rnd(0.1,0.45),ts:rnd(0.004,0.014),tp:rnd(0,Math.PI*2),dx:rnd(-0.04,0.04),dy:rnd(-0.03,0.03)});}}
 function drawBg(t){ct.clearRect(0,0,W,H);const bg=ct.createRadialGradient(W/2,0,0,W/2,H/2,Math.max(W,H));bg.addColorStop(0,'#091230');bg.addColorStop(0.35,'#050818');bg.addColorStop(1,'#02030c');ct.fillStyle=bg;ct.fillRect(0,0,W,H);st.forEach(s=>{const a=s.b*(0.5+0.5*Math.sin(t*s.ts+s.tp));ct.fillStyle='hsla('+s.h+','+s.s+'%,96%,'+a+')';ct.beginPath();ct.arc(s.x,s.y,s.r,0,Math.PI*2);ct.fill();});gd.forEach(g=>{g.x+=g.dx;g.y+=g.dy;if(g.x<-5)g.x=W+5;if(g.x>W+5)g.x=-5;if(g.y<-5)g.y=H+5;if(g.y>H+5)g.y=-5;const a=g.b*(0.4+0.6*Math.sin(t*g.ts+g.tp));ct.fillStyle='rgba(255,218,56,'+a+')';ct.beginPath();ct.arc(g.x,g.y,g.r,0,Math.PI*2);ct.fill();});requestAnimationFrame(drawBg);}
 window.addEventListener('resize',rsz);rsz();requestAnimationFrame(drawBg);
-function dlPDF() { window.print(); }@media print{body{padding:0;background:white;}}</style></head><body>');w.document.write(el.outerHTML);w.document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-</body></html>');w.document.close();w.focus();setTimeout(()=>w.print(),900);}
+
+function checkAccess(){
+  var exp=localStorage.getItem('fp_premium_exp');
+  if(exp && parseInt(exp)>Date.now()) return true;
+  return false;
+}
+function requireAccess(action){
+  if(checkAccess()){ action(); return; }
+  if(confirm('This feature requires a Form Porn account.\n\nClick OK to sign up or use a promo code — from $3 per form!')){
+    window.location.href='/pricing.html';
+  }
+}
+
+function dlPDF(id){
+  id=id||document.querySelector('[id$="-doc"]')||document.getElementById('resume-doc');
+  var el=typeof id==='string'?document.getElementById(id):id;
+  if(!el){window.print();return;}
+  requireAccess(function(){
+    if(typeof html2canvas==='undefined'){
+      var s=document.createElement('script');
+      s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+      s.onload=function(){_capturePDF(el);};
+      document.head.appendChild(s);
+    } else { _capturePDF(el); }
+  });
+}
+function _capturePDF(el){
+  html2canvas(el,{scale:2,useCORS:true,backgroundColor:'#fff',logging:false}).then(function(c){
+    var a=document.createElement('a');
+    a.download='formporn-document.pdf';
+    a.href=c.toDataURL('image/jpeg',0.95);
+    a.click();
+  });
+}
+function dlPNG(id){
+  var el=typeof id==='string'?document.getElementById(id):id;
+  if(!el)return;
+  requireAccess(function(){
+    if(typeof html2canvas==='undefined'){
+      var s=document.createElement('script');
+      s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+      s.onload=function(){_cap(el,'png');};document.head.appendChild(s);
+    } else { _cap(el,'png'); }
+  });
+}
+function dlJPEG(id){
+  var el=typeof id==='string'?document.getElementById(id):id;
+  if(!el)return;
+  requireAccess(function(){
+    if(typeof html2canvas==='undefined'){
+      var s=document.createElement('script');
+      s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+      s.onload=function(){_cap(el,'jpg');};document.head.appendChild(s);
+    } else { _cap(el,'jpg'); }
+  });
+}
+function _cap(el,fmt){
+  html2canvas(el,{scale:fmt==='png'?3:2,useCORS:true,backgroundColor:'#fff',logging:false}).then(function(c){
+    var a=document.createElement('a');
+    a.download='formporn.'+fmt;
+    a.href=c.toDataURL(fmt==='png'?'image/png':'image/jpeg',0.95);
+    a.click();
+  });
+}
+function downloadPDF(id){ dlPDF(id); }
+function downloadPNG(id){ dlPNG(id); }
+function downloadJPEG(id){ dlJPEG(id); }
+
 let jobs=[
   {title:'[Job Title]',company:'[Company Name]',loc:'[City, State]',dates:'[Start] — [End]',bullets:'[Describe your key achievement or responsibility]\n[Describe another accomplishment with measurable impact]\n[List tools or methods used]'},
   {title:'[Previous Job Title]',company:'[Previous Company]',loc:'[City, State]',dates:'[Start] — [End]',bullets:'[Key responsibility or achievement]\n[Another accomplishment]'}
