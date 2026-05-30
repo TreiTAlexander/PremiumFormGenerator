@@ -172,17 +172,17 @@ nav{position:sticky;top:0;z-index:500;display:flex;align-items:center;justify-co
       <h3>Company Details</h3>
       <div class="fg"><label>Company Name</label><input id="f-co" value="ACME CORPORATION" oninput="update()"></div>
       <div class="fg"><label>Company Address</label><input id="f-coaddr" value="1234 Business Pkwy, Suite 100" oninput="update()"></div>
-      <div class="fg"><label>City, State ZIP</label><input id="f-cocity" value="New York, NY 10001" oninput="update()"></div>
+      <div class="fg"><label>City, State ZIP</label><input id="f-cocity" value="Beverly Hills, CA 90212" oninput="update()"></div>
       <div class="fg"><label>Company Phone</label><input id="f-cophone" value="(212) 555-0100" oninput="update()"></div>
       <div class="fg"><label>EIN / Tax ID</label><input id="f-ein" value="12-3456789" oninput="update()"></div>
 
       <div class="sdiv">Employee Details</div>
-      <div class="fg"><label>Employee Name</label><input id="f-name" value="JOHN A. SMITH" oninput="update()"></div>
-      <div class="fg"><label>Employee Address</label><input id="f-addr" value="567 Oak Street, Apt 4B" oninput="update()"></div>
-      <div class="fg"><label>City, State ZIP</label><input id="f-city" value="Brooklyn, NY 11201" oninput="update()"></div>
+      <div class="fg"><label>Employee Name</label><input id="f-name" value="FORMA L. PAPESTON" oninput="update()"></div>
+      <div class="fg"><label>Employee Address</label><input id="f-addr" value="9720 Wilshire Blvd, Suite 400" oninput="update()"></div>
+      <div class="fg"><label>City, State ZIP</label><input id="f-city" value="Beverly Hills, CA 90212" oninput="update()"></div>
       <div class="fr2">
-        <div class="fg"><label>SSN (last 4)</label><input id="f-ssn" value="XXX-XX-4567" oninput="update()"></div>
-        <div class="fg"><label>Employee ID</label><input id="f-empid" value="EMP-00482" oninput="update()"></div>
+        <div class="fg"><label>SSN (last 4)</label><input id="f-ssn" value="XXX-XX-8801" oninput="update()"></div>
+        <div class="fg"><label>Employee ID</label><input id="f-empid" value="EMP-97208" oninput="update()"></div>
       </div>
 
       <div class="sdiv">Pay Period</div>
@@ -459,73 +459,5 @@ function downloadJPEG(docId) {
   }).catch(()=>alert('Try PDF instead.'));
 }
 </script>
-
-<script src="access.js"></script>
-<script>
-// FormPorn Access Gate — injected by stabilization script
-function _currentForm() {
-  return window.location.pathname.split('/').pop() || 'index.html';
-}
-function downloadPDF(docId) {
-  FP.requireAccess(_currentForm(), function() { _fpDoPDF(docId); });
-}
-function downloadPNG(docId) {
-  FP.requireAccess(_currentForm(), function() { _fpDoPNG(docId); });
-}
-function downloadJPEG(docId) {
-  FP.requireAccess(_currentForm(), function() { _fpDoJPEG(docId); });
-}
-// Legacy aliases used in older forms
-function dlPDF(docId) { downloadPDF(docId); }
-function dlPNG(docId) { downloadPNG(docId); }
-function dlJPEG(docId) { downloadJPEG(docId); }
-
-function _fpDoPDF(docId) {
-  const el = document.getElementById(docId);
-  if (!el) { window.print(); return; }
-  const allStyles = Array.from(document.styleSheets).map(s => {
-    try { return Array.from(s.cssRules).map(r => r.cssText).join('\n'); } catch(e) { return ''; }
-  }).join('\n');
-  const fontLink = document.querySelector('link[href*="fonts.googleapis"]');
-  const w = window.open('', '_blank', 'width=900,height=700');
-  w.document.write('<!DOCTYPE html><html><head><title>Form Porn</title>');
-  if (fontLink) w.document.write(fontLink.outerHTML);
-  w.document.write('<style>*{box-sizing:border-box;margin:0;padding:0;}body{background:#ddd;display:flex;justify-content:center;padding:30px;}@media print{body{background:white;padding:0;}@page{margin:0.5in;}}' + allStyles + '</style></head><body>');
-  w.document.write(el.outerHTML);
-  w.document.write('<scr'+'ipt>document.fonts.ready.then(()=>{setTimeout(()=>window.print(),800)});<\/scr'+'ipt></body></html>');
-  w.document.close();
-}
-function _fpDoPNG(docId) {
-  const el = document.getElementById(docId);
-  if (!el) { alert('Generate a document first.'); return; }
-  function capture() {
-    html2canvas(el, {scale:3, useCORS:true, backgroundColor:'#ffffff', logging:false}).then(c => {
-      const a = document.createElement('a'); a.download = 'formporn.png';
-      a.href = c.toDataURL('image/png', 1.0); a.click();
-    }).catch(() => alert('PNG failed. Use PDF instead.'));
-  }
-  if (typeof html2canvas === 'undefined') {
-    const s = document.createElement('script');
-    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    s.onload = capture; document.head.appendChild(s);
-  } else { capture(); }
-}
-function _fpDoJPEG(docId) {
-  const el = document.getElementById(docId);
-  if (!el) { alert('Generate a document first.'); return; }
-  function capture() {
-    html2canvas(el, {scale:2, useCORS:true, backgroundColor:'#ffffff', logging:false}).then(c => {
-      const a = document.createElement('a'); a.download = 'formporn.jpg';
-      a.href = c.toDataURL('image/jpeg', 0.95); a.click();
-    }).catch(() => alert('JPEG failed. Use PDF instead.'));
-  }
-  if (typeof html2canvas === 'undefined') {
-    const s = document.createElement('script');
-    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    s.onload = capture; document.head.appendChild(s);
-  } else { capture(); }
-}
-</script>
-
 </body>
 </html>
