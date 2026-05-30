@@ -55,8 +55,8 @@ nav{position:sticky;top:0;z-index:500;display:flex;align-items:center;justify-co
 <div class="g3"><div class="fg"><label>Last Name</label><input id="vr-last" value="Thompson" oninput="update()"></div><div class="fg"><label>First Name</label><input id="vr-first" value="Jordan" oninput="update()"></div><div class="fg"><label>Middle Name</label><input id="vr-mid" value="Lee" oninput="update()"></div></div>
 <div class="g3"><div class="fg"><label>Date of Birth</label><input id="vr-dob" value="11/22/1998" oninput="update()"></div><div class="fg"><label>State ID / DL Number</label><input id="vr-id" value="NV-DL-9876543" oninput="update()"></div><div class="fg"><label>Last 4 of SSN</label><input id="vr-ssn4" value="XXXX" oninput="update()"></div></div>
 <div class="fg"><label>Current Residence Address</label><input id="vr-addr" value="875 Las Vegas Blvd S, Apt 401, Las Vegas, NV 89101" oninput="update()"></div>
-<div class="g3"><div class="fg"><label>City</label><input id="vr-city" value="Las Vegas" oninput="update()"></div><div class="fg"><label>State</label><input id="vr-state" value="Nevada" oninput="update()"></div><div class="fg"><label>ZIP Code</label><input id="vr-zip" value="89101" oninput="update()"></div></div>
-<div class="g2"><div class="fg"><label>County</label><input id="vr-county" value="Clark County" oninput="update()"></div><div class="fg"><label>Party Preference</label><select id="vr-party" onchange="update()"><option>Democratic Party</option><option>Republican Party</option><option>Non-Partisan / No Party</option><option>Green Party</option><option>Libertarian Party</option><option>Other</option></select></div></div>
+<div class="g3"><div class="fg"><label>City</label><input id="vr-city" value="Beverly Hills" oninput="update()"></div><div class="fg"><label>State</label><input id="vr-state" value="North Forma" oninput="update()"></div><div class="fg"><label>ZIP Code</label><input id="vr-zip" value="89101" oninput="update()"></div></div>
+<div class="g2"><div class="fg"><label>County</label><input id="vr-county" value="Forma County" oninput="update()"></div><div class="fg"><label>Party Preference</label><select id="vr-party" onchange="update()"><option>Democratic Party</option><option>Republican Party</option><option>Non-Partisan / No Party</option><option>Green Party</option><option>Libertarian Party</option><option>Other</option></select></div></div>
 <div class="fg"><label>Date of Application</label><input id="vr-date" value="05/08/2026" oninput="update()"></div>
 </div>
 
@@ -152,72 +152,4 @@ I swear or affirm that: I am a United States citizen; I meet the eligibility req
 <span>VOTER REGISTRATION APPLICATION</span><span>STATE OF ${state.toUpperCase()} · ${county.toUpperCase()}</span><span>FORM PORN · ENTERTAINMENT ONLY</span></div>
 </div>`;}
 
-update();</script>
-<script src="access.js"></script>
-<script>
-// FormPorn Access Gate — injected by stabilization script
-function _currentForm() {
-  return window.location.pathname.split('/').pop() || 'index.html';
-}
-function downloadPDF(docId) {
-  FP.requireAccess(_currentForm(), function() { _fpDoPDF(docId); });
-}
-function downloadPNG(docId) {
-  FP.requireAccess(_currentForm(), function() { _fpDoPNG(docId); });
-}
-function downloadJPEG(docId) {
-  FP.requireAccess(_currentForm(), function() { _fpDoJPEG(docId); });
-}
-// Legacy aliases used in older forms
-function dlPDF(docId) { downloadPDF(docId); }
-function dlPNG(docId) { downloadPNG(docId); }
-function dlJPEG(docId) { downloadJPEG(docId); }
-
-function _fpDoPDF(docId) {
-  const el = document.getElementById(docId);
-  if (!el) { window.print(); return; }
-  const allStyles = Array.from(document.styleSheets).map(s => {
-    try { return Array.from(s.cssRules).map(r => r.cssText).join('\n'); } catch(e) { return ''; }
-  }).join('\n');
-  const fontLink = document.querySelector('link[href*="fonts.googleapis"]');
-  const w = window.open('', '_blank', 'width=900,height=700');
-  w.document.write('<!DOCTYPE html><html><head><title>Form Porn</title>');
-  if (fontLink) w.document.write(fontLink.outerHTML);
-  w.document.write('<style>*{box-sizing:border-box;margin:0;padding:0;}body{background:#ddd;display:flex;justify-content:center;padding:30px;}@media print{body{background:white;padding:0;}@page{margin:0.5in;}}' + allStyles + '</style></head><body>');
-  w.document.write(el.outerHTML);
-  w.document.write('<scr'+'ipt>document.fonts.ready.then(()=>{setTimeout(()=>window.print(),800)});<\/scr'+'ipt></body></html>');
-  w.document.close();
-}
-function _fpDoPNG(docId) {
-  const el = document.getElementById(docId);
-  if (!el) { alert('Generate a document first.'); return; }
-  function capture() {
-    html2canvas(el, {scale:3, useCORS:true, backgroundColor:'#ffffff', logging:false}).then(c => {
-      const a = document.createElement('a'); a.download = 'formporn.png';
-      a.href = c.toDataURL('image/png', 1.0); a.click();
-    }).catch(() => alert('PNG failed. Use PDF instead.'));
-  }
-  if (typeof html2canvas === 'undefined') {
-    const s = document.createElement('script');
-    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    s.onload = capture; document.head.appendChild(s);
-  } else { capture(); }
-}
-function _fpDoJPEG(docId) {
-  const el = document.getElementById(docId);
-  if (!el) { alert('Generate a document first.'); return; }
-  function capture() {
-    html2canvas(el, {scale:2, useCORS:true, backgroundColor:'#ffffff', logging:false}).then(c => {
-      const a = document.createElement('a'); a.download = 'formporn.jpg';
-      a.href = c.toDataURL('image/jpeg', 0.95); a.click();
-    }).catch(() => alert('JPEG failed. Use PDF instead.'));
-  }
-  if (typeof html2canvas === 'undefined') {
-    const s = document.createElement('script');
-    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    s.onload = capture; document.head.appendChild(s);
-  } else { capture(); }
-}
-</script>
-
-</body></html>
+update();</script></body></html>
