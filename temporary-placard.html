@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Temporary Placard Maker - Form Porn</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;500;700;800;900&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--black:#02030c;--blue:#1a7fff;--cyan:#40c8ff;--gold:#ffd438;--gold2:#ffb800;--white:#eef2ff;--gray:#6878a0;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--black);color:var(--white);font-family:Barlow,Arial,sans-serif;overflow-x:hidden;min-height:100vh;}
+nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:56px;background:rgba(2,3,12,.92);backdrop-filter:blur(24px);border-bottom:1px solid rgba(26,127,255,.15);}
+.nav-back{font-weight:700;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:7px 16px;border-radius:4px;border:1px solid rgba(64,200,255,.28);background:transparent;color:var(--cyan);cursor:pointer;text-decoration:none;}
+.nav-ft{font-size:14px;font-weight:900;color:var(--gold);}
+.nav-home{font-weight:700;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);text-decoration:none;}
+.page{position:relative;z-index:1;padding:20px 16px 60px;}
+.page-header{text-align:center;padding:16px 0 20px;}
+.page-eye{font-size:9px;font-weight:800;letter-spacing:5px;color:var(--blue);text-transform:uppercase;margin-bottom:6px;}
+.page-title{font-size:clamp(22px,5vw,30px);font-weight:900;color:var(--white);}
+.page-title span{color:var(--gold);}
+.page-rule{width:36px;height:2px;background:linear-gradient(90deg,var(--blue),var(--cyan));border-radius:2px;margin:10px auto 0;}
+.editor{display:grid;grid-template-columns:minmax(250px,330px) minmax(0,1fr);gap:16px;max-width:1420px;margin:0 auto;align-items:start;}
+.panel,.preview-panel{background:rgba(4,6,20,.85);border:1px solid rgba(26,127,255,.16);border-radius:12px;padding:18px;backdrop-filter:blur(16px);}
+.panel{position:sticky;top:72px;}
+.panel h3,.preview-panel h3{font-size:9px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:var(--blue);margin-bottom:14px;}
+.fg{margin-bottom:10px;}
+.fg label{display:block;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:4px;}
+.fg input{width:100%;border:1px solid rgba(26,127,255,.2);border-radius:5px;padding:10px 12px;font-size:13px;font-family:Barlow,Arial,sans-serif;font-weight:700;color:var(--white);background:rgba(2,3,12,.7);outline:none;}
+.fg input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(64,200,255,.07);}
+.check-row{display:flex;align-items:center;gap:8px;margin:4px 0 10px;color:var(--gray);font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;}
+.check-row input{width:16px;height:16px;accent-color:var(--gold);}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.fr4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;}
+.sdiv{font-size:8px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:rgba(104,120,160,.55);margin:14px 0 10px;padding-top:14px;border-top:1px solid rgba(26,127,255,.08);}
+.doc-scroll{overflow:auto;-webkit-overflow-scrolling:touch;padding:10px 0;}
+.action-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;}
+.btn-img{padding:12px;border-radius:6px;font-family:Barlow,Arial,sans-serif;font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:1px solid rgba(64,200,255,.25);background:rgba(26,127,255,.08);color:var(--white);}
+.btn-img.primary{border:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--black);}
+.placard-shell{display:flex;justify-content:center;}
+.placard-viewport{position:relative;width:min(100%,1120px);aspect-ratio:1210/585;overflow:hidden;}
+.placard-doc{position:absolute;left:0;top:0;width:2880px;height:1800px;min-width:0;overflow:hidden;background:#fff url("../assets/templates/placard-original.png") center/100% 100% no-repeat;transform-origin:0 0;}
+.native-layer{position:absolute;left:0;top:0;width:2880px;height:1800px;transform-origin:top left;}
+.card-clean,.static-title,.field,.qr-copy,.qr-source{position:absolute;transform-origin:top left;}
+.card-clean{left:900px;top:600px;width:1110px;height:555px;border:3px solid #dedede;border-radius:28px;background:#fafafa;box-shadow:0 18px 42px rgba(0,0,0,.08);pointer-events:none;}
+.static-title{left:1195px;top:680px;width:520px;height:42px;display:flex;align-items:center;justify-content:center;color:#050505;font-size:31px;font-weight:900;letter-spacing:.5px;pointer-events:none;}
+.field{display:flex;align-items:center;justify-content:center;color:#050505;white-space:nowrap;pointer-events:auto;cursor:move;user-select:none;touch-action:none;}
+.field.is-dragging{outline:2px solid rgba(26,127,255,.7);outline-offset:4px;}
+.state{left:1280px;top:615px;width:330px;height:58px;font-size:57px;font-weight:300;letter-spacing:7px;}
+.plate{left:934px;top:795px;width:1062px;height:138px;justify-content:flex-start;font-family:"Barlow Condensed",Barlow,Arial,sans-serif;font-size:151px;font-weight:900;letter-spacing:2px;}
+.date{left:920px;top:963px;width:812px;height:108px;justify-content:flex-start;font-family:"Barlow Condensed",Barlow,Arial,sans-serif;font-size:96px;font-weight:900;letter-spacing:2px;}
+.meta{top:735px;height:26px;justify-content:flex-start;color:#8c8c8c;font-size:23px;font-weight:800;letter-spacing:-.5px;}
+.vin{left:926px;width:326px;}
+.year{left:1309px;width:138px;}
+.make{left:1533px;width:147px;}
+.model{left:1747px;width:162px;}
+.qr-copy{left:1820px;top:952px;width:118px;height:118px;overflow:hidden;pointer-events:none;}
+.qr-source{left:0;top:0;width:190px;height:190px;background:url("../assets/templates/placard-original.png") no-repeat;background-size:2880px 1800px;background-position:-1805px -936px;transform:scale(.621);}
+.qr-copy.is-hidden{display:none;}
+@media (max-width:860px){
+  .editor{grid-template-columns:1fr;}
+  .panel{position:static;}
+  .page{padding:16px 12px 40px;}
+  nav{padding:0 12px;}
+  .nav-ft{font-size:12px;}
+  .placard-doc{width:100%;}
+}
+@media print{
+  body{background:#fff!important;}
+  nav,.page-header,.panel,.action-row,.preview-panel h3{display:none!important;}
+  .page{padding:0!important;}
+  .editor{display:block!important;max-width:none!important;}
+  .preview-panel{border:none!important;background:transparent!important;padding:0!important;}
+  .doc-scroll{overflow:visible!important;padding:0!important;}
+  .placard-doc{width:100vw;min-width:0;}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-back" id="back-link">&larr; Back</a>
+  <span class="nav-ft">Temporary Placard Maker</span>
+  <a href="/" class="nav-home">Home</a>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <div class="page-eye">Identity &amp; Vehicles</div>
+    <div class="page-title">Temporary <span>Placard</span> Maker</div>
+    <div class="page-rule"></div>
+  </div>
+
+  <div class="editor">
+    <div class="panel">
+      <h3>Placard Details</h3>
+      <div class="fg"><label for="f-state">State</label><input id="f-state" value="NEVADA" autocomplete="off"></div>
+      <div class="fg"><label for="f-plate">Plate / Permit Number</label><input id="f-plate" value="NV-774-040" autocomplete="off"></div>
+      <div class="sdiv">Expiration Date</div>
+      <div class="fr3">
+        <div class="fg"><label for="f-month">Month</label><input id="f-month" value="APR" maxlength="3" autocomplete="off"></div>
+        <div class="fg"><label for="f-day">Day</label><input id="f-day" value="25" maxlength="2" autocomplete="off"></div>
+        <div class="fg"><label for="f-exp-year">Year</label><input id="f-exp-year" value="2026" maxlength="4" autocomplete="off"></div>
+      </div>
+      <div class="sdiv">Vehicle Info</div>
+      <div class="fg"><label for="f-vin">VIN</label><input id="f-vin" value="1GD675CL6B1149336" autocomplete="off"></div>
+      <div class="fr3">
+        <div class="fg"><label for="f-vyear">Year</label><input id="f-vyear" value="2011" autocomplete="off"></div>
+        <div class="fg"><label for="f-make">Make</label><input id="f-make" value="GMC" autocomplete="off"></div>
+        <div class="fg"><label for="f-model">Model</label><input id="f-model" value="STS" autocomplete="off"></div>
+      </div>
+      <div class="sdiv">Line Size</div>
+      <div class="fr4">
+        <div class="fg"><label for="s-state">State</label><input id="s-state" type="number" value="57" min="12" max="120"></div>
+        <div class="fg"><label for="s-meta">Info</label><input id="s-meta" type="number" value="23" min="8" max="60"></div>
+        <div class="fg"><label for="s-plate">Plate</label><input id="s-plate" type="number" value="151" min="40" max="240"></div>
+        <div class="fg"><label for="s-date">Date</label><input id="s-date" type="number" value="96" min="30" max="180"></div>
+      </div>
+      <label class="check-row"><input id="show-barcode" type="checkbox" checked> Barcode</label>
+    </div>
+
+    <div class="preview-panel">
+      <h3>Live Preview</h3>
+      <div class="doc-scroll">
+        <div class="placard-shell">
+          <div class="placard-viewport">
+            <div id="placard-doc" class="placard-doc">
+              <div id="native-layer" class="native-layer">
+                <div class="card-clean"></div>
+                <div class="static-title">TEMPORARY PLACARD</div>
+                <div id="qr-copy" class="qr-copy"><div class="qr-source"></div></div>
+                <div id="p-state" class="field state" data-key="state"></div>
+                <div id="p-vin" class="field meta vin" data-key="vin"></div>
+                <div id="p-vyear" class="field meta year" data-key="vyear"></div>
+                <div id="p-make" class="field meta make" data-key="make"></div>
+                <div id="p-model" class="field meta model" data-key="model"></div>
+                <div id="p-plate" class="field plate" data-key="plate"></div>
+                <div id="p-date" class="field date" data-key="date"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="action-row">
+        <button class="btn-img primary" type="button" data-format="png">PNG</button>
+        <button class="btn-img" type="button" data-format="jpeg">JPEG</button>
+        <button class="btn-img" type="button" data-format="pdf">PDF</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../access.js"></script>
+<script>
+const nativeWidth=2880;
+const nativeHeight=1800;
+const templateSrc="../assets/templates/placard-original.png";
+const fieldIds=["f-state","f-plate","f-month","f-day","f-exp-year","f-vin","f-vyear","f-make","f-model"];
+const sizeIds=["s-state","s-meta","s-plate","s-date"];
+const currentForm="forms/temporary-placard.html";
+const crop={x:875,y:575,w:1160,h:610};
+const layout={
+  state:{x:1280,y:615,w:330,h:58,drawX:1445,drawY:645,align:"center",font:"300 57px Barlow, Arial, sans-serif",letterSpacing:7},
+  vin:{x:926,y:735,w:326,h:26,drawX:926,drawY:748,font:"800 23px Barlow, Arial, sans-serif",color:"#8c8c8c"},
+  vyear:{x:1309,y:735,w:138,h:26,drawX:1309,drawY:748,font:"800 23px Barlow, Arial, sans-serif",color:"#8c8c8c"},
+  make:{x:1533,y:735,w:147,h:26,drawX:1533,drawY:748,font:"800 23px Barlow, Arial, sans-serif",color:"#8c8c8c"},
+  model:{x:1747,y:735,w:162,h:26,drawX:1747,drawY:748,font:"800 23px Barlow, Arial, sans-serif",color:"#8c8c8c"},
+  plate:{x:934,y:795,w:1062,h:138,drawX:934,drawY:870,font:"900 151px 'Barlow Condensed', Barlow, Arial, sans-serif",letterSpacing:2},
+  date:{x:920,y:963,w:812,h:108,drawX:920,drawY:1023,font:"900 96px 'Barlow Condensed', Barlow, Arial, sans-serif",letterSpacing:2}
+};
+
+function val(id){return (document.getElementById(id).value||"").trim();}
+function num(id,fallback){return Number(document.getElementById(id).value)||fallback;}
+function up(text){return text.toUpperCase();}
+function scale(){return document.querySelector(".placard-viewport").clientWidth/crop.w;}
+function textFor(key){
+  if(key==="state") return up(val("f-state"))||"STATE";
+  if(key==="plate") return up(val("f-plate"))||"NV-000-000";
+  if(key==="date") return `${(up(val("f-month"))||"MON").slice(0,3)} ${val("f-day")||"00"} - ${val("f-exp-year")||"0000"}`;
+  if(key==="vin") return `VIN: ${up(val("f-vin"))}`;
+  if(key==="vyear") return `YEAR: ${up(val("f-vyear"))}`;
+  if(key==="make") return `MAKE: ${up(val("f-make"))}`;
+  if(key==="model") return `MODEL: ${up(val("f-model"))}`;
+  return "";
+}
+
+function applyPreviewTransform(){
+  const s=scale();
+  const doc=document.getElementById("placard-doc");
+  doc.style.width=`${nativeWidth*s}px`;
+  doc.style.height=`${nativeHeight*s}px`;
+  doc.style.left=`${-crop.x*s}px`;
+  doc.style.top=`${-crop.y*s}px`;
+  doc.style.transform="none";
+  document.getElementById("native-layer").style.transform=`scale(${s})`;
+}
+
+function applyLayout(){
+  layout.state.font=`300 ${num("s-state",57)}px Barlow, Arial, sans-serif`;
+  layout.vin.font=layout.vyear.font=layout.make.font=layout.model.font=`800 ${num("s-meta",23)}px Barlow, Arial, sans-serif`;
+  layout.plate.font=`900 ${num("s-plate",151)}px 'Barlow Condensed', Barlow, Arial, sans-serif`;
+  layout.date.font=`900 ${num("s-date",96)}px 'Barlow Condensed', Barlow, Arial, sans-serif`;
+  Object.keys(layout).forEach(key=>{
+    const el=document.querySelector(`[data-key="${key}"]`);
+    const pos=layout[key];
+    el.style.left=`${pos.x}px`;
+    el.style.top=`${pos.y}px`;
+    el.style.width=`${pos.w}px`;
+    el.style.height=`${pos.h}px`;
+    el.style.font=pos.font;
+  });
+}
+
+function updatePreview(){
+  Object.keys(layout).forEach(key=>{
+    document.querySelector(`[data-key="${key}"]`).textContent=textFor(key);
+  });
+  document.getElementById("qr-copy").classList.toggle("is-hidden",!document.getElementById("show-barcode").checked);
+}
+
+function hasAccess(){
+  if(!window.FP) return true;
+  return FP.canAccess(currentForm)||FP.canAccess("temporary-placard.html")||FP.canAccess("placard-v4.html");
+}
+
+function requireExportAccess(onAllowed){
+  if(hasAccess()){onAllowed();return;}
+  if(confirm("This is a premium form.\n\nUnlock this form or get all forms with Premium.\n\nGo to checkout?")){
+    window.location.href=`/checkout.html?plan=single&form=${encodeURIComponent(currentForm)}`;
+  }
+}
+
+function drawText(ctx,text,x,y,options){
+  ctx.save();
+  ctx.fillStyle=options.color||"#050505";
+  ctx.font=options.font;
+  ctx.textAlign=options.align||"left";
+  ctx.textBaseline="middle";
+  if(options.letterSpacing){
+    let cursor=x;
+    const chars=String(text).split("");
+    if(options.align==="center"){
+      const width=chars.reduce((sum,char)=>sum+ctx.measureText(char).width+options.letterSpacing,0)-options.letterSpacing;
+      cursor=x-width/2;
+    }
+    chars.forEach(char=>{
+      ctx.fillText(char,cursor,y);
+      cursor+=ctx.measureText(char).width+options.letterSpacing;
+    });
+  }else{
+    ctx.fillText(text,x,y);
+  }
+  ctx.restore();
+}
+
+function roundedRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+function renderCanvas(){
+  return new Promise((resolve,reject)=>{
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement("canvas");
+      canvas.width=nativeWidth;
+      canvas.height=nativeHeight;
+      const ctx=canvas.getContext("2d");
+      ctx.drawImage(img,0,0,nativeWidth,nativeHeight);
+      ctx.save();
+      ctx.shadowColor="rgba(0,0,0,.08)";
+      ctx.shadowBlur=42;
+      ctx.shadowOffsetY=18;
+      roundedRect(ctx,900,600,1110,555,28);
+      ctx.fillStyle="#fafafa";
+      ctx.fill();
+      ctx.restore();
+      roundedRect(ctx,900,600,1110,555,28);
+      ctx.strokeStyle="#dedede";
+      ctx.lineWidth=3;
+      ctx.stroke();
+      drawText(ctx,"TEMPORARY PLACARD",1455,701,{font:"900 31px Barlow, Arial, sans-serif",align:"center",letterSpacing:.5});
+      Object.keys(layout).forEach(key=>{
+        const pos=layout[key];
+        drawText(ctx,textFor(key),pos.drawX,pos.drawY,{font:pos.font,align:pos.align,letterSpacing:pos.letterSpacing,color:pos.color});
+      });
+      if(document.getElementById("show-barcode").checked){
+        ctx.drawImage(img,1805,936,190,190,1820,952,118,118);
+      }
+      resolve(canvas);
+    };
+    img.onerror=reject;
+    img.src=templateSrc;
+  });
+}
+
+async function exportFile(format){
+  requireExportAccess(async()=>{
+    await document.fonts.ready;
+    const canvas=await renderCanvas();
+    if(format==="pdf"){
+      const win=window.open("","_blank","width=900,height=700");
+      const data=canvas.toDataURL("image/png");
+      win.document.write(`<!DOCTYPE html><title>Temporary Placard</title><style>body{margin:0;background:#fff;}img{width:100%;height:auto;display:block;}@page{margin:0;}</style><img src="${data}" alt="Temporary Placard">`);
+      win.document.close();
+      win.focus();
+      win.print();
+      return;
+    }
+    const mime=format==="jpeg"?"image/jpeg":"image/png";
+    const ext=format==="jpeg"?"jpg":"png";
+    const a=document.createElement("a");
+    a.download=`formporn-temporary-placard.${ext}`;
+    a.href=canvas.toDataURL(mime,format==="jpeg"?.96:1);
+    a.click();
+  });
+}
+
+fieldIds.forEach(id=>document.getElementById(id).addEventListener("input",updatePreview));
+sizeIds.forEach(id=>document.getElementById(id).addEventListener("input",()=>{applyLayout();updatePreview();}));
+document.getElementById("show-barcode").addEventListener("change",updatePreview);
+document.querySelectorAll("[data-format]").forEach(btn=>btn.addEventListener("click",()=>exportFile(btn.dataset.format)));
+document.querySelectorAll(".field").forEach(el=>{
+  el.addEventListener("pointerdown",event=>{
+    const key=el.dataset.key;
+    const pos=layout[key];
+    const s=scale();
+    const startX=event.clientX;
+    const startY=event.clientY;
+    const originX=pos.x;
+    const originY=pos.y;
+    el.classList.add("is-dragging");
+    el.setPointerCapture(event.pointerId);
+    function move(moveEvent){
+      const dx=(moveEvent.clientX-startX)/s;
+      const dy=(moveEvent.clientY-startY)/s;
+      pos.x=Math.max(0,Math.min(nativeWidth-pos.w,originX+dx));
+      pos.y=Math.max(0,Math.min(nativeHeight-pos.h,originY+dy));
+      if(key==="state"){pos.drawX=pos.x+pos.w/2;pos.drawY=pos.y+30;}
+      else if(key==="plate"){pos.drawX=pos.x;pos.drawY=pos.y+75;}
+      else if(key==="date"){pos.drawX=pos.x;pos.drawY=pos.y+60;}
+      else {pos.drawX=pos.x;pos.drawY=pos.y+13;}
+      applyLayout();
+    }
+    function upPointer(){
+      el.classList.remove("is-dragging");
+      el.removeEventListener("pointermove",move);
+      el.removeEventListener("pointerup",upPointer);
+      el.removeEventListener("pointercancel",upPointer);
+    }
+    el.addEventListener("pointermove",move);
+    el.addEventListener("pointerup",upPointer);
+    el.addEventListener("pointercancel",upPointer);
+  });
+});
+new ResizeObserver(applyPreviewTransform).observe(document.querySelector(".placard-viewport"));
+document.getElementById("back-link").addEventListener("click",event=>{
+  if(history.length>1){
+    event.preventDefault();
+    history.back();
+  }
+});
+applyLayout();
+applyPreviewTransform();
+updatePreview();
+</script>
+</body>
+</html>

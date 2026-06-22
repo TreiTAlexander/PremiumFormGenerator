@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Security Specimen Editor - Form Porn</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;800;900&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--black:#02030c;--blue:#1a7fff;--cyan:#40c8ff;--gold:#ffd438;--gold2:#ffb800;--white:#eef2ff;--gray:#6878a0;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--black);color:var(--white);font-family:Barlow,Arial,sans-serif;overflow-x:hidden;min-height:100vh;}
+nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:56px;background:rgba(2,3,12,.92);backdrop-filter:blur(24px);border-bottom:1px solid rgba(26,127,255,.15);}
+.nav-back,.nav-home{font-weight:800;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);text-decoration:none;}
+.nav-back{padding:7px 16px;border-radius:4px;border:1px solid rgba(64,200,255,.28);}
+.nav-ft{font-size:14px;font-weight:900;color:var(--gold);}
+.page{padding:20px 16px 60px;}
+.page-header{text-align:center;padding:16px 0 20px;}
+.page-eye{font-size:9px;font-weight:800;letter-spacing:5px;color:var(--blue);text-transform:uppercase;margin-bottom:6px;}
+.page-title{font-size:clamp(22px,5vw,30px);font-weight:900;color:var(--white);}
+.page-title span{color:var(--gold);}
+.page-rule{width:36px;height:2px;background:linear-gradient(90deg,var(--blue),var(--cyan));border-radius:2px;margin:10px auto 0;}
+.editor{display:grid;grid-template-columns:minmax(260px,340px) minmax(0,1fr);gap:16px;max-width:1180px;margin:0 auto;align-items:start;}
+.panel,.preview-panel{background:rgba(4,6,20,.85);border:1px solid rgba(26,127,255,.16);border-radius:12px;padding:18px;backdrop-filter:blur(16px);}
+.panel{position:sticky;top:72px;}
+.panel h3,.preview-panel h3{font-size:9px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:var(--blue);margin-bottom:14px;}
+.fg{margin-bottom:10px;}
+.fg label{display:block;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:4px;}
+.fg input{width:100%;border:1px solid rgba(26,127,255,.2);border-radius:5px;padding:10px 12px;font-size:13px;font-family:Barlow,Arial,sans-serif;font-weight:700;color:var(--white);background:rgba(2,3,12,.7);outline:none;}
+.fg textarea{width:100%;min-height:76px;resize:vertical;border:1px solid rgba(26,127,255,.2);border-radius:5px;padding:10px 12px;font-size:13px;font-family:Barlow,Arial,sans-serif;font-weight:700;color:var(--white);background:rgba(2,3,12,.7);outline:none;}
+.fg input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(64,200,255,.07);}
+.fg textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(64,200,255,.07);}
+.check-row{display:flex;align-items:center;gap:8px;margin:4px 0 10px;color:var(--gray);font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;}
+.check-row input{width:16px;height:16px;accent-color:var(--gold);}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.tab{border:1px solid rgba(64,200,255,.25);border-radius:6px;background:rgba(26,127,255,.08);color:var(--white);font:900 10px Barlow,Arial,sans-serif;letter-spacing:2px;text-transform:uppercase;padding:10px;cursor:pointer;}
+.tab.active{border:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--black);}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.sdiv{font-size:8px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:rgba(104,120,160,.55);margin:14px 0 10px;padding-top:14px;border-top:1px solid rgba(26,127,255,.08);}
+.action-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;}
+.btn-img{padding:12px;border-radius:6px;font-family:Barlow,Arial,sans-serif;font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:1px solid rgba(64,200,255,.25);background:rgba(26,127,255,.08);color:var(--white);}
+.btn-img.primary{border:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--black);}
+.doc-scroll{overflow:auto;-webkit-overflow-scrolling:touch;padding:10px 0;}
+.specimen-shell{display:flex;justify-content:center;}
+.specimen-frame{display:grid;justify-items:center;gap:8px;width:min(100%,860px);}
+.specimen-doc{position:relative;width:100%;aspect-ratio:612/408;background:#fff url("../assets/templates/social-security-specimen.png") center/100% 100% no-repeat;overflow:hidden;}
+.specimen-doc.back{aspect-ratio:752/467;background:#fbfbfb;border:2px solid #111;border-radius:24px;}
+.overlay{position:absolute;display:flex;align-items:center;justify-content:center;pointer-events:auto;cursor:move;user-select:none;touch-action:none;white-space:nowrap;}
+.back-text{position:absolute;left:22px;top:24px;width:704px;height:316px;color:#0b2e6d;font-family:Georgia,"Times New Roman",serif;font-size:25px;line-height:1.05;white-space:pre-wrap;pointer-events:auto;cursor:move;user-select:none;touch-action:none;}
+.back-code{position:absolute;left:438px;top:404px;width:270px;height:36px;color:#000;font-family:"DM Mono",monospace;font-size:28px;font-weight:700;letter-spacing:6px;pointer-events:auto;cursor:move;user-select:none;touch-action:none;}
+.overlay.is-dragging{outline:2px solid rgba(26,127,255,.75);outline-offset:3px;}
+.back-text.is-dragging,.back-code.is-dragging{outline:2px solid rgba(26,127,255,.75);outline-offset:3px;}
+.sample-number{left:208px;top:198px;width:196px;height:27px;color:#153c76;font-family:"DM Mono",monospace;font-size:19px;font-weight:700;letter-spacing:2px;}
+.sample-name{left:188px;top:281px;width:246px;height:23px;color:#164272;font-family:"DM Mono",monospace;font-size:15px;font-weight:700;letter-spacing:1px;}
+.sample-note{left:186px;top:232px;width:246px;height:18px;color:#173f72;font-size:10px;font-weight:800;letter-spacing:1px;}
+.watermark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transform:rotate(-18deg);font-size:72px;font-weight:900;letter-spacing:8px;color:rgba(180,0,0,.32);text-transform:uppercase;pointer-events:none;}
+.watermark.is-hidden{display:none;}
+.not-valid{color:rgba(220,35,45,.95);font-size:14px;font-weight:900;letter-spacing:3px;text-transform:uppercase;text-align:center;pointer-events:none;}
+@media (max-width:860px){
+  .editor{grid-template-columns:1fr;}
+  .panel{position:static;}
+  nav{padding:0 12px;}
+  .nav-ft{font-size:12px;}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-back" id="back-link">&larr; Back</a>
+  <span class="nav-ft">Social Security Specimen</span>
+  <a href="/" class="nav-home">Home</a>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <div class="page-eye">Identity &amp; Personal Documents</div>
+    <div class="page-title">Social Security <span>Specimen</span> Editor</div>
+    <div class="page-rule"></div>
+  </div>
+
+  <div class="editor">
+    <div class="panel">
+      <h3>Specimen Details</h3>
+      <div class="fg"><label for="f-number">Sample Number</label><input id="f-number" value="000-00-0000" autocomplete="off"></div>
+      <div class="fg"><label for="f-name">Display Name</label><input id="f-name" value="SAMPLE HOLDER" autocomplete="off"></div>
+      <div class="fg"><label for="f-note">Small Caption</label><input id="f-note" value="THIS NUMBER IS A SPECIMEN" autocomplete="off"></div>
+      <label class="check-row"><input id="show-specimen" type="checkbox" checked> Specimen Watermark</label>
+      <div class="sdiv">Line Size</div>
+      <div class="fr3">
+        <div class="fg"><label for="s-number">Number</label><input id="s-number" type="number" value="19" min="8" max="44"></div>
+        <div class="fg"><label for="s-name">Name</label><input id="s-name" type="number" value="15" min="8" max="36"></div>
+        <div class="fg"><label for="s-note">Caption</label><input id="s-note" type="number" value="10" min="6" max="22"></div>
+      </div>
+      <div class="sdiv">Back Side</div>
+      <div class="fg"><label for="f-back-text">Back Wording</label><textarea id="f-back-text"></textarea></div>
+      <div class="fg"><label for="f-back-code">Back Code</label><input id="f-back-code" value="SAMPLE0000" autocomplete="off"></div>
+      <div class="fr3">
+        <div class="fg"><label for="s-back-text">Text</label><input id="s-back-text" type="number" value="25" min="10" max="40"></div>
+        <div class="fg"><label for="s-back-code">Code</label><input id="s-back-code" type="number" value="28" min="10" max="44"></div>
+        <div></div>
+      </div>
+    </div>
+
+    <div class="preview-panel">
+      <h3>Live Preview</h3>
+      <div class="tabs">
+        <button class="tab active" type="button" data-side="front">Front</button>
+        <button class="tab" type="button" data-side="back">Back</button>
+      </div>
+      <div class="doc-scroll">
+        <div class="specimen-shell">
+          <div class="specimen-frame">
+            <div id="specimen-doc" class="specimen-doc">
+              <div id="p-note" class="overlay sample-note" data-key="note"></div>
+              <div id="p-number" class="overlay sample-number" data-key="number"></div>
+              <div id="p-name" class="overlay sample-name" data-key="name"></div>
+              <div id="p-back-text" class="back-text" data-key="backText"></div>
+              <div id="p-back-code" class="back-code" data-key="backCode"></div>
+              <div id="p-watermark" class="watermark">SPECIMEN</div>
+            </div>
+            <div class="not-valid">Not Valid For Identification</div>
+          </div>
+        </div>
+      </div>
+      <div class="action-row">
+        <button class="btn-img primary" type="button" data-format="png">PNG</button>
+        <button class="btn-img" type="button" data-format="jpeg">JPEG</button>
+        <button class="btn-img" type="button" data-format="pdf">PDF</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../access.js"></script>
+<script>
+const nativeWidth=612;
+const nativeHeight=408;
+const templateSrc="../assets/templates/social-security-specimen.png";
+const backWidth=752;
+const backHeight=467;
+const backTemplateSrc="../assets/templates/social-security-specimen-back.png";
+const currentForm="forms/social-security-specimen.html";
+let activeSide="front";
+const layout={
+  note:{x:186,y:232,w:246,h:18,size:"s-note",font:"Barlow",weight:"800",color:"#173f72"},
+  number:{x:208,y:198,w:196,h:27,size:"s-number",font:"DM Mono",weight:"700",color:"#153c76",letterSpacing:2},
+  name:{x:188,y:281,w:246,h:23,size:"s-name",font:"DM Mono",weight:"700",color:"#164272",letterSpacing:1},
+  backText:{x:22,y:24,w:704,h:316,size:"s-back-text",font:"Georgia",weight:"400",color:"#0b2e6d",lineHeight:1.05},
+  backCode:{x:438,y:404,w:270,h:36,size:"s-back-code",font:"DM Mono",weight:"700",color:"#000",letterSpacing:6}
+};
+
+function val(id){return (document.getElementById(id).value||"").trim();}
+function num(id,fallback){return Number(document.getElementById(id).value)||fallback;}
+function textFor(key){
+  if(key==="number") return val("f-number")||"000-00-0000";
+  if(key==="name") return val("f-name").toUpperCase();
+  if(key==="backText") return val("f-back-text");
+  if(key==="backCode") return val("f-back-code").toUpperCase();
+  return (val("f-note")||"THIS NUMBER IS A SPECIMEN").toUpperCase();
+}
+function scale(){return document.getElementById("specimen-doc").clientWidth/(activeSide==="back"?backWidth:nativeWidth);}
+function applyLayout(){
+  Object.keys(layout).forEach(key=>{
+    const pos=layout[key];
+    const el=document.querySelector(`[data-key="${key}"]`);
+    el.style.left=`${pos.x}px`;
+    el.style.top=`${pos.y}px`;
+    el.style.width=`${pos.w}px`;
+    el.style.height=`${pos.h}px`;
+    el.style.fontSize=`${num(pos.size,14)}px`;
+    if(pos.lineHeight) el.style.lineHeight=pos.lineHeight;
+  });
+}
+function updatePreview(){
+  Object.keys(layout).forEach(key=>{
+    document.querySelector(`[data-key="${key}"]`).textContent=textFor(key);
+  });
+  document.getElementById("p-watermark").classList.toggle("is-hidden",!document.getElementById("show-specimen").checked);
+  setSide(activeSide);
+}
+function setSide(side){
+  activeSide=side;
+  const doc=document.getElementById("specimen-doc");
+  doc.classList.toggle("back",side==="back");
+  document.querySelectorAll(".tab").forEach(tab=>tab.classList.toggle("active",tab.dataset.side===side));
+  document.querySelectorAll('[data-key="note"],[data-key="number"],[data-key="name"]').forEach(el=>el.style.display=side==="front"?"flex":"none");
+  document.querySelectorAll('[data-key="backText"],[data-key="backCode"]').forEach(el=>el.style.display=side==="back"?"block":"none");
+}
+function hasAccess(){
+  if(!window.FP) return true;
+  return FP.canAccess(currentForm)||FP.canAccess("social-security-specimen.html");
+}
+function requireExportAccess(onAllowed){
+  if(hasAccess()){onAllowed();return;}
+  if(confirm("This is a premium form.\n\nUnlock this form or get all forms with Premium.\n\nGo to checkout?")){
+    window.location.href=`/checkout.html?plan=single&form=${encodeURIComponent(currentForm)}`;
+  }
+}
+function drawText(ctx,text,x,y,options){
+  ctx.save();
+  ctx.fillStyle=options.color;
+  ctx.font=`${options.weight} ${options.size}px "${options.font}", Arial, sans-serif`;
+  ctx.textAlign="center";
+  ctx.textBaseline="middle";
+  if(options.letterSpacing){
+    let cursor=x;
+    const chars=String(text).split("");
+    const width=chars.reduce((sum,char)=>sum+ctx.measureText(char).width+options.letterSpacing,0)-options.letterSpacing;
+    cursor=x-width/2;
+    chars.forEach(char=>{
+      ctx.fillText(char,cursor,y);
+      cursor+=ctx.measureText(char).width+options.letterSpacing;
+    });
+  }else{
+    ctx.fillText(text,x,y);
+  }
+  ctx.restore();
+}
+function drawWrappedText(ctx,text,x,y,maxWidth,lineHeight){
+  const lines=String(text).split(/\r?\n/);
+  let cursorY=y;
+  lines.forEach(line=>{
+    const words=line.split(" ");
+    let current="";
+    words.forEach(word=>{
+      const test=current?`${current} ${word}`:word;
+      if(ctx.measureText(test).width>maxWidth&&current){
+        ctx.fillText(current,x,cursorY);
+        current=word;
+        cursorY+=lineHeight;
+      }else{
+        current=test;
+      }
+    });
+    ctx.fillText(current,x,cursorY);
+    cursorY+=lineHeight;
+  });
+}
+function roundedRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+function renderCanvas(side=activeSide){
+  return new Promise((resolve,reject)=>{
+    const img=new Image();
+    img.onload=()=>{
+      const labelHeight=42;
+      const canvas=document.createElement("canvas");
+      const width=side==="back"?backWidth:nativeWidth;
+      const height=side==="back"?backHeight:nativeHeight;
+      canvas.width=width;
+      canvas.height=height+labelHeight;
+      const ctx=canvas.getContext("2d");
+      if(side==="front"){
+        ctx.drawImage(img,0,0,width,height);
+      }else{
+        ctx.fillStyle="#fbfbfb";
+        roundedRect(ctx,1,1,width-2,height-2,24);
+        ctx.fill();
+        ctx.strokeStyle="#111";
+        ctx.lineWidth=2;
+        ctx.stroke();
+      }
+      if(side==="front"){
+        ["note","number","name"].forEach(key=>{
+          const pos=layout[key];
+          drawText(ctx,textFor(key),pos.x+pos.w/2,pos.y+pos.h/2,{...pos,size:num(pos.size,14)});
+        });
+      }else{
+        const text=layout.backText;
+        ctx.fillStyle=text.color;
+        ctx.font=`${text.weight} ${num(text.size,25)}px Georgia, "Times New Roman", serif`;
+        ctx.textAlign="left";
+        ctx.textBaseline="top";
+        drawWrappedText(ctx,textFor("backText"),text.x,text.y,text.w,num(text.size,25)*1.05);
+        const code=layout.backCode;
+        drawText(ctx,textFor("backCode"),code.x+code.w/2,code.y+code.h/2,{...code,size:num(code.size,28)});
+      }
+      if(document.getElementById("show-specimen").checked){
+        ctx.save();
+        ctx.translate(width/2,height/2);
+        ctx.rotate(-18*Math.PI/180);
+        ctx.fillStyle="rgba(180,0,0,.32)";
+        ctx.font=`900 ${side==="back"?86:72}px Barlow, Arial, sans-serif`;
+        ctx.textAlign="center";
+        ctx.textBaseline="middle";
+        ctx.fillText("SPECIMEN",0,0);
+        ctx.restore();
+      }
+      ctx.fillStyle="rgba(180,0,0,.82)";
+      ctx.font="900 14px Barlow, Arial, sans-serif";
+      ctx.textAlign="center";
+      ctx.fillText("NOT VALID FOR IDENTIFICATION",width/2,height+28);
+      resolve(canvas);
+    };
+    img.onerror=reject;
+    img.src=side==="back"?backTemplateSrc:templateSrc;
+  });
+}
+async function exportFile(format){
+  requireExportAccess(async()=>{
+    await document.fonts.ready;
+    const canvas=await renderCanvas(activeSide);
+    if(format==="pdf"){
+      const win=window.open("","_blank","width=900,height=700");
+      const data=canvas.toDataURL("image/png");
+      win.document.write(`<!DOCTYPE html><title>Social Security Specimen</title><style>body{margin:0;background:#fff;display:flex;justify-content:center;padding:30px;}img{width:100%;max-width:850px;height:auto;display:block;}</style><img src="${data}" alt="Social Security specimen">`);
+      win.document.close();
+      win.focus();
+      win.print();
+      return;
+    }
+    const mime=format==="jpeg"?"image/jpeg":"image/png";
+    const ext=format==="jpeg"?"jpg":"png";
+    const a=document.createElement("a");
+    a.download=`formporn-social-security-specimen.${ext}`;
+    a.href=canvas.toDataURL(mime,format==="jpeg"?.96:1);
+    a.click();
+  });
+}
+["f-number","f-name","f-note","f-back-text","f-back-code"].forEach(id=>document.getElementById(id).addEventListener("input",updatePreview));
+["s-number","s-name","s-note","s-back-text","s-back-code"].forEach(id=>document.getElementById(id).addEventListener("input",()=>{applyLayout();updatePreview();}));
+document.getElementById("show-specimen").addEventListener("change",updatePreview);
+document.querySelectorAll(".tab").forEach(tab=>tab.addEventListener("click",()=>setSide(tab.dataset.side)));
+document.querySelectorAll("[data-format]").forEach(btn=>btn.addEventListener("click",()=>exportFile(btn.dataset.format)));
+document.querySelectorAll(".overlay,.back-text,.back-code").forEach(el=>{
+  el.addEventListener("pointerdown",event=>{
+    const key=el.dataset.key;
+    const pos=layout[key];
+    const s=scale();
+    const startX=event.clientX;
+    const startY=event.clientY;
+    const originX=pos.x;
+    const originY=pos.y;
+    el.classList.add("is-dragging");
+    el.setPointerCapture(event.pointerId);
+    function move(moveEvent){
+      const maxW=activeSide==="back"?backWidth:nativeWidth;
+      const maxH=activeSide==="back"?backHeight:nativeHeight;
+      pos.x=Math.max(0,Math.min(maxW-pos.w,originX+(moveEvent.clientX-startX)/s));
+      pos.y=Math.max(0,Math.min(maxH-pos.h,originY+(moveEvent.clientY-startY)/s));
+      applyLayout();
+    }
+    function done(){
+      el.classList.remove("is-dragging");
+      el.removeEventListener("pointermove",move);
+      el.removeEventListener("pointerup",done);
+      el.removeEventListener("pointercancel",done);
+    }
+    el.addEventListener("pointermove",move);
+    el.addEventListener("pointerup",done);
+    el.addEventListener("pointercancel",done);
+  });
+});
+document.getElementById("back-link").addEventListener("click",event=>{
+  if(history.length>1){
+    event.preventDefault();
+    history.back();
+  }
+});
+applyLayout();
+updatePreview();
+</script>
+</body>
+</html>
