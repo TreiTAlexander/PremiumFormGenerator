@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report Card Builder | Form Porn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#030713;--panel:#071326;--gold:#ffcf2e;--cyan:#2fb7ff;--text:#eaf4ff;--muted:#9cb3ce;--paper:#fbfbf7;--ink:#171717;--grid:#222;--soft:#e4e4e4}*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--text);background:radial-gradient(circle at top,#0b1f3d 0,#030713 46%,#01030a 100%);font-family:Barlow,Arial,sans-serif}.topbar{height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;border-bottom:1px solid rgba(42,149,222,.28);background:rgba(1,4,13,.84);position:sticky;top:0;z-index:10}.brand,.home{color:#23b8ff;text-decoration:none;text-transform:uppercase;letter-spacing:.32em;font:800 13px Barlow,sans-serif}.title{color:var(--gold);text-align:center;font:900 16px Barlow,sans-serif}.wrap{width:min(1460px,calc(100vw - 24px));margin:20px auto 40px;display:grid;grid-template-columns:minmax(310px,455px) minmax(0,1fr);gap:18px;align-items:start}.panel{border:1px solid rgba(38,142,219,.35);background:rgba(4,10,24,.86);border-radius:8px;box-shadow:0 20px 50px rgba(0,0,0,.35)}.controls{padding:18px;position:sticky;top:88px;max-height:calc(100vh - 108px);overflow:auto}.preview-panel{padding:18px;overflow:hidden}.eyebrow{color:var(--cyan);text-transform:uppercase;letter-spacing:.46em;font:800 12px Barlow,sans-serif;margin:0 0 14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{display:grid;gap:6px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font:800 10px Barlow,sans-serif}input,textarea,select{width:100%;border:1px solid rgba(41,159,234,.38);border-radius:6px;background:#06111f;color:#eef7ff;padding:10px 11px;font:600 14px Barlow,sans-serif;outline:none}textarea{min-height:70px;resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,207,46,.14)}.section{border-top:1px solid rgba(41,159,234,.22);padding-top:14px;margin-top:14px}.item-editor{display:grid;gap:10px}.item-card{border:1px solid rgba(41,159,234,.26);border-radius:8px;padding:10px;background:rgba(7,20,38,.8);display:grid;gap:8px}.item-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.item-head strong{color:var(--gold);letter-spacing:.12em;text-transform:uppercase;font-size:11px}button{border:1px solid rgba(41,159,234,.48);background:#061322;color:#eaf7ff;border-radius:6px;padding:11px 12px;font:900 12px Barlow,sans-serif;text-transform:uppercase;letter-spacing:.18em;cursor:pointer}button.primary{border-color:transparent;background:var(--gold);color:#01040b}button.danger{padding:7px 9px;color:#ff9fa9;border-color:rgba(255,91,113,.35)}.notice{margin:12px 0 0;color:#ffcf2e;font:700 12px/1.4 Barlow,sans-serif}.stage{overflow:auto;padding:14px;background:#020611;border:1px solid rgba(41,159,234,.22);border-radius:8px}.export-area{width:940px;margin:0 auto}.sheet{width:940px;min-height:1220px;margin:0 auto;position:relative;color:var(--ink);background:var(--paper);box-shadow:0 28px 65px rgba(0,0,0,.42);padding:32px;overflow:hidden;font-family:Arial,Helvetica,sans-serif}.sheet:after{content:attr(data-watermark);position:absolute;top:47%;left:50%;transform:translate(-50%,-50%) rotate(-34deg);width:1200px;color:rgba(70,70,70,.24);font:900 130px Georgia,serif;text-align:center;pointer-events:none;z-index:0}.sheet.no-watermark:after{display:none}.sheet-content{position:relative;z-index:1}.sample-strip{text-align:center;color:#b32030;border-top:2px solid rgba(179,32,48,.58);border-bottom:2px solid rgba(179,32,48,.58);padding:10px 8px;text-transform:uppercase;letter-spacing:.2em;font:900 13px Barlow,sans-serif;margin:16px auto 0;width:940px;background:#fbfbf7}.rc-header{text-align:center;margin-bottom:14px}.logo{width:92px;height:72px;margin:0 auto 8px;display:grid;place-items:center;border:2px solid #111;overflow:hidden;font:900 20px Barlow,sans-serif}.logo.round{border-radius:50%;width:98px;height:98px}.logo img{width:100%;height:100%;object-fit:contain;padding:7px}.doc-title{margin:0;font:900 26px Arial,sans-serif;text-transform:uppercase}.sub-title{margin:3px 0 0;font:700 16px Arial,sans-serif}.meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--grid);margin:10px 0 14px}.meta-item{min-height:34px;border-right:1px solid var(--grid);border-bottom:1px solid var(--grid);padding:5px 7px;font-size:12px}.meta-item:nth-child(3n){border-right:0}.meta-item:nth-last-child(-n+3){border-bottom:0}.meta-item b{display:block;font-size:11px}.legend{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}.legend-box{border:1px solid var(--grid);padding:8px;font-size:12px}.legend-box h3{margin:0 0 6px;font:800 13px Arial}.rc-table{width:100%;border-collapse:collapse;font-family:Arial,Helvetica,sans-serif}.rc-table th,.rc-table td{border:1px solid var(--grid);padding:4px 5px;font-size:12px;vertical-align:top}.rc-table th{background:#d9d9d9;font-weight:800;text-align:left}.rc-table .center{text-align:center}.elementary-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.subject-card{border:1px solid var(--grid);break-inside:avoid}.subject-title{background:#d9d9d9;border-bottom:1px solid var(--grid);padding:5px 7px;font:800 13px Arial}.subject-card table td,.subject-card table th{font-size:10px;padding:3px}.college-head{display:grid;grid-template-columns:112px 1fr;gap:18px;align-items:center;text-align:center;margin:8px 20px 18px}.college-school{font:900 23px Georgia,serif;text-transform:uppercase;margin:0}.college-title{font:800 16px Georgia,serif;text-transform:uppercase;margin:4px 0}.college-info{white-space:pre-line;font:700 12px Georgia,serif}.college-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 0 14px}.summary-box{border:1px solid var(--grid);padding:8px;min-height:48px}.summary-box b{display:block;font-size:11px}.dates-title{text-align:center;border:1px solid var(--grid);color:#6f93c7;font:900 33px Arial,sans-serif;padding:5px;margin:0 0 4px}.dates-year{text-align:center;font:400 28px Arial;margin:0 0 20px}.notes{white-space:pre-line;font-size:12px;line-height:1.4;margin-top:18px}.signature{display:flex;justify-content:flex-end;margin-top:44px}.signature span{border-top:1px solid #111;width:310px;text-align:center;font:italic 10px Arial;padding-top:4px}.sheet.elementary{font-family:Arial,Helvetica,sans-serif;padding:34px;background:#fdfdf9}.sheet.elementary .doc-title{font-size:28px;letter-spacing:.02em}.sheet.elementary .subject-title{background:#ececec}.sheet.highSchool{font-family:Arial,Helvetica,sans-serif;padding:30px;background:#fff}.sheet.highSchool .rc-header{text-align:left;border-bottom:3px solid #111;padding-bottom:10px}.sheet.highSchool .doc-title{font-size:30px}.sheet.highSchool .meta-grid{grid-template-columns:repeat(4,1fr)}.sheet.highSchool .meta-item:nth-child(3n){border-right:1px solid var(--grid)}.sheet.highSchool .meta-item:nth-child(4n){border-right:0}.sheet.college{font-family:Georgia,serif;background:#fbfbf5;padding:46px 42px}.sheet.college .rc-table th{background:#efefef}.sheet.college .meta-grid{font-family:Arial,Helvetica,sans-serif}.hidden{display:none!important}@media(max-width:980px){.wrap{grid-template-columns:1fr}.controls{position:static;max-height:none}.stage{padding:8px}}@media(max-width:560px){.topbar{padding:0 12px}.title{font-size:13px}.brand,.home{letter-spacing:.18em}.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="javascript:history.back()">Back</a><div class="title">Report Card Builder</div><a class="home" href="/">Home</a></header>
+  <main class="wrap">
+    <section class="panel controls">
+      <p class="eyebrow">Report Card</p>
+      <div class="grid">
+        <label>Version<select id="version"><option value="elementary" selected>Elementary</option><option value="highSchool">High School</option><option value="college">College</option></select></label>
+        <label>Logo Upload<input id="logoInput" type="file" accept="image/*"></label>
+        <label>Document Title<input id="documentTitle" value="Sample Grade Report Card"></label>
+        <label>Background Watermark<select id="watermarkMode"><option value="unofficial" selected>Unofficial</option><option value="sample">Sample</option><option value="none">None</option></select></label>
+      </div>
+      <div class="section grid">
+        <label>School Name<input id="schoolName" value="Form Porn Academy"></label>
+        <label>District / Campus<input id="district" value="Form Porn Creative District"></label>
+        <label>School Year<input id="schoolYear" value="2025-2026 Form Year"></label>
+        <label>Term / Cycle<input id="termName" value="Design Cycle 1"></label>
+        <label>Address / Info<textarea id="schoolInfo">404 Form Avenue
+Template City, FP 00000</textarea></label>
+        <label>Teacher<input id="teacher" value="Ms. Forma"></label>
+      </div>
+      <div class="section grid">
+        <label>Student<input id="studentName" value="Fiona Formwell"></label>
+        <label>Grade / Level<input id="gradeLevel" value="Sample Grade"></label>
+        <label>ID<input id="studentId" value=""></label>
+        <label>Attendance<input id="attendance" value="Forms Completed: 12 | Drafts Revised: 2 | Late Edits: 0"></label>
+        <label>GPA / Average<input id="gpa" value="3.75"></label>
+        <label>Credits<input id="credits" value="15"></label>
+      </div>
+      <div class="section">
+        <p class="eyebrow">Editable Labels</p>
+        <div class="grid">
+          <label>Student Label<input id="labelStudent" value="Student"></label>
+          <label>Teacher Label<input id="labelTeacher" value="Teacher"></label>
+          <label>Grade Label<input id="labelGrade" value="Grade"></label>
+          <label>ID Label<input id="labelId" value="ID#"></label>
+          <label>Subject Label<input id="labelSubject" value="Subject"></label>
+          <label>Skill Label<input id="labelSkill" value="Learning Experience"></label>
+          <label>Q1 Label<input id="labelQ1" value="1"></label>
+          <label>Q2 Label<input id="labelQ2" value="2"></label>
+          <label>Q3 Label<input id="labelQ3" value="3"></label>
+          <label>Q4 Label<input id="labelQ4" value="4"></label>
+          <label>Final Label<input id="labelFinal" value="Final"></label>
+          <label>Comments Label<input id="labelComments" value="Comments"></label>
+          <label>Attendance Label<input id="labelAttendance" value="Attendance"></label>
+          <label>GPA Label<input id="labelGpa" value="GPA"></label>
+          <label>Credits Label<input id="labelCredits" value="Credits"></label>
+          <label>Signature Label<input id="labelSignature" value="Reviewer Signature"></label>
+          <label>Legend Title<input id="labelLegend" value="Form Progress Indicators"></label>
+          <label>Bottom Notice<input id="bottomNotice" value="Sample / Not Valid For Verification"></label>
+        </div>
+      </div>
+      <div class="section">
+        <p class="eyebrow">Rows</p>
+        <div id="itemEditor" class="item-editor"></div>
+        <button id="addItem" class="primary" type="button">Add Row</button>
+      </div>
+      <div class="section"><label>Notes / Dates / Requirements<textarea id="notes">Form progress indicators reflect current template performance during this design cycle.
+Additional Form Porn notes, review dates, or template requirements can be entered here.</textarea></label></div>
+      <p class="notice">Preview only for now. I did not add download/export buttons.</p>
+    </section>
+    <section class="panel preview-panel"><p class="eyebrow">Live Preview</p><div class="stage"><div id="exportArea" class="export-area"><article id="reportCard" class="sheet" data-watermark="Unofficial"><div id="sheetContent" class="sheet-content"></div></article><div id="sampleStrip" class="sample-strip"></div></div></div></section>
+  </main>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const text = (id) => ($(id)?.value || "").trim();
+    const fields = ["version","documentTitle","watermarkMode","schoolName","district","schoolYear","termName","schoolInfo","teacher","studentName","gradeLevel","studentId","attendance","gpa","credits","labelStudent","labelTeacher","labelGrade","labelId","labelSubject","labelSkill","labelQ1","labelQ2","labelQ3","labelQ4","labelFinal","labelComments","labelAttendance","labelGpa","labelCredits","labelSignature","labelLegend","bottomNotice","notes"];
+    let logoData = "";
+    let items = [
+      { category:"Language Arts", skill:"Foundational Skills", q1:"3", q2:"3", q3:"", q4:"", final:"", comments:"Uses template wording effectively.", credits:"", grade:"A" },
+      { category:"Mathematics", skill:"Operations and Algebraic Thinking", q1:"3", q2:"4", q3:"", q4:"", final:"", comments:"Builds clean editable form sections.", credits:"", grade:"A" },
+      { category:"Science", skill:"Next Generation Science Standards", q1:"2", q2:"3", q3:"", q4:"", final:"", comments:"Reviews details and catches layout issues.", credits:"", grade:"B" },
+      { category:"Social Emotional Learning", skill:"Responsible Decision Making", q1:"3", q2:"3", q3:"", q4:"", final:"", comments:"Collaborates well during form reviews.", credits:"", grade:"A" }
+    ];
+    const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+    const attr = (value) => esc(value).replace(/`/g,"&#96;");
+    const label = (id, fallback) => text(id) || fallback;
+    function optional(labelText, value){ return value ? `<div class="meta-item"><b>${esc(labelText)}</b>${esc(value)}</div>` : ""; }
+    function logo(className="logo"){ if(logoData) return `<div class="${className}"><img alt="Uploaded logo" src="${logoData}"></div>`; const initials = text("schoolName").split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toUpperCase(); return `<div class="${className}">${esc(initials || "RC")}</div>`; }
+    function renderItemControls(){ $("itemEditor").innerHTML=""; items.forEach((item,index)=>{ const card=document.createElement("div"); card.className="item-card"; card.innerHTML=`<div class="item-head"><strong>Row ${index+1}</strong><button class="danger" type="button" data-remove="${index}">Remove</button></div><div class="grid"><label>Category<input data-item="${index}" data-key="category" value="${attr(item.category)}"></label><label>Skill / Class<input data-item="${index}" data-key="skill" value="${attr(item.skill)}"></label><label>Q1 / Sem 1<input data-item="${index}" data-key="q1" value="${attr(item.q1)}"></label><label>Q2 / Sem 2<input data-item="${index}" data-key="q2" value="${attr(item.q2)}"></label><label>Q3<input data-item="${index}" data-key="q3" value="${attr(item.q3)}"></label><label>Q4<input data-item="${index}" data-key="q4" value="${attr(item.q4)}"></label><label>Final<input data-item="${index}" data-key="final" value="${attr(item.final)}"></label><label>Credits<input data-item="${index}" data-key="credits" value="${attr(item.credits)}"></label><label>Grade<input data-item="${index}" data-key="grade" value="${attr(item.grade)}"></label><label>Comments<textarea data-item="${index}" data-key="comments">${esc(item.comments)}</textarea></label></div>`; $("itemEditor").appendChild(card); }); }
+    function applyShell(){ const rc=$("reportCard"); const version=text("version") || "elementary"; rc.className = `sheet ${version}`; const mode=text("watermarkMode"); const watermark = mode === "none" ? "" : mode === "sample" ? "Sample" : "Unofficial"; rc.dataset.watermark = watermark; rc.classList.toggle("no-watermark", !watermark); $("sampleStrip").textContent = text("bottomNotice") || "Sample / Not Valid For Verification"; }
+    function grouped(){ return items.reduce((map,item)=>{ const key=item.category || ""; if(!map[key]) map[key]=[]; map[key].push(item); return map; },{}); }
+    function renderHeader(extraClass="") { return `<header class="rc-header ${extraClass}">${logo(extraClass.includes("college") ? "logo round" : "logo")}<h1 class="doc-title">${esc(text("documentTitle"))}</h1>${text("schoolName") ? `<div class="sub-title">${esc(text("schoolName"))}</div>` : ""}${text("schoolYear") ? `<div class="sub-title">${esc(text("schoolYear"))}</div>` : ""}</header>`; }
+    function renderMeta(){ return `<section class="meta-grid">${optional(label("labelStudent","Student"),text("studentName"))}${optional(label("labelTeacher","Teacher"),text("teacher"))}${optional(label("labelGrade","Grade"),text("gradeLevel"))}${optional(label("labelId","ID#"),text("studentId"))}${optional("School / District",text("district"))}${optional("Term",text("termName"))}</section>`; }
+    function renderElementary(){ const groups=grouped(); const cards=Object.keys(groups).map(cat=>`<section class="subject-card"><div class="subject-title">${esc(cat)}</div><table class="rc-table"><thead><tr><th>${esc(label("labelSkill","Skill"))}</th><th class="center">${esc(label("labelQ1","1"))}</th><th class="center">${esc(label("labelQ2","2"))}</th><th class="center">${esc(label("labelQ3","3"))}</th><th class="center">${esc(label("labelQ4","4"))}</th></tr></thead><tbody>${groups[cat].map(i=>`<tr><td>${esc(i.skill)}${i.comments?`<br>${esc(i.comments)}`:""}</td><td class="center">${esc(i.q1)}</td><td class="center">${esc(i.q2)}</td><td class="center">${esc(i.q3)}</td><td class="center">${esc(i.q4)}</td></tr>`).join("")}</tbody></table></section>`).join(""); return `${renderHeader()}${renderMeta()}<section class="legend"><div class="legend-box"><h3>${esc(label("labelLegend","Progress Indicators"))}</h3>4 - Exceeds Standards<br>3 - Meets Standards<br>2 - Working Towards Standards<br>1 - Not Meeting Standards</div><div class="legend-box"><h3>${esc(label("labelAttendance","Attendance"))}</h3>${esc(text("attendance"))}</div></section><section class="elementary-grid">${cards}</section>${renderNotesAndSignature()}`; }
+    function renderHighSchool(){ return `${renderHeader()}${renderMeta()}<table class="rc-table"><thead><tr><th>${esc(label("labelSubject","Subject"))}</th><th>${esc(label("labelSkill","Course / Class"))}</th><th>${esc(label("labelQ1","Q1"))}</th><th>${esc(label("labelQ2","Q2"))}</th><th>${esc(label("labelQ3","Q3"))}</th><th>${esc(label("labelQ4","Q4"))}</th><th>${esc(label("labelFinal","Final"))}</th><th>${esc(label("labelComments","Comments"))}</th></tr></thead><tbody>${items.map(i=>`<tr><td>${esc(i.category)}</td><td>${esc(i.skill)}</td><td class="center">${esc(i.q1)}</td><td class="center">${esc(i.q2)}</td><td class="center">${esc(i.q3)}</td><td class="center">${esc(i.q4)}</td><td class="center">${esc(i.final || i.grade)}</td><td>${esc(i.comments)}</td></tr>`).join("")}</tbody></table><section class="college-summary"><div class="summary-box"><b>${esc(label("labelGpa","GPA"))}</b>${esc(text("gpa"))}</div><div class="summary-box"><b>${esc(label("labelCredits","Credits"))}</b>${esc(text("credits"))}</div><div class="summary-box"><b>${esc(label("labelAttendance","Attendance"))}</b>${esc(text("attendance"))}</div><div class="summary-box"><b>${esc(text("termName"))}</b>${esc(text("schoolYear"))}</div></section>${renderNotesAndSignature()}`; }
+    function renderCollege(){ return `<header class="college-head">${logo("logo round")}<div><h1 class="college-school">${esc(text("schoolName"))}</h1><h2 class="college-title">${esc(text("documentTitle"))}</h2><div class="college-info">${esc([text("district"),text("schoolInfo"),text("schoolYear")].filter(Boolean).join("\n"))}</div></div></header>${renderMeta()}<section class="college-summary"><div class="summary-box"><b>${esc(label("labelGpa","GPA"))}</b>${esc(text("gpa"))}</div><div class="summary-box"><b>${esc(label("labelCredits","Credits"))}</b>${esc(text("credits"))}</div><div class="summary-box"><b>${esc(label("labelAttendance","Attendance"))}</b>${esc(text("attendance"))}</div><div class="summary-box"><b>${esc(text("termName") || "Semester")}</b>${esc(text("schoolYear"))}</div></section><table class="rc-table"><thead><tr><th>${esc(label("labelSubject","Department"))}</th><th>${esc(label("labelSkill","Course"))}</th><th>${esc(label("labelQ1","Semester 1"))}</th><th>${esc(label("labelQ2","Semester 2"))}</th><th>${esc(label("labelFinal","Final"))}</th><th>${esc(label("labelCredits","Credits"))}</th><th>${esc(label("labelGpa","Grade"))}</th><th>${esc(label("labelComments","Comments"))}</th></tr></thead><tbody>${items.map(i=>`<tr><td>${esc(i.category)}</td><td>${esc(i.skill)}</td><td class="center">${esc(i.q1)}</td><td class="center">${esc(i.q2)}</td><td class="center">${esc(i.final)}</td><td class="center">${esc(i.credits)}</td><td class="center">${esc(i.grade)}</td><td>${esc(i.comments)}</td></tr>`).join("")}</tbody></table>${renderNotesAndSignature()}`; }
+    function renderDatesStyle(){ return `<h1 class="dates-title">${esc(text("documentTitle"))}</h1><div class="dates-year">${esc(text("schoolYear"))}</div><table class="rc-table"><thead><tr><th>Cycle</th><th>Dates</th><th># of Days</th><th>Progress Report Date</th><th>Report Card Date</th></tr></thead><tbody>${items.map(i=>`<tr><td>${esc(i.category)}</td><td>${esc(i.skill)}</td><td>${esc(i.q1)}</td><td>${esc(i.q2)}</td><td>${esc(i.comments)}</td></tr>`).join("")}</tbody></table>${renderNotesAndSignature()}`; }
+        function setValue(id, value){ if($(id)) $(id).value = value; }
+    function applyVersionPreset(){
+      const version = text("version");
+      const presets = {
+        elementary: {
+          title: "Sample Grade Report Card", school: "Form Porn Primary Studio", district: "Form Porn Learning Lab", year: "Sample Learning Year", term: "Creative Cycle 1", grade: "Sample Grade", teacher: "Ms. Forma", student: "Fiona Formwell", attendance: "Forms Completed: 12 | Drafts Revised: 2 | Late Edits: 0", gpa: "", credits: "", skillLabel: "Learning Standard", q1: "1", q2: "2", q3: "3", q4: "4", final: "Final", notes: "Form progress indicators reflect current template performance during this design cycle.\nAdditional Form Porn notes, review dates, or template requirements can be entered here.", items: [
+            {category:"Reading / Literature", skill:"Recognizes form labels and instructions", q1:"3", q2:"3", q3:"", q4:"", final:"", comments:"Uses template wording effectively.", credits:"", grade:""},
+            {category:"Mathematics", skill:"Organizes totals, rows, and form sections", q1:"3", q2:"4", q3:"", q4:"", final:"", comments:"Builds clean editable form sections.", credits:"", grade:""},
+            {category:"Creative Skills", skill:"Chooses clear layouts and visual hierarchy", q1:"4", q2:"4", q3:"", q4:"", final:"", comments:"Shows strong design awareness.", credits:"", grade:""},
+            {category:"Collaboration", skill:"Participates in review and revision", q1:"3", q2:"3", q3:"", q4:"", final:"", comments:"Collaborates well during form reviews.", credits:"", grade:""}
+          ]
+        },
+        highSchool: {
+          title: "Sample High School Progress Report", school: "Form Porn High School", district: "Form Porn Template District", year: "Sample Academic Year", term: "Quarter 1", grade: "Sample Level", teacher: "Mr. Template", student: "Felix Formwell", attendance: "Present: 42 | Absent: 1 | Tardy: 0", gpa: "3.75", credits: "4.0", skillLabel: "Course / Class", q1: "Q1", q2: "Q2", q3: "Q3", q4: "Q4", final: "Final", notes: "Course marks are sample preview data for this Form Porn report card builder.\nAdvisory notes, graduation requirements, or review comments can be entered here.", items: [
+            {category:"English", skill:"Document Composition", q1:"A", q2:"A-", q3:"", q4:"", final:"A", comments:"Strong command of structure and tone.", credits:"1.0", grade:"A"},
+            {category:"Mathematics", skill:"Form Logic and Calculations", q1:"B+", q2:"A", q3:"", q4:"", final:"A-", comments:"Accurate totals and clean row logic.", credits:"1.0", grade:"A-"},
+            {category:"Science", skill:"Layout Testing Lab", q1:"A", q2:"A", q3:"", q4:"", final:"A", comments:"Carefully tests preview behavior.", credits:"1.0", grade:"A"},
+            {category:"Elective", skill:"Visual Design Studio", q1:"A", q2:"A", q3:"", q4:"", final:"A", comments:"Polished visual decisions.", credits:"1.0", grade:"A"}
+          ]
+        },
+        college: {
+          title: "Sample College Grade Report", school: "Form Porn University", district: "College of Editable Documents", year: "Sample Academic Term", term: "Semester 1", grade: "Sample Program", teacher: "Professor Forma", student: "Frances Formwell", attendance: "Enrollment Status: Active Preview", gpa: "3.80", credits: "15", skillLabel: "Course", q1: "Semester 1", q2: "Semester 2", q3: "Midterm", q4: "Lab", final: "Final", notes: "This college-style report is sample preview data for Form Porn templates.\nRegistrar-style notes, degree requirements, or semester comments can be edited here.", items: [
+            {category:"DOC 101", skill:"Editable Document Systems", q1:"A", q2:"", q3:"A", q4:"", final:"A", comments:"Core course in reusable form structure.", credits:"3", grade:"A"},
+            {category:"LAY 220", skill:"Applied Layout Review", q1:"A-", q2:"", q3:"B+", q4:"", final:"A-", comments:"Studio practice for page balance.", credits:"3", grade:"A-"},
+            {category:"EXP 305", skill:"Export Readiness", q1:"B+", q2:"", q3:"A", q4:"", final:"A-", comments:"Focuses on preview and file delivery.", credits:"3", grade:"A-"},
+            {category:"BRD 410", skill:"Form Porn Brand Lab", q1:"A", q2:"", q3:"A", q4:"", final:"A", comments:"Advanced branded document work.", credits:"3", grade:"A"}
+          ]
+        }
+      };
+      const p = presets[version] || presets.elementary;
+      setValue("documentTitle", p.title); setValue("schoolName", p.school); setValue("district", p.district); setValue("schoolYear", p.year); setValue("termName", p.term); setValue("gradeLevel", p.grade); setValue("teacher", p.teacher); setValue("studentName", p.student); setValue("attendance", p.attendance); setValue("gpa", p.gpa); setValue("credits", p.credits); setValue("labelSkill", p.skillLabel); setValue("labelQ1", p.q1); setValue("labelQ2", p.q2); setValue("labelQ3", p.q3); setValue("labelQ4", p.q4); setValue("labelFinal", p.final); setValue("notes", p.notes);
+      items = p.items.map(item => ({...item}));
+      renderItemControls();
+      updatePreview();
+    }    function renderNotesAndSignature(){ return `${text("notes")?`<div class="notes">${esc(text("notes"))}</div>`:""}<div class="signature"><span>${esc(label("labelSignature","Parent / Guardian Signature"))}</span></div>`; }
+    function updatePreview(){ applyShell(); const v=text("version"); $("sheetContent").innerHTML = v === "college" ? renderCollege() : v === "highSchool" ? renderHighSchool() : renderElementary(); }
+    fields.forEach(id=>{ $(id).addEventListener("input", updatePreview); $(id).addEventListener("change", updatePreview); });
+    $("version").addEventListener("change", applyVersionPreset);
+    $("logoInput").addEventListener("change", e=>{ const file=e.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>{ logoData=reader.result; updatePreview(); }; reader.readAsDataURL(file); });
+    $("itemEditor").addEventListener("input", e=>{ const index=Number(e.target.dataset.item); const key=e.target.dataset.key; if(!Number.isNaN(index)&&key){ items[index][key]=e.target.value; updatePreview(); }});
+    $("itemEditor").addEventListener("click", e=>{ const remove=e.target.dataset.remove; if(remove===undefined) return; items.splice(Number(remove),1); applyVersionPreset(); });
+    $("addItem").addEventListener("click",()=>{ items.push({category:"",skill:"",q1:"",q2:"",q3:"",q4:"",final:"",comments:"",credits:"",grade:""}); applyVersionPreset(); });
+    applyVersionPreset();
+  </script>
+</body>
+</html>
+
+
+

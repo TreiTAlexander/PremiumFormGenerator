@@ -217,11 +217,15 @@ function updatePreview(){
 }
 
 function hasAccess(){
-  if(!window.FP) return true;
+  if(!window.FP) return false;
   return FP.canAccess(currentForm)||FP.canAccess("temporary-placard.html")||FP.canAccess("placard-v4.html");
 }
 
 function requireExportAccess(onAllowed){
+  if(!window.FP){
+    alert("Couldn't verify your access \u2014 please refresh the page.\n\nIf this keeps happening, disable your ad blocker for formporn.app.");
+    return;
+  }
   if(hasAccess()){onAllowed();return;}
   if(confirm("This is a premium form.\n\nUnlock this form or get all forms with Premium.\n\nGo to checkout?")){
     window.location.href=`/checkout.html?plan=single&form=${encodeURIComponent(currentForm)}`;

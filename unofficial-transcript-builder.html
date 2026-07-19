@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Transcript Builder | Form Porn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030713;
+      --panel: #071326;
+      --line: #0a66a3;
+      --gold: #ffcf2e;
+      --text: #eaf4ff;
+      --muted: #7d91ad;
+      --ink: #111;
+      --blue: #11294b;
+      --paper: #fbfbf7;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background: radial-gradient(circle at top, #0b1f3d 0, #030713 46%, #01030a 100%);
+      font-family: Barlow, Arial, sans-serif;
+    }
+
+    .topbar {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      border-bottom: 1px solid rgba(42, 149, 222, .28);
+      background: rgba(1, 4, 13, .84);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .brand, .home {
+      color: #23b8ff;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: .32em;
+      font: 800 13px Barlow, sans-serif;
+    }
+
+    .title {
+      color: var(--gold);
+      text-align: center;
+      font: 900 16px Barlow, sans-serif;
+      text-shadow: 0 1px 12px rgba(255, 207, 46, .28);
+    }
+
+    .wrap {
+      width: min(1460px, calc(100vw - 24px));
+      margin: 20px auto 40px;
+      display: grid;
+      grid-template-columns: minmax(310px, 450px) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      border: 1px solid rgba(38, 142, 219, .35);
+      background: rgba(4, 10, 24, .86);
+      border-radius: 8px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, .35);
+    }
+
+    .controls {
+      padding: 18px;
+      position: sticky;
+      top: 88px;
+      max-height: calc(100vh - 108px);
+      overflow: auto;
+    }
+
+    .preview-panel { padding: 18px; overflow: hidden; }
+
+    .eyebrow {
+      color: #2fb7ff;
+      text-transform: uppercase;
+      letter-spacing: .46em;
+      font: 800 12px Barlow, sans-serif;
+      margin: 0 0 14px;
+    }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: #9cb3ce;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font: 800 10px Barlow, sans-serif;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid rgba(41, 159, 234, .38);
+      border-radius: 6px;
+      background: #06111f;
+      color: #eef7ff;
+      padding: 10px 11px;
+      font: 600 14px Barlow, sans-serif;
+      outline: none;
+    }
+
+    textarea { min-height: 72px; resize: vertical; }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(255, 207, 46, .14);
+    }
+
+    .section {
+      border-top: 1px solid rgba(41, 159, 234, .22);
+      padding-top: 14px;
+      margin-top: 14px;
+    }
+
+    .course-editor { display: grid; gap: 10px; }
+
+    .course-card {
+      border: 1px solid rgba(41, 159, 234, .26);
+      border-radius: 8px;
+      padding: 10px;
+      background: rgba(7, 20, 38, .8);
+      display: grid;
+      gap: 8px;
+    }
+
+    .course-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .course-head strong { color: var(--gold); letter-spacing: .12em; text-transform: uppercase; font-size: 11px; }
+
+    button {
+      border: 1px solid rgba(41, 159, 234, .48);
+      background: #061322;
+      color: #eaf7ff;
+      border-radius: 6px;
+      padding: 11px 12px;
+      font: 900 12px Barlow, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      cursor: pointer;
+    }
+
+    button.primary { border-color: transparent; background: var(--gold); color: #01040b; }
+    button.danger { padding: 7px 9px; color: #ff9fa9; border-color: rgba(255, 91, 113, .35); }
+
+    .actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-top: 12px; }
+    .notice { margin: 12px 0 0; color: #ffcf2e; font: 700 12px/1.4 Barlow, sans-serif; }
+
+    .stage {
+      overflow: auto;
+      padding: 14px;
+      background: #020611;
+      border: 1px solid rgba(41, 159, 234, .22);
+      border-radius: 8px;
+    }
+
+    .export-area { width: 940px; margin: 0 auto; }
+
+    .sheet {
+      width: 940px;
+      min-height: 1220px;
+      margin: 0 auto;
+      position: relative;
+      color: var(--ink);
+      background: var(--paper);
+      box-shadow: 0 28px 65px rgba(0, 0, 0, .42);
+      padding: 24px;
+      font-family: Arial, Helvetica, sans-serif;
+      overflow: hidden;
+    }
+
+    .sheet::after {
+      content: attr(data-watermark);
+      position: absolute;
+      top: 46%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-35deg);
+      width: 1200px;
+      color: rgba(70, 70, 70, .28);
+      font: 900 132px Georgia, serif;
+      text-align: center;
+      letter-spacing: .02em;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .sheet.no-watermark::after { display: none; }
+    .sheet-content { position: relative; z-index: 1; }
+
+    .sample-strip {
+      text-align: center;
+      color: #b32030;
+      border-top: 2px solid rgba(179, 32, 48, .58);
+      border-bottom: 2px solid rgba(179, 32, 48, .58);
+      padding: 10px 8px;
+      text-transform: uppercase;
+      letter-spacing: .2em;
+      font: 900 13px Barlow, sans-serif;
+      margin: 16px auto 0;
+      width: 940px;
+      background: #fbfbf7;
+    }
+
+    .hs .doc-title {
+      text-align: center;
+      margin: 0 0 8px;
+      font: 700 20px Arial, sans-serif;
+    }
+
+    .hs-head-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 16px;
+      border-top: 1px solid #000;
+      border-bottom: 1px solid #000;
+      padding: 4px 0;
+      font-size: 11px;
+      line-height: 1.25;
+    }
+
+    .mini-row { display: grid; grid-template-columns: 132px 1fr; gap: 4px; min-height: 16px; }
+    .mini-row b { font-weight: 700; }
+    .line-value { border-bottom: 1px solid #222; min-height: 14px; }
+    .mini-row.is-empty { display: none; }
+
+    .hs-main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-left: 1px solid #000;
+      border-right: 1px solid #000;
+      min-height: 725px;
+    }
+
+    .hs-column:first-child { border-right: 1px solid #000; }
+    .hs-column { padding: 6px 8px; }
+
+    .year-block { margin: 0 0 13px; break-inside: avoid; }
+    .year-title { font: 700 11px Arial, sans-serif; margin: 0 0 3px; }
+
+    .hs-table, .college-table, .dept-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .hs-table th, .hs-table td {
+      font-size: 9px;
+      padding: 1px 2px;
+      line-height: 1.2;
+      vertical-align: top;
+    }
+
+    .hs-table th { border-bottom: 1px solid #000; text-align: left; }
+    .hs-table td:nth-child(n+3), .hs-table th:nth-child(n+3) { text-align: center; }
+
+    .lower-grid { border: 1px solid #000; border-top: 0; }
+    .lower-title { text-align: center; border-bottom: 1px solid #000; font: 700 10px Arial, sans-serif; padding: 2px; }
+
+    .dept-table th, .dept-table td {
+      border-right: 1px solid #000;
+      border-bottom: 1px solid #000;
+      font-size: 9px;
+      text-align: center;
+      padding: 3px 2px;
+    }
+
+    .dept-table th:last-child, .dept-table td:last-child { border-right: 0; }
+
+    .signature-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 54px;
+      font: italic 10px Arial, sans-serif;
+    }
+
+    .signature-line { width: 340px; border-top: 1px solid #000; text-align: center; padding-top: 4px; }
+
+    .college .college-head {
+      display: grid;
+      grid-template-columns: 116px 1fr;
+      gap: 20px;
+      align-items: center;
+      margin: 18px 28px 16px;
+      text-align: center;
+    }
+
+    .seal {
+      width: 96px;
+      height: 96px;
+      border: 2px solid #111;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      font: 900 24px Barlow, sans-serif;
+      margin: 0 auto;
+    }
+
+    .seal img { width: 100%; height: 100%; object-fit: contain; padding: 8px; }
+    .college-school { font: 700 22px Georgia, serif; margin: 0 0 3px; text-transform: uppercase; }
+    .college-title { font: 700 15px Georgia, serif; margin: 0 0 8px; text-transform: uppercase; }
+    .college-info { white-space: pre-line; font: 700 12px Georgia, serif; }
+
+    .college-meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px 22px;
+      margin: 0 54px 18px;
+      font: 700 12px Georgia, serif;
+    }
+
+    .college-meta .meta-item.is-empty { display: none; }
+    .term-card { margin: 0 34px 18px; }
+    .term-card h3 { font: 700 19px Georgia, serif; margin: 0 0 4px; }
+
+    .college-table th, .college-table td {
+      padding: 2px 4px;
+      font: 12px Arial, sans-serif;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .college-table th:nth-child(n+3), .college-table td:nth-child(n+3) { text-align: center; }
+    .college-notes { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin: 28px 36px 0; font: 11px Arial, sans-serif; white-space: pre-line; }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 980px) {
+      .wrap { grid-template-columns: 1fr; }
+      .controls { position: static; max-height: none; }
+      .stage { padding: 8px; }
+    }
+
+    @media (max-width: 560px) {
+      .topbar { padding: 0 12px; }
+      .title { font-size: 13px; }
+      .brand, .home { letter-spacing: .18em; }
+      .grid, .actions { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .topbar, .controls, .eyebrow { display: none; }
+      .wrap, .preview-panel, .stage { display: block; margin: 0; padding: 0; width: auto; border: 0; background: #fff; box-shadow: none; }
+      .sheet { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="javascript:history.back()">Back</a>
+    <div class="title">Transcript Builder</div>
+    <a class="home" href="/">Home</a>
+  </header>
+
+  <main class="wrap">
+    <section class="panel controls">
+      <p class="eyebrow">Transcript Builder</p>
+
+      <div class="grid">
+        <label>Version
+          <select id="version">
+            <option value="highSchool" selected>High School</option>
+            <option value="college">College</option>
+          </select>
+        </label>
+        <label>Logo / Seal Upload
+          <input id="logoInput" type="file" accept="image/*">
+        </label>
+        <label>Document Title
+          <input id="documentTitle" value="Academic Achievement Record">
+        </label>
+        <label>Background Watermark
+          <select id="watermarkMode">
+            <option value="unofficial" selected>Unofficial</option>
+            <option value="sample">Sample</option>
+            <option value="none">None</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="section grid">
+        <label>School Name<input id="schoolName" value="Landmark Christian Academy"></label>
+        <label>School Address<input id="schoolAddress" value="222 East Hinson Avenue Haines City, FL 33844"></label>
+        <label>School Code<input id="schoolCode" value="2222"></label>
+        <label>Phone<input id="phone" value="8007005322"></label>
+        <label>Website<input id="website" value=""></label>
+        <label>Email<input id="email" value=""></label>
+      </div>
+
+      <div class="section grid">
+        <label>Student Name<input id="studentName" value="Doe, Janet Jean"></label>
+        <label>Student ID / SSN<input id="studentId" value=""></label>
+        <label>Date of Birth<input id="dob" value="03/01/2005"></label>
+        <label>Parent / Guardian<input id="guardian" value="Doe, John and Jane"></label>
+        <label>Address<input id="studentAddress" value="1234 State Street Big City, FL 33333"></label>
+        <label>Graduation Date<input id="graduationDate" value="05/19/2023"></label>
+        <label>Date Printed / Issue Date<input id="issueDate" value="02/07/2024"></label>
+        <label>GPA<input id="gpaInput" value=""></label>
+        <label>Credits Attempted<input id="creditsAttempted" value=""></label>
+        <label>Credits Earned<input id="creditsEarned" value=""></label>
+      </div>
+
+      <div class="section">
+        <label>School Info / Header Notes
+          <textarea id="schoolInfo">Official transcript preview layout
+Sample record for editing only</textarea>
+        </label>
+      </div>
+
+
+      <div class="section">
+        <p class="eyebrow">Label Text</p>
+        <div class="grid">
+          <label>Name Label<input id="labelFullLegalName" value="Full Legal Name"></label>
+          <label>Student ID Label<input id="labelStudentId" value="SSN / ID"></label>
+          <label>DOB Label<input id="labelDob" value="DOB"></label>
+          <label>Guardian Label<input id="labelGuardian" value="Parent or Guardian"></label>
+          <label>Address Label<input id="labelAddress" value="Address"></label>
+          <label>Phone Label<input id="labelPhone" value="Phone"></label>
+          <label>School Label<input id="labelSchoolName" value="School Name"></label>
+          <label>School Address Label<input id="labelSchoolAddress" value="School Address"></label>
+          <label>School Code Label<input id="labelSchoolCode" value="School Code"></label>
+          <label>Issue Date Label<input id="labelDatePrinted" value="Date Printed"></label>
+          <label>Graduation Label<input id="labelGraduationDate" value="Graduation Date"></label>
+          <label>GPA Label<input id="labelGpa" value="GPA"></label>
+          <label>Course Grade Label<input id="labelCourseGrade" value="Grd"></label>
+          <label>Course Code Label<input id="labelCourseCode" value="Course"></label>
+          <label>Course Name Label<input id="labelCourseName" value="Course"></label>
+          <label>Term 1 Label<input id="labelS1" value="S1"></label>
+          <label>Term 2 Label<input id="labelS2" value="S2"></label>
+          <label>Final Label<input id="labelFinal" value="Final"></label>
+          <label>Credits Label<input id="labelCredits" value="CRD"></label>
+          <label>Department Credits Label<input id="labelDepartmentCredits" value="NUMBER OF CREDITS EARNED BY DEPARTMENT"></label>
+          <label>English Dept Label<input id="labelEnglish" value="English"></label>
+          <label>Math Dept Label<input id="labelMath" value="Mathematics"></label>
+          <label>Science Dept Label<input id="labelScience" value="Science"></label>
+          <label>Social Studies Label<input id="labelSocialStudies" value="Social Studies"></label>
+          <label>Elective Label<input id="labelElective" value="Elective"></label>
+          <label>Total Label<input id="labelTotal" value="Total"></label>
+          <label>Tests Label<input id="labelStandardizedTests" value="STANDARDIZED TESTS"></label>
+          <label>Service Label<input id="labelCommunityService" value="COMMUNITY SERVICE RECORD"></label>
+          <label>Signature Label<input id="labelSignature" value="Signature of School Official / Title / Date"></label>
+          <label>College Student Label<input id="labelCollegeStudent" value="Student"></label>
+          <label>College Semester 1 Label<input id="labelCollegeSemester1" value="Semester 1"></label>
+          <label>College Semester 2 Label<input id="labelCollegeSemester2" value="Semester 2"></label>
+          <label>Registrar Label<input id="labelRegistrar" value="Registrar / Date"></label>
+        </div>
+      </div>
+      <div class="section">
+        <p class="eyebrow">Classes</p>
+        <div id="courseEditor" class="course-editor"></div>
+        <button id="addCourse" class="primary" type="button">Add Class</button>
+      </div>
+
+      <div class="section">
+        <label>Bottom Notes / Honors / Requirements
+          <textarea id="footerNote">H - Honors class, AP - Advanced Placement, * - Block Schedule, ** - Credited by Exam</textarea>
+        </label>
+      </div>
+
+      <div class="actions">
+        <button type="button" data-export="png">PNG</button>
+        <button type="button" data-export="jpeg">JPEG</button>
+        <button type="button" data-export="pdf">PDF</button>
+      </div>
+      <p class="notice">Exports keep a sample/not-valid notice below the form. This builder is for preview/design use only.</p>
+    </section>
+
+    <section class="panel preview-panel">
+      <p class="eyebrow">Live Preview</p>
+      <div class="stage">
+        <div id="exportArea" class="export-area">
+          <article id="transcript" class="sheet hs" data-watermark="Unofficial">
+            <div class="sheet-content" id="sheetContent"></div>
+          </article>
+          <div class="sample-strip">Sample / Not Valid For Verification</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../access.js"></script>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const text = (id) => ($(id)?.value || "").trim();
+    const fields = ["version", "documentTitle", "watermarkMode", "schoolName", "schoolAddress", "schoolCode", "phone", "website", "email", "studentName", "studentId", "dob", "guardian", "studentAddress", "graduationDate", "issueDate", "gpaInput", "creditsAttempted", "creditsEarned", "schoolInfo", "footerNote", "labelFullLegalName", "labelStudentId", "labelDob", "labelGuardian", "labelAddress", "labelPhone", "labelSchoolName", "labelSchoolAddress", "labelSchoolCode", "labelDatePrinted", "labelGraduationDate", "labelGpa", "labelCourseGrade", "labelCourseCode", "labelCourseName", "labelS1", "labelS2", "labelFinal", "labelCredits", "labelDepartmentCredits", "labelEnglish", "labelMath", "labelScience", "labelSocialStudies", "labelElective", "labelTotal", "labelStandardizedTests", "labelCommunityService", "labelSignature", "labelCollegeStudent", "labelCollegeSemester1", "labelCollegeSemester2", "labelRegistrar"];
+    const gradePoints = { "A+": 4, "A": 4, "A-": 3.7, "B+": 3.3, "B": 3, "B-": 2.7, "C+": 2.3, "C": 2, "C-": 1.7, "D+": 1.3, "D": 1, "F": 0, "P": 0, "I": 0, "W": 0 };
+    let logoData = "";
+    let courses = [
+      { year: "2019-2020", gradeLevel: "09", term: "Sem 1", code: "1200310", name: "English Grammar and Composition I", info: "Landmark Christian Academy", s1: "93", s2: "93", final: "93", credits: 1, grade: "A" },
+      { year: "2020-2021", gradeLevel: "10", term: "Sem 2", code: "2000310", name: "Biology", info: "Lab Science", s1: "94", s2: "94", final: "94", credits: 1, grade: "A" },
+      { year: "2021-2022", gradeLevel: "11", term: "Fall", code: "1001370", name: "English Grammar and Composition III", info: "Honors", s1: "94", s2: "94", final: "94", credits: 1, grade: "A" },
+      { year: "2022-2023", gradeLevel: "12", term: "Spring", code: "1202340", name: "Precalculus", info: "College Prep", s1: "99", s2: "99", final: "99", credits: 1, grade: "A" }
+    ];
+
+    function esc(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
+    }
+
+    function attr(value) { return esc(value).replace(/`/g, "&#96;"); }
+
+    function optionalRow(label, value) {
+      if (!value) return "";
+      return `<div class="mini-row"><b>${esc(label)}</b><span class="line-value">${esc(value)}</span></div>`;
+    }
+
+    function optionalMeta(label, value) {
+      if (!value) return "";
+      return `<div class="meta-item"><b>${esc(label)}:</b> ${esc(value)}</div>`;
+    }
+
+    function labelText(id, fallback) {
+      return text(id) || fallback;
+    }
+
+    function renderCourseControls() {
+      $("courseEditor").innerHTML = "";
+      courses.forEach((course, index) => {
+        const version = text("version");
+        const termLabel = version === "college" ? "Semester" : "Term";
+        const sem1Label = version === "college" ? labelText("labelCollegeSemester1", "Semester 1") : "Sem / Term 1";
+        const sem2Label = version === "college" ? labelText("labelCollegeSemester2", "Semester 2") : "Sem / Term 2";
+        const card = document.createElement("div");
+        card.className = "course-card";
+        card.innerHTML = `
++          <div class="course-head"><strong>Class ${index + 1}</strong><button class="danger" type="button" data-remove="${index}">Remove</button></div>
++          <div class="grid">
++            <label>School Year<input data-course="${index}" data-key="year" value="${attr(course.year)}"></label>
++            <label>Grade / Level<input data-course="${index}" data-key="gradeLevel" value="${attr(course.gradeLevel)}"></label>
++            <label>${termLabel}<input data-course="${index}" data-key="term" value="${attr(course.term)}"></label>
++            <label>Course Code<input data-course="${index}" data-key="code" value="${attr(course.code)}"></label>
++          </div>
++          <label>Class Name<input data-course="${index}" data-key="name" value="${attr(course.name)}"></label>
++          <label>Class Info<textarea data-course="${index}" data-key="info">${esc(course.info)}</textarea></label>
++          <div class="grid">
++            <label>${sem1Label}<input data-course="${index}" data-key="s1" value="${attr(course.s1)}"></label>
++            <label>${sem2Label}<input data-course="${index}" data-key="s2" value="${attr(course.s2)}"></label>
++            <label>Final<input data-course="${index}" data-key="final" value="${attr(course.final)}"></label>
++            <label>Credits<input data-course="${index}" data-key="credits" type="number" min="0" step="0.5" value="${attr(course.credits)}"></label>
++            <label>Letter Grade<select data-course="${index}" data-key="grade">${Object.keys(gradePoints).map((g) => `<option value="${g}" ${g === course.grade ? "selected" : ""}>${g}</option>`).join("")}</select></label>
++          </div>
++        `.replace(/^\+/gm, "");
+        $("courseEditor").appendChild(card);
+      });
+    }
+
+    function getWatermark() {
+      const mode = text("watermarkMode");
+      if (mode === "none") return "";
+      if (mode === "sample") return "Sample";
+      return "Unofficial";
+    }
+
+    function applyShell() {
+      const transcript = $("transcript");
+      const version = text("version");
+      transcript.className = `sheet ${version === "college" ? "college" : "hs"}`;
+      const watermark = getWatermark();
+      transcript.dataset.watermark = watermark;
+      transcript.classList.toggle("no-watermark", !watermark);
+    }
+
+    function renderLogo(className) {
+      if (logoData) return `<div class="${className}"><img alt="Uploaded school logo" src="${logoData}"></div>`;
+      const initials = text("schoolName").split(/\s+/).filter(Boolean).slice(0, 2).map((word) => word[0]).join("").toUpperCase();
+      return `<div class="${className}">${esc(initials)}</div>`;
+    }
+
+    function renderHighSchool() {
+      const leftRows = [
+        optionalRow(labelText("labelFullLegalName", "Full Legal Name"), text("studentName")),
+        optionalRow(labelText("labelStudentId", "SSN / ID"), text("studentId")),
+        optionalRow(labelText("labelDob", "DOB"), text("dob")),
+        optionalRow(labelText("labelGuardian", "Parent or Guardian"), text("guardian")),
+        optionalRow(labelText("labelAddress", "Address"), text("studentAddress")),
+        optionalRow(labelText("labelPhone", "Phone"), text("phone"))
+      ].join("");
+      const rightRows = [
+        optionalRow(labelText("labelSchoolName", "School Name"), text("schoolName")),
+        optionalRow(labelText("labelSchoolAddress", "School Address"), text("schoolAddress")),
+        optionalRow(labelText("labelSchoolCode", "School Code"), text("schoolCode")),
+        optionalRow(labelText("labelDatePrinted", "Date Printed"), text("issueDate")),
+        optionalRow(labelText("labelGraduationDate", "Graduation Date"), text("graduationDate")),
+        optionalRow(labelText("labelGpa", "GPA"), text("gpaInput") || calculatedGpa())
+      ].join("");
+      const groups = groupBy(courses, "year");
+      const years = Object.keys(groups);
+      const midpoint = Math.ceil(years.length / 2);
+      const left = years.slice(0, midpoint).map((year) => renderHighSchoolYear(year, groups[year])).join("");
+      const right = years.slice(midpoint).map((year) => renderHighSchoolYear(year, groups[year])).join("");
+      return `
+        <h1 class="doc-title">${esc(text("documentTitle"))}</h1>
+        <section class="hs-head-grid"><div>${leftRows}</div><div>${rightRows}</div></section>
+        <section class="hs-main"><div class="hs-column">${left}</div><div class="hs-column">${right}</div></section>
+        <section class="lower-grid">
+          <div class="lower-title">${esc(labelText("labelDepartmentCredits", "NUMBER OF CREDITS EARNED BY DEPARTMENT"))}</div>
+          <table class="dept-table"><tbody><tr><th>${esc(labelText("labelEnglish", "English"))}</th><th>${esc(labelText("labelMath", "Mathematics"))}</th><th>${esc(labelText("labelScience", "Science"))}</th><th>${esc(labelText("labelSocialStudies", "Social Studies"))}</th><th>${esc(labelText("labelElective", "Elective"))}</th><th>${esc(labelText("labelTotal", "Total"))}</th></tr><tr><td></td><td></td><td></td><td></td><td></td><td>${esc(text("creditsEarned") || totalCredits())}</td></tr></tbody></table>
+          <div class="lower-title">${esc(labelText("labelStandardizedTests", "STANDARDIZED TESTS"))}</div>
+          <div class="lower-title">${esc(labelText("labelCommunityService", "COMMUNITY SERVICE RECORD"))}</div>
+        </section>
+        ${text("footerNote") ? `<p class="college-notes">${esc(text("footerNote"))}</p>` : ""}
+        <div class="signature-row"><div class="signature-line">${esc(labelText("labelSignature", "Signature of School Official / Title / Date"))}</div></div>
+      `;
+    }
+
+    function renderHighSchoolYear(year, list) {
+      const rows = list.map((course) => {
+        return `<tr><td>${esc(course.gradeLevel)}</td><td>${esc(course.code)}</td><td>${esc(course.name)}${course.info ? `<br>${esc(course.info)}` : ""}</td><td>${esc(course.s1)}</td><td>${esc(course.s2)}</td><td>${esc(course.final)}</td><td>${esc(course.credits)}</td></tr>`;
+      }).join("");
+      return `<section class="year-block"><h2 class="year-title">${esc(year)}</h2><table class="hs-table"><thead><tr><th>${esc(labelText("labelCourseGrade", "Grd"))}</th><th>${esc(labelText("labelCourseCode", "Course"))}</th><th>${esc(labelText("labelCourseName", "Course"))}</th><th>${esc(labelText("labelS1", "S1"))}</th><th>${esc(labelText("labelS2", "S2"))}</th><th>${esc(labelText("labelFinal", "Final"))}</th><th>${esc(labelText("labelCredits", "CRD"))}</th></tr></thead><tbody>${rows}</tbody></table></section>`;
+    }
+
+    function renderCollege() {
+      const groups = groupBy(courses, "year");
+      const terms = Object.keys(groups).map((term) => renderCollegeTerm(term, groups[term])).join("");
+      return `
+        <header class="college-head">${renderLogo("seal")}<div><h1 class="college-school">${esc(text("schoolName"))}</h1><h2 class="college-title">${esc(text("documentTitle"))}</h2><div class="college-info">${esc([text("schoolAddress"), text("schoolInfo"), text("phone") && `TEL. ${text("phone")}`, text("email")].filter(Boolean).join("\n"))}</div></div></header>
+        <section class="college-meta">
+          ${optionalMeta(labelText("labelCollegeStudent", "Student"), text("studentName"))}
+          ${optionalMeta(labelText("labelStudentId", "Student ID"), text("studentId"))}
+          ${optionalMeta(labelText("labelDob", "DOB"), text("dob"))}
+          ${optionalMeta(labelText("labelGraduationDate", "Graduation"), text("graduationDate"))}
+          ${optionalMeta(labelText("labelGpa", "Cumulative GPA"), text("gpaInput") || calculatedGpa())}
+          ${optionalMeta(labelText("labelCredits", "Current Credits"), text("creditsEarned") || totalCredits())}
+          ${optionalMeta(labelText("labelDatePrinted", "Issue Date"), text("issueDate"))}
+        </section>
+        ${terms}
+        ${text("footerNote") ? `<section class="college-notes"><div>${esc(text("footerNote"))}</div><div>Director / Registrar notes can be entered here.</div></section>` : ""}
+        <div class="signature-row"><div class="signature-line">${esc(labelText("labelRegistrar", "Registrar / Date"))}</div></div>
+      `;
+    }
+
+    function renderCollegeTerm(term, list) {
+      const rows = list.map((course) => {
+        return `<tr><td>${esc(course.code)}</td><td>${esc(course.name)}${course.info ? `<br>${esc(course.info)}` : ""}</td><td>${esc(course.s1 || course.final)}</td><td>${esc(course.s2)}</td><td>${esc(course.final)}</td><td>${esc(course.credits)}</td><td>${esc(course.grade)}</td></tr>`;
+      }).join("");
+      return `<section class="term-card"><h3>${esc(term)} ${list[0]?.gradeLevel ? `${esc(labelText("labelCourseGrade", "Level"))}: ${esc(list[0].gradeLevel)}` : ""}</h3><table class="college-table"><thead><tr><th>${esc(labelText("labelCourseCode", "Class"))}</th><th>${esc(labelText("labelCourseName", "Course"))}</th><th>${esc(labelText("labelCollegeSemester1", "Semester 1"))}</th><th>${esc(labelText("labelCollegeSemester2", "Semester 2"))}</th><th>${esc(labelText("labelFinal", "Final"))}</th><th>${esc(labelText("labelCredits", "Cr."))}</th><th>${esc(labelText("labelGpa", "Grade"))}</th></tr></thead><tbody>${rows}</tbody></table></section>`;
+    }
+
+    function groupBy(items, key) {
+      return items.reduce((map, item) => {
+        const group = item[key] || "";
+        if (!map[group]) map[group] = [];
+        map[group].push(item);
+        return map;
+      }, {});
+    }
+
+    function totalCredits() {
+      return courses.reduce((sum, course) => sum + (Number(course.credits) || 0), 0).toFixed(1);
+    }
+
+    function calculatedGpa() {
+      let credits = 0;
+      let points = 0;
+      courses.forEach((course) => {
+        const c = Number(course.credits) || 0;
+        const gp = gradePoints[course.grade] ?? 0;
+        if (!["P", "I", "W"].includes(course.grade)) {
+          credits += c;
+          points += c * gp;
+        }
+      });
+      return credits ? (points / credits).toFixed(3) : "";
+    }
+
+    function updatePreview() {
+      applyShell();
+      $("sheetContent").innerHTML = text("version") === "college" ? renderCollege() : renderHighSchool();
+    }
+
+    function loadScript(src) {
+      return new Promise((resolve, reject) => {
+        if (document.querySelector(`script[src="${src}"]`)) return resolve();
+        const script = document.createElement("script");
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    }
+
+    const currentForm = "forms/unofficial-transcript-builder.html";
+
+    function hasAccess() {
+      if (!window.FP) return false;
+      return FP.canAccess(currentForm) || FP.canAccess("unofficial-transcript-builder.html");
+    }
+
+    function requireExportAccess(onAllowed) {
+      if (!window.FP) {
+        alert("Couldn't verify your access \u2014 please refresh the page.\n\nIf this keeps happening, disable your ad blocker for formporn.app.");
+        return;
+      }
+      if (hasAccess()) { onAllowed(); return; }
+      if (confirm("This is a premium form.\n\nUnlock this form or get all forms with Premium.\n\nGo to checkout?")) {
+        window.location.href = `/checkout.html?plan=single&form=${encodeURIComponent(currentForm)}`;
+      }
+    }
+
+    async function exportFile(format) {
+      await loadScript("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
+      if (format === "pdf") await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+      const canvas = await html2canvas($("exportArea"), { scale: 2, backgroundColor: null, useCORS: true });
+      const stamp = "form-porn-transcript-builder-sample";
+      if (format === "pdf") {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({ orientation: "portrait", unit: "pt", format: "letter" });
+        const img = canvas.toDataURL("image/jpeg", .95);
+        pdf.addImage(img, "JPEG", 0, 0, 612, 792);
+        pdf.save(`${stamp}.pdf`);
+        return;
+      }
+      const type = format === "jpeg" ? "image/jpeg" : "image/png";
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL(type, .95);
+      link.download = `${stamp}.${format === "jpeg" ? "jpg" : "png"}`;
+      link.click();
+    }
+
+    fields.forEach((id) => $(id).addEventListener("input", updatePreview));
+    fields.forEach((id) => $(id).addEventListener("change", () => { if (id === "version" || id.startsWith("label")) renderCourseControls(); updatePreview(); }));
+
+    $("logoInput").addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => { logoData = reader.result; updatePreview(); };
+      reader.readAsDataURL(file);
+    });
+
+    $("courseEditor").addEventListener("input", (event) => {
+      const target = event.target;
+      const index = Number(target.dataset.course);
+      const key = target.dataset.key;
+      if (!Number.isNaN(index) && key) {
+        courses[index][key] = key === "credits" ? Number(target.value) : target.value;
+        updatePreview();
+      }
+    });
+
+    $("courseEditor").addEventListener("change", (event) => {
+      const target = event.target;
+      const index = Number(target.dataset.course);
+      const key = target.dataset.key;
+      if (!Number.isNaN(index) && key) {
+        courses[index][key] = key === "credits" ? Number(target.value) : target.value;
+        updatePreview();
+      }
+    });
+
+    $("courseEditor").addEventListener("click", (event) => {
+      const removeIndex = event.target.dataset.remove;
+      if (removeIndex === undefined) return;
+      courses.splice(Number(removeIndex), 1);
+      renderCourseControls();
+      updatePreview();
+    });
+
+    $("addCourse").addEventListener("click", () => {
+      courses.push({ year: "", gradeLevel: "", term: "", code: "", name: "", info: "", s1: "", s2: "", final: "", credits: "", grade: "A" });
+      renderCourseControls();
+      updatePreview();
+    });
+
+    document.querySelectorAll("[data-export]").forEach((button) => {
+      button.addEventListener("click", () => requireExportAccess(() => exportFile(button.dataset.export)));
+    });
+
+    renderCourseControls();
+    updatePreview();
+  </script>
+</body>
+</html>
+
