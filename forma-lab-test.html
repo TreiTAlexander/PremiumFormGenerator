@@ -51,11 +51,22 @@ select{appearance:none;cursor:pointer}
 .meta-strip b{color:var(--cyan)}
 .hidden{display:none}
 .summary-block{font-size:15px;line-height:1.6;color:#fff;margin-bottom:6px}
+.forma-hero{display:flex;justify-content:center;margin:4px 0 14px}
+.forma-hero img{width:112px;height:auto;animation:forma-idle-sway 4.5s ease-in-out infinite;filter:drop-shadow(0 10px 24px rgba(255,212,56,0.28))}
+@keyframes forma-idle-sway{0%,100%{transform:rotate(-2deg) translateY(0)}50%{transform:rotate(2deg) translateY(-5px)}}
+.working-stage{position:relative;display:flex;flex-direction:column;align-items:center;padding:30px 10px 22px}
+.working-glow{position:absolute;width:180px;height:180px;top:14px;background:radial-gradient(circle,rgba(255,212,56,0.55),transparent 70%);filter:blur(18px);animation:forma-glow-pulse 1.3s ease-in-out infinite;z-index:0}
+@keyframes forma-glow-pulse{0%,100%{opacity:.35;transform:scale(.9)}50%{opacity:.75;transform:scale(1.1)}}
+.working-stage img{position:relative;z-index:1;width:150px;height:auto;animation:forma-dance 1.25s ease-in-out infinite;filter:drop-shadow(0 12px 26px rgba(255,212,56,0.4))}
+@keyframes forma-dance{0%{transform:translateY(0) rotate(-4deg)}20%{transform:translateY(-14px) rotate(3deg)}40%{transform:translateY(0) rotate(-3deg)}60%{transform:translateY(-10px) rotate(4deg)}80%{transform:translateY(0) rotate(-2deg)}100%{transform:translateY(0) rotate(-4deg)}}
+.working-title{font:900 15px Georgia,serif;color:var(--gold);margin-top:16px;text-align:center}
+.working-sub{font:700 11px 'Courier New',monospace;color:var(--muted);margin-top:8px;text-align:center;letter-spacing:.05em;min-height:14px;transition:opacity .25s ease}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
+    <div class="forma-hero"><img src="/forma-mascot.png" alt="Forma"></div>
     <h1>Forma Lab — Test</h1>
     <p>Private development interface · not part of the public site</p>
     <span class="badge">Internal Use Only</span>
@@ -94,6 +105,15 @@ select{appearance:none;cursor:pointer}
     </div>
     <button class="btn btn-gold" id="askBtn">Ask Forma</button>
     <div class="status" id="status"></div>
+  </div>
+
+  <div class="panel hidden" id="formaWorking">
+    <div class="working-stage">
+      <div class="working-glow"></div>
+      <img src="/forma-mascot.png" alt="Forma working">
+      <div class="working-title">Forma is on it.</div>
+      <div class="working-sub" id="workingSub">Reading your resume line by line...</div>
+    </div>
   </div>
 
   <div class="panel hidden" id="resultsPanel">
@@ -149,6 +169,39 @@ select{appearance:none;cursor:pointer}
   const askBtn = $('askBtn');
   let inFlight = false;
 
+  const WORKING_MESSAGES = [
+    'Reading your resume line by line...',
+    'Making sure nothing here gets invented...',
+    'Cross-checking your story against itself...',
+    'Sharpening your strongest bullets...',
+    'Double-checking the details...',
+    'Putting on the finishing touches...'
+  ];
+  let workingTimer = null;
+
+  function startWorkingAnimation() {
+    $('resultsPanel').classList.add('hidden');
+    $('formaWorking').classList.remove('hidden');
+    const sub = $('workingSub');
+    let i = 0;
+    sub.textContent = WORKING_MESSAGES[0];
+    sub.style.opacity = 1;
+    workingTimer = setInterval(() => {
+      i = (i + 1) % WORKING_MESSAGES.length;
+      sub.style.opacity = 0;
+      setTimeout(() => {
+        sub.textContent = WORKING_MESSAGES[i];
+        sub.style.opacity = 1;
+      }, 200);
+    }, 1800);
+  }
+
+  function stopWorkingAnimation() {
+    if (workingTimer) clearInterval(workingTimer);
+    workingTimer = null;
+    $('formaWorking').classList.add('hidden');
+  }
+
   askBtn.addEventListener('click', async () => {
     if (inFlight) return;
 
@@ -166,9 +219,9 @@ select{appearance:none;cursor:pointer}
 
     inFlight = true;
     askBtn.disabled = true;
-    askBtn.textContent = 'Forma is thinking...';
-    setStatus('Sending to Forma...', '');
-    $('resultsPanel').classList.add('hidden');
+    askBtn.textContent = 'Working...';
+    setStatus('', '');
+    startWorkingAnimation();
 
     try {
       const res = await fetch('/api/forma-resume-lab', {
@@ -178,6 +231,8 @@ select{appearance:none;cursor:pointer}
       });
       const data = await res.json();
 
+      stopWorkingAnimation();
+
       if (!data.ok) {
         setStatus(data.error || 'Something went wrong.', 'error');
         return;
@@ -186,6 +241,7 @@ select{appearance:none;cursor:pointer}
       renderResults(data.result, data.meta);
       setStatus('Done.', 'ok');
     } catch (err) {
+      stopWorkingAnimation();
       setStatus('Network error — please try again.', 'error');
     } finally {
       inFlight = false;
