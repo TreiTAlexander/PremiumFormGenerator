@@ -38,7 +38,7 @@ nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-con
 .btn-img.primary{border:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--black);}
 .placard-shell{display:flex;justify-content:center;}
 .placard-viewport{position:relative;width:min(100%,1120px);aspect-ratio:1210/585;overflow:hidden;}
-.placard-doc{position:absolute;left:0;top:0;width:2880px;height:1800px;min-width:0;overflow:hidden;background:#fff url("../assets/templates/placard-original.png") center/100% 100% no-repeat;transform-origin:0 0;}
+.placard-doc{position:absolute;left:0;top:0;width:2880px;height:1800px;min-width:0;overflow:hidden;background:#fff url("placard-original.png") center/100% 100% no-repeat;transform-origin:0 0;}
 .native-layer{position:absolute;left:0;top:0;width:2880px;height:1800px;transform-origin:top left;}
 .card-clean,.static-title,.field,.qr-copy,.qr-source{position:absolute;transform-origin:top left;}
 .card-clean{left:900px;top:600px;width:1110px;height:555px;border:3px solid #dedede;border-radius:28px;background:#fafafa;box-shadow:0 18px 42px rgba(0,0,0,.08);pointer-events:none;}
@@ -54,7 +54,7 @@ nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-con
 .make{left:1533px;width:147px;}
 .model{left:1747px;width:162px;}
 .qr-copy{left:1820px;top:952px;width:118px;height:118px;overflow:hidden;pointer-events:none;}
-.qr-source{left:0;top:0;width:190px;height:190px;background:url("../assets/templates/placard-original.png") no-repeat;background-size:2880px 1800px;background-position:-1805px -936px;transform:scale(.621);}
+.qr-source{left:0;top:0;width:190px;height:190px;background:url("placard-original.png") no-repeat;background-size:2880px 1800px;background-position:-1805px -936px;transform:scale(.621);}
 .qr-copy.is-hidden{display:none;}
 @media (max-width:860px){
   .editor{grid-template-columns:1fr;}
@@ -152,7 +152,7 @@ nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-con
 <script>
 const nativeWidth=2880;
 const nativeHeight=1800;
-const templateSrc="../assets/templates/placard-original.png";
+const templateSrc="placard-original.png";
 const fieldIds=["f-state","f-plate","f-month","f-day","f-exp-year","f-vin","f-vyear","f-make","f-model"];
 const sizeIds=["s-state","s-meta","s-plate","s-date"];
 const currentForm="forms/temporary-placard.html";
@@ -217,12 +217,12 @@ function updatePreview(){
 }
 
 function hasAccess(){
-  if(!window.FP) return false;
+  if(typeof FP==='undefined') return false;
   return FP.canAccess(currentForm)||FP.canAccess("temporary-placard.html")||FP.canAccess("placard-v4.html");
 }
 
 function requireExportAccess(onAllowed){
-  if(!window.FP){
+  if(typeof FP==='undefined'){
     alert("Couldn't verify your access \u2014 please refresh the page.\n\nIf this keeps happening, disable your ad blocker for formporn.app.");
     return;
   }

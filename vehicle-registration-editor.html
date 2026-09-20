@@ -251,6 +251,7 @@ nav{position:sticky;top:0;z-index:500;display:flex;align-items:center;justify-co
 }
 .btn-img{flex:1;padding:12px;border-radius:6px;font-family:'Exo 2';font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:1px solid rgba(64,200,255,0.25);background:rgba(26,127,255,0.08);color:var(--white);}
 </style>
+<script src="/access.js"></script>
 </head>
 <body>
 <canvas id="space-canvas"></canvas>
@@ -496,7 +497,25 @@ update();
 
 function dlPDF() { window.print(); }
 function downloadPDF(id) { window.print(); }
+const currentForm = "vehicle-registration-editor.html";
+function hasAccess(){
+  if (typeof FP === 'undefined') return false;
+  return FP.canAccess(currentForm);
+}
+function requireExportAccess(onAllowed){
+  if (typeof FP === 'undefined') {
+    alert("Couldn't verify your access — please refresh the page.\n\nIf this keeps happening, disable your ad blocker for formporn.app.");
+    return;
+  }
+  if (hasAccess()) { onAllowed(); return; }
+  if (confirm("This is a premium form.\n\nUnlock this form or get all forms with Premium.\n\nGo to checkout?")) {
+    window.location.href = `/checkout.html?plan=single&form=${encodeURIComponent(currentForm)}`;
+  }
+}
 function downloadPNG(docId) {
+  requireExportAccess(function(){ doDownloadPNG(docId); });
+}
+function doDownloadPNG(docId) {
   var el = document.getElementById(docId);
   if (!el) { alert('Generate a document first.'); return; }
   if (typeof html2canvas === 'undefined') {
@@ -512,6 +531,9 @@ function _capPNG(el) {
   }).catch(function(){ alert('PNG failed. Use PDF instead.'); });
 }
 function downloadJPEG(docId) {
+  requireExportAccess(function(){ doDownloadJPEG(docId); });
+}
+function doDownloadJPEG(docId) {
   var el = document.getElementById(docId);
   if (!el) { alert('Generate a document first.'); return; }
   if (typeof html2canvas === 'undefined') {

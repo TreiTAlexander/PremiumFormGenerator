@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marriage License &amp; Certificate Builder | Form Porn</title>
+<script src="/access.js"></script>
+<script>
+const currentForm = "marriage-license-certificate.html";
+function hasAccess(){
+  if(typeof FP==='undefined') return false;
+  return FP.canAccess(currentForm) || FP.canAccess("marriage-license-certificate.html");
+}
+function requireExportAccess(onAllowed){
+  if(typeof FP==='undefined'){
+    alert("Couldn't verify your access - please refresh the page.\n\nIf this keeps happening, disable your ad blocker for formporn.app.");
+    return;
+  }
+  if(hasAccess()){ onAllowed(); return; }
+  if(confirm("This is a premium form.\n\nUnlock this form or get all forms with Premium.\n\nGo to checkout?")){
+    window.location.href = `/checkout.html?plan=single&form=${encodeURIComponent(currentForm)}`;
+  }
+}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--black:#02030c;--blue:#1a7fff;--cyan:#40c8ff;--gold:#ffd438;--white:#eef2ff;--muted:#7282ac;--ink:#151515;--teal:#74a8b5;--paper:#fffdf7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background:radial-gradient(circle at top,#101a38 0,#050711 46%,#02030c 100%);color:var(--white);font-family:Arial,Helvetica,sans-serif}
+nav{height:58px;position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:rgba(2,3,12,.93);border-bottom:1px solid rgba(26,127,255,.18);backdrop-filter:blur(18px)}
+nav a,nav span{font:800 11px "Courier New",monospace;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none}
+.back{color:var(--cyan)}
+.page{padding:22px 18px 60px}
+.hero{text-align:center;margin:12px auto 24px}
+.hero h1{font:900 clamp(26px,5vw,38px) Georgia,serif;color:var(--gold);margin-bottom:6px}
+.hero p{font:800 10px "Courier New",monospace;letter-spacing:.32em;text-transform:uppercase;color:#7890c5}
+.workspace{max-width:1460px;margin:0 auto;display:grid;grid-template-columns:minmax(310px,390px) minmax(0,1fr);gap:24px;align-items:start}
+.panel,.preview-panel{background:rgba(5,7,20,.86);border:1px solid rgba(26,127,255,.2);border-radius:12px;padding:18px;box-shadow:0 18px 50px rgba(0,0,0,.28)}
+.panel{position:sticky;top:76px;max-height:calc(100vh - 96px);overflow:auto}
+.panel h3,.preview-panel h3{font:900 10px "Courier New",monospace;letter-spacing:.32em;text-transform:uppercase;color:var(--blue);margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid rgba(26,127,255,.12)}
+.group-title{font:900 9px "Courier New",monospace;color:rgba(255,212,56,.78);letter-spacing:.28em;text-transform:uppercase;margin:14px 0 10px;padding-top:12px;border-top:1px solid rgba(255,212,56,.12)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.field{margin-bottom:9px}
+.field label{display:block;font:800 8px "Courier New",monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.field input,.field select,.field textarea{width:100%;border:1px solid rgba(26,127,255,.22);border-radius:5px;background:#151827;color:#fff;padding:9px 10px;font:700 12px Arial,Helvetica,sans-serif;outline:none}
+.field textarea{height:58px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(64,200,255,.08)}
+.font-preview{font-size:11px;color:#9fb2e8;margin-top:-4px;margin-bottom:10px;line-height:1.35}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.btn{border:1px solid rgba(64,200,255,.28);background:rgba(26,127,255,.08);border-radius:7px;color:#fff;padding:12px 10px;font:900 10px "Courier New",monospace;letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
+.btn.primary{background:linear-gradient(135deg,#ffd438,#ffb800);border:0;color:#02030c}
+.preview-stage{min-height:760px;display:grid;place-items:center;overflow:auto;padding:24px;background:radial-gradient(circle at center,rgba(26,127,255,.08),transparent 52%)}
+.doc{position:relative;background:var(--paper);color:var(--ink);box-shadow:0 28px 70px rgba(0,0,0,.45);overflow:hidden}
+.doc .piece{font-family:var(--doc-body-font,Arial,Helvetica,sans-serif)}
+.doc .cert-title,.doc .cert-banner,.doc .lic-watermark{font-family:var(--doc-heading-font,Georgia,serif)}
+.doc .cert-line,.doc .cert-signature,.doc .cert-clerk-sign{font-family:var(--doc-script-font,"Comic Sans MS","Bradley Hand",cursive)}
+.doc:after{content:"NOT VALID FOR VERIFICATION";position:absolute;left:0;right:0;bottom:7px;text-align:center;font:900 9px "Courier New",monospace;letter-spacing:.24em;color:#9e1e2f;background:rgba(255,255,255,.84);z-index:90;padding:3px 0}
+.stamp{position:absolute;inset:0;display:grid;place-items:center;transform:rotate(-28deg);font:900 96px Arial,sans-serif;letter-spacing:.12em;color:rgba(160,32,44,.11);z-index:50;pointer-events:auto}
+.hide-stamp .stamp,.hide-watermark .lic-watermark,.hide-ribbon .cert-seal,.hide-ribbon .cert-bottom-seal{display:none!important}
+.piece{position:absolute;z-index:20;cursor:move;touch-action:none;white-space:pre-line}
+.piece.is-moving{outline:2px solid rgba(26,127,255,.85);outline-offset:3px;z-index:100}
+.line{border-bottom:2px solid #555}
+.seal{border-radius:50%;display:grid;place-items:center;text-align:center}
+.uploaded-logo{display:grid;place-items:center;overflow:hidden;border:1px solid #777;background:#f8f8f8;color:#777;font:900 8px Arial,sans-serif;text-align:center}
+.uploaded-logo img{width:100%;height:100%;object-fit:contain}
+.doc-license{width:850px;height:1100px;padding:0;background:#fff}
+.doc-license .lic-body{left:38px;right:38px;top:72px;bottom:30px;border:2px solid #222;background:#fff;z-index:4}
+.doc-license .logo-a{left:38px;top:92px;width:62px;height:62px;z-index:30}
+.doc-license .logo-b{right:48px;top:92px;width:62px;height:62px;z-index:30}
+.doc-license .issuer-seal{left:116px;top:104px;width:54px;height:54px;border:2px solid #777;font:700 7px Georgia,serif;color:#555;z-index:30}
+.doc-license .issued-box{right:120px;top:92px;width:142px;height:88px;border:1px solid #999;text-align:center;padding-top:8px;font:700 10px Arial,sans-serif;z-index:30}
+.doc-license .note{left:38px;top:194px;width:774px;font:700 9px Arial,sans-serif;z-index:30}
+.doc-license .spouse-a-label,.doc-license .spouse-b-label{writing-mode:vertical-rl;transform:rotate(180deg);font:900 16px Arial,sans-serif;text-align:center;border:1px solid #111;background:#f1f1f1;padding:6px 2px;z-index:30}
+.doc-license .spouse-a-label{left:39px;top:250px;height:205px}
+.doc-license .spouse-b-label{left:39px;top:465px;height:205px}
+.doc-license .party-a,.doc-license .party-b{left:75px;width:700px;border-top:2px solid #111;font:700 11px Arial,sans-serif;line-height:1.45;z-index:30}
+.doc-license .party-a{top:249px}
+.doc-license .party-b{top:463px}
+.doc-license .cert-section{left:38px;top:710px;width:774px;height:235px;border-top:2px solid #111;font:700 10px Arial,sans-serif;z-index:30}
+.doc-license .license-footer{left:40px;bottom:34px;width:770px;text-align:center;font:900 8px "Courier New",monospace;letter-spacing:.16em;color:#9e1e2f;z-index:30}
+.doc-license .lic-watermark{left:205px;top:370px;font:900 110px Georgia,serif;color:rgba(110,110,110,.09);z-index:12}
+.doc-certificate{width:900px;height:1380px;background:#fbf7ea;padding:0}
+.doc-certificate:before{content:"SAMPLE COUNTY RECORD ";position:absolute;inset:54px 42px;background:repeating-linear-gradient(9deg,rgba(191,64,64,.11) 0 1px,transparent 1px 34px),repeating-linear-gradient(0deg,transparent 0 44px,rgba(42,106,129,.08) 44px 45px),radial-gradient(circle at 50% 46%,rgba(58,103,116,.13) 0 145px,transparent 146px);font:700 12px Georgia,serif;letter-spacing:.16em;color:rgba(180,65,65,.12);line-height:42px;word-spacing:18px;z-index:1;overflow:hidden}
+.doc-certificate .ornate{inset:0;border:36px solid #426d7d;border-image:repeating-linear-gradient(45deg,#2f5363 0 8px,#eef5ef 8px 15px,#7897a5 15px 24px,#173c4b 24px 32px) 40;z-index:5;pointer-events:auto}
+.doc-certificate .ornate:before{content:"";position:absolute;inset:-25px;border:18px solid rgba(240,248,243,.55);filter:blur(.3px);clip-path:polygon(0 0,5% 6%,10% 0,15% 6%,20% 0,25% 6%,30% 0,35% 6%,40% 0,45% 6%,50% 0,55% 6%,60% 0,65% 6%,70% 0,75% 6%,80% 0,85% 6%,90% 0,95% 6%,100% 0,100% 100%,95% 94%,90% 100%,85% 94%,80% 100%,75% 94%,70% 100%,65% 94%,60% 100%,55% 94%,50% 100%,45% 94%,40% 100%,35% 94%,30% 100%,25% 94%,20% 100%,15% 94%,10% 100%,5% 94%,0 100%)}
+.doc-certificate .inner-border{left:38px;top:38px;width:824px;height:1304px;border:2px solid rgba(45,82,95,.75);z-index:8}
+.doc-certificate .cert-banner{left:315px;top:17px;width:315px;height:30px;background:#58717d;color:#fff;border:2px solid #e6ebe4;border-radius:5px;text-align:center;font:900 20px Arial,sans-serif;letter-spacing:.03em;padding-top:2px;z-index:30}
+.doc-certificate .cert-left-logo{left:68px;top:48px;width:142px;height:142px;border-radius:50%;background:repeating-radial-gradient(circle,#f8faf2 0 5px,#53645c 6px 11px);display:grid;place-items:center;text-align:center;color:#fff;font:900 18px Arial,sans-serif;letter-spacing:.07em;text-transform:uppercase;text-shadow:0 1px 0 #111;z-index:30}
+.doc-certificate .cert-barcode-main,.doc-certificate .cert-barcode-right{height:38px;background:repeating-linear-gradient(90deg,#111 0 2px,#fff 2px 4px,#111 4px 5px,#fff 5px 8px,#111 8px 11px,#fff 11px 14px);border:1px solid rgba(0,0,0,.2);z-index:30}
+.doc-certificate .cert-barcode-main{left:335px;top:104px;width:220px}
+.doc-certificate .cert-barcode-right{right:88px;top:250px;width:190px;height:26px}
+.doc-certificate .cert-title{left:290px;top:175px;width:295px;text-align:center;font:900 26px Georgia,serif;line-height:1.05;color:#222;text-transform:uppercase;z-index:30}
+.doc-certificate .cert-record-no{left:348px;top:236px;width:180px;text-align:center;font:900 16px Georgia,serif;color:#222;z-index:30}
+.doc-certificate .cert-side-copy{left:142px;top:263px;width:195px;text-align:left;font:900 18px Georgia,serif;line-height:1.8;color:#2a2a2a;z-index:30}
+.doc-certificate .cert-brace{left:285px;top:265px;width:38px;font:400 70px Georgia,serif;color:#222;z-index:30}
+.doc-certificate .cert-filing{right:82px;top:82px;width:205px;font:900 18px Arial,sans-serif;line-height:1.05;color:#111;z-index:30}
+.doc-certificate .cert-copy{left:140px;top:345px;width:635px;font:700 17px Georgia,serif;line-height:1.65;color:#222;z-index:30}
+.doc-certificate .cert-line{display:inline-block;min-width:190px;border-bottom:2px solid #333;text-align:center;font:900 23px "Comic Sans MS","Bradley Hand",cursive;color:#222;line-height:1.05}
+.doc-certificate .cert-seal{left:268px;top:570px;width:350px;height:350px;background:radial-gradient(circle,rgba(72,118,127,.06) 0 38%,rgba(72,118,127,.18) 39% 42%,transparent 43%),repeating-radial-gradient(circle,rgba(62,91,102,.12) 0 3px,transparent 3px 7px);border:2px solid rgba(70,112,122,.12);z-index:12;color:rgba(62,91,102,.18);font:900 42px Georgia,serif}
+.doc-certificate .cert-signature{left:380px;top:800px;width:370px;border-bottom:2px solid #222;font:400 37px "Comic Sans MS","Bradley Hand",cursive;color:#111;text-align:center;z-index:30}
+.doc-certificate .cert-official-lines{left:385px;top:860px;width:360px;font:700 16px Georgia,serif;line-height:2.25;color:#222;z-index:30}
+.doc-certificate .cert-official-lines div{border-bottom:2px solid #222}
+.doc-certificate .cert-bottom-seal{left:178px;top:770px;width:108px;height:108px;border:4px double #222;border-radius:50%;background:#f7f4e8;text-align:center;font:900 14px Georgia,serif;line-height:1.1;padding-top:29px;color:#222;z-index:30}
+.doc-certificate .cert-clerk-sign{left:140px;top:920px;width:240px;font:400 32px "Comic Sans MS","Bradley Hand",cursive;color:#111;text-align:center;z-index:30}
+.doc-certificate .cert-bottom-copy{left:132px;top:1082px;width:640px;text-align:center;font:900 16px Georgia,serif;line-height:1.25;color:#222;z-index:30}
+.doc-certificate .cert-safe{left:262px;bottom:28px;width:405px;background:#2f4b5c;color:#fff;border:3px solid #f5f1df;border-radius:7px;text-align:center;font:900 17px Arial,sans-serif;line-height:1.05;letter-spacing:.02em;padding:8px 12px;z-index:35}
+.doc-certificate .cert-id{left:55px;bottom:60px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,#d7e2dc 0 58%,#78919b 59% 100%);border:2px solid #58717d;color:#9a3b2d;font:900 29px "Courier New",monospace;display:grid;place-items:center;z-index:30}
+.doc-certificate .cert-footer{right:78px;bottom:110px;width:220px;text-align:center;font:900 13px Arial,sans-serif;line-height:1.15;color:#222;z-index:30}
+@media(max-width:980px){.workspace{grid-template-columns:1fr}.panel{position:static;max-height:none}.preview-stage{justify-content:flex-start}.doc{transform-origin:top left;transform:scale(.72);margin-bottom:-220px}}
+@media(max-width:560px){nav{padding:0 12px}.grid2,.grid3{grid-template-columns:1fr}.doc{transform:scale(.48);margin-bottom:-430px}}
+</style>
+</head>
+<body>
+<nav><a class="back" href="/index.html">&larr; Form Porn</a><span>Marriage License &amp; Certificate Builder</span><a href="/checkout.html?plan=single&amp;form=marriage-license-certificate.html">Premium</a></nav>
+<div class="page">
+  <section class="hero">
+    <h1>Marriage License &amp; Certificate Builder</h1>
+    <p>fictional specimen records</p>
+  </section>
+  <main class="workspace">
+    <section class="panel">
+      <h3>Document Setup</h3>
+      <div class="grid2">
+        <div class="field"><label for="docType">Document Type</label><select id="docType"><option value="license">Marriage License</option><option value="certificate">Certificate of Marriage</option></select></div>
+        <div class="field"><label for="stampToggle">Specimen Stamp</label><select id="stampToggle"><option value="show" selected>Show</option><option value="hide">Hide</option></select></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="watermarkToggle">License Background Sample</label><select id="watermarkToggle"><option value="show" selected>Show</option><option value="hide">Remove</option></select></div>
+        <div class="field"><label for="ribbonToggle">Certificate Ribbon / Seal</label><select id="ribbonToggle"><option value="show" selected>Show</option><option value="hide">Remove</option></select></div>
+      </div>
+      <div class="group-title">Fonts</div>
+      <div class="grid3">
+        <div class="field"><label for="bodyFont">Body Font</label><select id="bodyFont"><option value="Arial, Helvetica, sans-serif">Arial</option><option value="Georgia, serif">Georgia</option><option value="'Times New Roman', Times, serif">Times</option><option value="'Courier New', monospace">Courier</option><option value="Verdana, Geneva, sans-serif">Verdana</option><option value="Tahoma, Geneva, sans-serif">Tahoma</option></select></div>
+        <div class="field"><label for="headingFont">Heading Font</label><select id="headingFont"><option value="Georgia, serif">Georgia</option><option value="'Times New Roman', Times, serif">Times</option><option value="Arial, Helvetica, sans-serif">Arial</option><option value="Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif">Impact</option><option value="'Courier New', monospace">Courier</option></select></div>
+        <div class="field"><label for="scriptFont">Signature Font</label><select id="scriptFont"><option value="'Comic Sans MS', 'Bradley Hand', cursive">Handwritten</option><option value="Georgia, serif">Georgia Italic</option><option value="'Brush Script MT', cursive">Brush Script</option><option value="'Segoe Script', cursive">Segoe Script</option><option value="'Courier New', monospace">Typed</option></select></div>
+      </div>
+      <div class="font-preview">Font controls apply to the live preview and exports.</div>
+      <div class="field"><label for="titleText">Title</label><input id="titleText" value="Marriage License"></div>
+      <div class="grid2">
+        <div class="field"><label for="jurisdiction">Jurisdiction</label><input id="jurisdiction" value="Sample County"></div>
+        <div class="field"><label for="stateText">State / Region</label><input id="stateText" value="Sample State"></div>
+      </div>
+      <div class="grid3">
+        <div class="field"><label for="licenseNo">Record No.</label><input id="licenseNo" value="M-000-2026"></div>
+        <div class="field"><label for="issueDate">Issue Date</label><input id="issueDate" value="05/08/2026"></div>
+        <div class="field"><label for="issueTime">Time</label><input id="issueTime" value="10:54 AM"></div>
+      </div>
+      <div class="group-title">Logos</div>
+      <div class="grid2">
+        <div class="field"><label for="logoAInput">Logo A</label><input id="logoAInput" type="file" accept="image/*"></div>
+        <div class="field"><label for="logoBInput">Logo B</label><input id="logoBInput" type="file" accept="image/*"></div>
+      </div>
+      <div class="group-title">Party One</div>
+      <div class="field"><label for="p1Label">Party Label</label><input id="p1Label" value="PARTY A"></div>
+      <div class="grid2">
+        <div class="field"><label for="p1Name">Full Name</label><input id="p1Name" value="Sample Person One"></div>
+        <div class="field"><label for="p1Age">Age</label><input id="p1Age" value="32"></div>
+      </div>
+      <div class="field"><label for="p1Info">Details</label><textarea id="p1Info">Birth: 01/15/1994 - Sample City&#10;Address: 100 Example Ave&#10;Prior marriages: None</textarea></div>
+      <div class="group-title">Party Two</div>
+      <div class="field"><label for="p2Label">Party Label</label><input id="p2Label" value="PARTY B"></div>
+      <div class="grid2">
+        <div class="field"><label for="p2Name">Full Name</label><input id="p2Name" value="Sample Person Two"></div>
+        <div class="field"><label for="p2Age">Age</label><input id="p2Age" value="31"></div>
+      </div>
+      <div class="field"><label for="p2Info">Details</label><textarea id="p2Info">Birth: 03/29/1995 - Sample Town&#10;Address: 220 Fictional Road&#10;Prior marriages: None</textarea></div>
+      <div class="group-title">Ceremony</div>
+      <div class="grid2">
+        <div class="field"><label for="ceremonyDate">Ceremony Date</label><input id="ceremonyDate" value="09/12/2026"></div>
+        <div class="field"><label for="location">Location</label><input id="location" value="Sample Gardens"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="officiant">Officiant</label><input id="officiant" value="Officiant Sample"></div>
+        <div class="field"><label for="officiantTitle">Officiant Title</label><input id="officiantTitle" value="Ceremony Officiant"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="witness1">Witness 1</label><input id="witness1" value="Witness One"></div>
+        <div class="field"><label for="witness2">Witness 2</label><input id="witness2" value="Witness Two"></div>
+      </div>
+      <div class="field"><label for="footerText">Footer Text</label><input id="footerText" value="SPECIMEN RECORD - NOT VALID FOR VERIFICATION"></div>
+    </section>
+    <section class="preview-panel">
+      <h3>Live Preview</h3>
+      <div class="preview-stage">
+        <article id="doc" class="doc doc-license">
+          <div class="stamp piece" data-piece="stamp">SPECIMEN</div>
+          <div class="piece lic-body" data-piece="body"></div>
+          <div class="piece uploaded-logo logo-a" data-piece="logoA">LOGO</div>
+          <div class="piece uploaded-logo logo-b" data-piece="logoB">LOGO</div>
+          <div class="piece issuer-seal seal" data-piece="seal">SAMPLE<br>SEAL</div>
+          <div class="piece issued-box" data-piece="issuedBox">ISSUED<br>No: M-000-2026<br>Date: 05/08/2026<br>Time: 10:54 AM</div>
+          <div class="piece note" data-piece="note">ALL PARTIES PLEASE NOTE: This fictional specimen is for design preview only and has no legal effect.</div>
+          <div class="piece spouse-a-label" data-piece="spouseALabel">PARTY A</div>
+          <div class="piece spouse-b-label" data-piece="spouseBLabel">PARTY B</div>
+          <div class="piece party-a" data-piece="partyA"></div>
+          <div class="piece party-b" data-piece="partyB"></div>
+          <div class="piece cert-section" data-piece="certSection"></div>
+          <div class="piece license-footer" data-piece="footer">SPECIMEN RECORD - NOT VALID FOR VERIFICATION</div>
+          <div class="piece lic-watermark" data-piece="watermark">SAMPLE</div>
+          <div class="piece ornate" data-piece="ornate"></div>
+          <div class="piece inner-border" data-piece="innerBorder"></div>
+          <div class="piece cert-banner" data-piece="certBanner">CERTIFICATION OF VITAL RECORDS</div>
+          <div class="piece cert-left-logo" data-piece="certLeftLogo">SAMPLE<br>COUNTY</div>
+          <div class="piece cert-barcode-main" data-piece="certBarcodeMain"></div>
+          <div class="piece cert-barcode-right" data-piece="certBarcodeRight"></div>
+          <div class="piece cert-filing" data-piece="certFiling"></div>
+          <div class="piece cert-title" data-piece="certTitle">SAMPLE STATE<br>MARRIAGE CERTIFICATE</div>
+          <div class="piece cert-record-no" data-piece="certRecordNo"></div>
+          <div class="piece cert-side-copy" data-piece="certSideCopy"></div>
+          <div class="piece cert-brace" data-piece="certBrace">}</div>
+          <div class="piece cert-copy" data-piece="certCopy"></div>
+          <div class="piece cert-seal seal" data-piece="certSeal">SEAL</div>
+          <div class="piece cert-signature" data-piece="certSignature"></div>
+          <div class="piece cert-official-lines" data-piece="certOfficialLines"></div>
+          <div class="piece cert-bottom-seal" data-piece="certBottomSeal">SAMPLE<br>SEAL</div>
+          <div class="piece cert-clerk-sign" data-piece="certClerkSign"></div>
+          <div class="piece cert-bottom-copy" data-piece="certBottomCopy"></div>
+          <div class="piece cert-safe" data-piece="certSafe">KEEP DOCUMENT IN A SAFE PLACE<br>ANY ALTERATION OR ERASURE VOIDS THIS CERTIFICATE</div>
+          <div class="piece cert-id" data-piece="certId">C3131879</div>
+          <div class="piece cert-footer" data-piece="certFooter">SPECIMEN RECORD - NOT VALID FOR VERIFICATION</div>
+        </article>
+      </div>
+      <div class="actions">
+        <button class="btn primary" data-export="png">PNG</button>
+        <button class="btn" data-export="jpeg">JPEG</button>
+        <button class="btn" data-export="pdf">PDF</button>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+const doc=document.getElementById("doc");
+const ids=["docType","stampToggle","watermarkToggle","ribbonToggle","bodyFont","headingFont","scriptFont","titleText","jurisdiction","stateText","licenseNo","issueDate","issueTime","p1Label","p1Name","p1Age","p1Info","p2Label","p2Name","p2Age","p2Info","ceremonyDate","location","officiant","officiantTitle","witness1","witness2","footerText"];
+const movePositions={};
+const logoURLs={logoA:"",logoB:""};
+function val(id){return (document.getElementById(id).value||"").trim();}
+function activeType(){return val("docType")||"license";}
+function setHTML(sel,html){doc.querySelector(sel).innerHTML=html;}
+function setText(sel,text){doc.querySelector(sel).textContent=text;}
+function escapeHTML(text){return String(text).replace(/[&<>]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[ch]));}
+function applyDocMode(){
+  const type=activeType();
+  const classes=["doc",`doc-${type}`];
+  if(val("stampToggle")==="hide") classes.push("hide-stamp");
+  if(val("watermarkToggle")==="hide") classes.push("hide-watermark");
+  if(val("ribbonToggle")==="hide") classes.push("hide-ribbon");
+  doc.className=classes.join(" ");
+  doc.querySelectorAll(".piece").forEach(el=>{el.style.display="none";});
+  const show=type==="license"?["stamp","body","logoA","logoB","seal","issuedBox","note","spouseALabel","spouseBLabel","partyA","partyB","certSection","footer","watermark"]:["stamp","ornate","innerBorder","certBanner","certLeftLogo","certBarcodeMain","certBarcodeRight","certFiling","certTitle","certRecordNo","certSideCopy","certBrace","certCopy","certSeal","certSignature","certOfficialLines","certBottomSeal","certClerkSign","certBottomCopy","certSafe","certId","certFooter"];
+  show.forEach(key=>{const el=doc.querySelector(`[data-piece="${key}"]`);if(el)el.style.display="";});
+}
+function setLogo(piece,url){
+  const box=doc.querySelector(`[data-piece="${piece}"]`);
+  if(!box) return;
+  box.innerHTML=url?`<img alt="" src="${url}">`:"LOGO";
+}
+function update(){
+  applyDocMode();
+  doc.style.setProperty("--doc-body-font",val("bodyFont")||"Arial, Helvetica, sans-serif");
+  doc.style.setProperty("--doc-heading-font",val("headingFont")||"Georgia, serif");
+  doc.style.setProperty("--doc-script-font",val("scriptFont")||"'Comic Sans MS', 'Bradley Hand', cursive");
+  let title=val("titleText") || (activeType()==="license"?"Marriage License":"Marriage Certificate");
+  if(activeType()==="certificate" && title==="Marriage License") title="Marriage Certificate";
+  setHTML(".cert-title",`${escapeHTML(val("stateText")||"Sample State").toUpperCase()}<br>${escapeHTML(title).toUpperCase()}`);
+  setLogo("logoA",logoURLs.logoA);
+  setLogo("logoB",logoURLs.logoB);
+  setText(".spouse-a-label",val("p1Label")||"PARTY A");
+  setText(".spouse-b-label",val("p2Label")||"PARTY B");
+  setHTML(".issued-box",`ISSUED<br>No: ${escapeHTML(val("licenseNo")||"M-000-2026")}<br>Date: ${escapeHTML(val("issueDate")||"05/08/2026")}<br>Time: ${escapeHTML(val("issueTime")||"10:54 AM")}`);
+  setHTML(".party-a",`Name: ${escapeHTML(val("p1Name")||"Sample Person One")} <span style="float:right">Age: ${escapeHTML(val("p1Age")||"32")}</span><br>${escapeHTML(val("p1Info")).replace(/\n/g,"<br>")}`);
+  setHTML(".party-b",`Name: ${escapeHTML(val("p2Name")||"Sample Person Two")} <span style="float:right">Age: ${escapeHTML(val("p2Age")||"31")}</span><br>${escapeHTML(val("p2Info")).replace(/\n/g,"<br>")}`);
+  setHTML(".cert-section",`CERTIFICATE OF MARRIAGE<br><br>I HEREBY CERTIFY THAT I DID ON ${escapeHTML(val("ceremonyDate")||"09/12/2026")} AT ${escapeHTML(val("location")||"Sample Gardens")} SOLEMNIZE THE RITES OF MATRIMONY BETWEEN THE COUPLE IN THE PRESENCE OF WITNESSES.<br><br>Officiant: ${escapeHTML(val("officiant")||"Officiant Sample")} - ${escapeHTML(val("officiantTitle")||"Ceremony Officiant")}`);
+  setHTML(".cert-filing",`MC<br># ${escapeHTML(val("licenseNo")||"M-000-2026")}<br>Fees: $0.00<br>${escapeHTML(val("issueDate")||"05/08/2026")} ${escapeHTML(val("issueTime")||"10:54 AM")}<br>Receipt #: 2024789<br>Filed By: SAMPLE<br>${escapeHTML(val("officiant")||"Officiant Sample")}<br>RECORD CLERK`);
+  setText(".cert-record-no",`No: ${val("licenseNo")||"M-000-2026"}`);
+  setHTML(".cert-side-copy",`${escapeHTML(val("stateText")||"Sample State").toUpperCase()}<br>${escapeHTML(val("jurisdiction")||"Sample County").toUpperCase()}<br><span style="font-size:14px">SS:</span>`);
+  setHTML(".cert-copy",`This is to certify that the undersigned, <span class="cert-line">${escapeHTML(val("officiant")||"Officiant Sample")}</span>,<br>did on the <span class="cert-line" style="min-width:90px">${escapeHTML(val("ceremonyDate")||"09/12/2026")}</span> day at <span class="cert-line">${escapeHTML(val("location")||"Sample Gardens")}</span>,<br>with their mutual consent and witnessed in the presence of <span class="cert-line">${escapeHTML(val("witness1")||"Witness One")}</span>,<br>join in lawful wedlock <span class="cert-line">${escapeHTML(val("p1Name")||"Sample Person One")}</span> and <span class="cert-line">${escapeHTML(val("p2Name")||"Sample Person Two")}</span>.`);
+  setText(".cert-signature",val("officiant")||"Officiant Sample");
+  setHTML(".certOfficialLines",`<div>Signature of Official Performing Marriage</div><div>${escapeHTML(val("officiantTitle")||"Ceremony Officiant")}</div><div>Address of Official Performing Marriage</div><div>City, State and Zip Code</div><div>Specimen Officiant ID Number</div>`);
+  setText(".certClerkSign",val("officiant")||"Officiant Sample");
+  setHTML(".certBottomCopy",`Couple's Mailing Address: ${escapeHTML((val("p1Info")||"100 Example Ave").split("\n")[1]||"100 Example Ave")}<br><br>This certificate must be printed in black ink and retained for specimen design preview only.`);
+  setText(".license-footer",val("footerText")||"SPECIMEN RECORD - NOT VALID FOR VERIFICATION");
+  setText(".cert-footer",val("footerText")||"SPECIMEN RECORD - NOT VALID FOR VERIFICATION");
+  applyMovedPositions();
+}
+function savedMap(){const type=activeType();if(!movePositions[type])movePositions[type]={};return movePositions[type];}
+function applyMovedPositions(){
+  const saved=movePositions[activeType()]||{};
+  doc.querySelectorAll(".piece").forEach(el=>{
+    el.style.left="";el.style.top="";el.style.right="";el.style.bottom="";
+    const pos=saved[el.dataset.piece];
+    if(pos){el.style.left=`${pos.left}px`;el.style.top=`${pos.top}px`;el.style.right="auto";el.style.bottom="auto";}
+  });
+}
+function makeMoveable(){
+  doc.querySelectorAll(".piece").forEach(el=>{
+    el.addEventListener("pointerdown",event=>{
+      if(event.button!==0) return;
+      event.preventDefault();
+      const docRect=doc.getBoundingClientRect();
+      const r=el.getBoundingClientRect();
+      const startX=event.clientX,startY=event.clientY;
+      const originLeft=r.left-docRect.left,originTop=r.top-docRect.top;
+      const saved=savedMap();
+      el.classList.add("is-moving");
+      el.setPointerCapture(event.pointerId);
+      function move(e){
+        const left=originLeft+(e.clientX-startX);
+        const top=originTop+(e.clientY-startY);
+        el.style.left=`${left}px`;
+        el.style.top=`${top}px`;
+        el.style.right="auto";
+        el.style.bottom="auto";
+        saved[el.dataset.piece]={left,top};
+      }
+      function done(){
+        el.classList.remove("is-moving");
+        el.removeEventListener("pointermove",move);
+        el.removeEventListener("pointerup",done);
+        el.removeEventListener("pointercancel",done);
+      }
+      el.addEventListener("pointermove",move);
+      el.addEventListener("pointerup",done);
+      el.addEventListener("pointercancel",done);
+    });
+  });
+}
+function readLogo(inputId,piece){
+  const input=document.getElementById(inputId);
+  input.addEventListener("change",()=>{
+    const file=input.files&&input.files[0];
+    if(logoURLs[piece]) URL.revokeObjectURL(logoURLs[piece]);
+    logoURLs[piece]=file?URL.createObjectURL(file):"";
+    update();
+  });
+}
+ids.forEach(id=>{
+  document.getElementById(id).addEventListener("input",update);
+  document.getElementById(id).addEventListener("change",update);
+});
+readLogo("logoAInput","logoA");
+readLogo("logoBInput","logoB");
+async function exportFile(format){
+  await document.fonts.ready;
+  const canvas=await html2canvas(doc,{scale:2,backgroundColor:null,useCORS:true});
+  const stamp="marriage-license-certificate";
+  if(format==="pdf"){
+    const{jsPDF}=window.jspdf;
+    const pdf=new jsPDF({orientation:canvas.width>canvas.height?"landscape":"portrait",unit:"pt",format:"letter"});
+    const pageW=pdf.internal.pageSize.getWidth(),pageH=pdf.internal.pageSize.getHeight();
+    const ratio=Math.min((pageW-54)/canvas.width,(pageH-54)/canvas.height);
+    const w=canvas.width*ratio,h=canvas.height*ratio;
+    pdf.addImage(canvas.toDataURL("image/jpeg",.95),"JPEG",(pageW-w)/2,(pageH-h)/2,w,h);
+    pdf.save(`${stamp}.pdf`);
+    return;
+  }
+  const link=document.createElement("a");
+  const type=format==="jpeg"?"image/jpeg":"image/png";
+  link.href=canvas.toDataURL(type,.95);
+  link.download=`${stamp}.${format==="jpeg"?"jpg":"png"}`;
+  link.click();
+}
+document.querySelectorAll("[data-export]").forEach(btn=>btn.addEventListener("click",()=>requireExportAccess(()=>exportFile(btn.dataset.export))));
+makeMoveable();
+update();
+</script>
+</body>
+</html>

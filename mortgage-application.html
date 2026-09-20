@@ -41,7 +41,7 @@ nav{position:sticky;top:0;z-index:500;display:flex;align-items:center;justify-co
 #cv,body::after,nav,.ar,.pnl,.pghd,.pw>h3{display:none!important;}
 .pw{border:none!important;background:transparent!important;padding:0!important;}
 .pg{padding:0!important;}}
-</style></head><body>
+</style><script src="/access.js"></script></head><body>
 <canvas id="cv"></canvas>
 <nav><a href="index.html" class="nbk">← All Forms</a>
 <span class="nft">Mortgage Application</span>
@@ -101,16 +101,13 @@ window.addEventListener('resize',rsz);rsz();requestAnimationFrame(draw);
 })();
 function dlPDF(){window.print();}
 
+var currentForm = "mortgage-application.html";
 function checkAccess(){
-  var exp=localStorage.getItem('fp_premium_exp');
-  if(exp && parseInt(exp)>Date.now()) return true;
-  return false;
+  return typeof FP!=='undefined' && FP.canAccess(currentForm);
 }
 function requireAccess(action){
-  if(checkAccess()){ action(); return; }
-  if(confirm('This feature requires a Form Porn account.\n\nClick OK to sign up or use a promo code — from $3 per form!')){
-    window.location.href='/pricing.html';
-  }
+  if(typeof FP==='undefined'){ alert("Couldn't verify your access \u2014 please refresh the page."); return; }
+  FP.requireAccess(currentForm, action);
 }
 
 function dlPNG(id){var el=document.getElementById(id);if(!el)return;
@@ -119,6 +116,7 @@ function dlPNG(id){var el=document.getElementById(id);if(!el)return;
   });
 }
 function dlJPEG(id){var el=document.getElementById(id);if(!el)return;
+  requireAccess(function(){
   if(typeof html2canvas==='undefined'){var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';s.onload=()=>_cap(el,'jpg');document.head.appendChild(s);}else _cap(el,'jpg');
   });
 }

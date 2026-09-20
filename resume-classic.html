@@ -81,7 +81,7 @@ nav{position:sticky;top:0;z-index:500;display:flex;align-items:center;justify-co
 .r1-footer{grid-column:1/-1;background:#1e2835;padding:8px 20px;display:flex;align-items:center;justify-content:space-between;}
 .fp-label{font-size:8px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;text-transform:uppercase;}
 .mascot-img{height:38px;opacity:0.35;object-fit:contain;}
-</style></head><body>
+</style><script src="/access.js"></script></head><body>
 <canvas id="space-canvas"></canvas>
 <nav>
   <a href="formporn-v6.html" class="nav-back">← Back</a>
@@ -142,16 +142,13 @@ function drawBg(t){ct.clearRect(0,0,W,H);const bg=ct.createRadialGradient(W/2,0,
 window.addEventListener('resize',rsz);rsz();requestAnimationFrame(drawBg);
 
 
+var currentForm = "resume-classic.html";
 function checkAccess(){
-  var exp=localStorage.getItem('fp_premium_exp');
-  if(exp && parseInt(exp)>Date.now()) return true;
-  return false;
+  return typeof FP!=='undefined' && FP.canAccess(currentForm);
 }
 function requireAccess(action){
-  if(checkAccess()){ action(); return; }
-  if(confirm('This feature requires a Form Porn account.\n\nClick OK to sign up or use a promo code — from $3 per form!')){
-    window.location.href='/pricing.html';
-  }
+  if(typeof FP==='undefined'){ alert("Couldn't verify your access \u2014 please refresh the page."); return; }
+  FP.requireAccess(currentForm, action);
 }
 
 function dlPDF(id){
