@@ -6,6 +6,7 @@
 <title>National Registry Card — Form Porn</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Playfair+Display:wght@700;900&family=IM+Fell+English:ital@0;1&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="/access.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{--bg:#06070f;--panel:#0d0e1c;--gold:#c9a84c;--gold2:#e8c96a;--gr:#5a6b88;--wh:#fff;--border:rgba(200,170,90,0.18);}
@@ -372,13 +373,28 @@ function render(){
   document.getElementById('d_sig').textContent=g('f_sig');
   document.getElementById('d_year').textContent=g('f_year')||'2024';
 }
-async function exportCard(){
+async function doExportCard(){
   const el=document.getElementById('card-front');
   const canvas=await html2canvas(el,{scale:4,useCORS:true,backgroundColor:null,logging:false});
   const link=document.createElement('a');
   link.download='forma-registry-card.png';
   link.href=canvas.toDataURL('image/png');
   link.click();
+}
+const currentForm = "social-security-card-generator.html";
+function hasAccess(){
+  if (typeof FP === 'undefined') return false;
+  return FP.canAccess(currentForm);
+}
+function exportCard(){
+  if (typeof FP === 'undefined') {
+    alert("Couldn't verify your access — please refresh the page.\n\nIf this keeps happening, disable your ad blocker for formporn.app.");
+    return;
+  }
+  if (hasAccess()) { doExportCard(); return; }
+  if (confirm("This is a premium form.\n\nUnlock this form or get all forms with Premium.\n\nGo to checkout?")) {
+    window.location.href = `/checkout.html?plan=single&form=${encodeURIComponent(currentForm)}`;
+  }
 }
 // Init with a random number
 document.getElementById('f_num').value='472-88-0197';
