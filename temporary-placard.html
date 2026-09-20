@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Temporary Placard Maker - Form Porn</title>
+<title>Temporary License Plate Maker - Form Porn</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;500;700;800;900&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{--black:#02030c;--blue:#1a7fff;--cyan:#40c8ff;--gold:#ffd438;--gold2:#ffb800;--white:#eef2ff;--gray:#6878a0;}
@@ -38,7 +38,7 @@ nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-con
 .btn-img.primary{border:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--black);}
 .placard-shell{display:flex;justify-content:center;}
 .placard-viewport{position:relative;width:min(100%,1120px);aspect-ratio:1210/585;overflow:hidden;}
-.placard-doc{position:absolute;left:0;top:0;width:2880px;height:1800px;min-width:0;overflow:hidden;background:#fff url("../assets/templates/placard-original.png") center/100% 100% no-repeat;transform-origin:0 0;}
+.placard-doc{position:absolute;left:0;top:0;width:2880px;height:1800px;min-width:0;overflow:hidden;background:#fff url("placard-original.png") center/100% 100% no-repeat;transform-origin:0 0;}
 .native-layer{position:absolute;left:0;top:0;width:2880px;height:1800px;transform-origin:top left;}
 .card-clean,.static-title,.field,.qr-copy,.qr-source{position:absolute;transform-origin:top left;}
 .card-clean{left:900px;top:600px;width:1110px;height:555px;border:3px solid #dedede;border-radius:28px;background:#fafafa;box-shadow:0 18px 42px rgba(0,0,0,.08);pointer-events:none;}
@@ -54,7 +54,7 @@ nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-con
 .make{left:1533px;width:147px;}
 .model{left:1747px;width:162px;}
 .qr-copy{left:1820px;top:952px;width:118px;height:118px;overflow:hidden;pointer-events:none;}
-.qr-source{left:0;top:0;width:190px;height:190px;background:url("../assets/templates/placard-original.png") no-repeat;background-size:2880px 1800px;background-position:-1805px -936px;transform:scale(.621);}
+.qr-source{left:0;top:0;width:190px;height:190px;background:url("placard-original.png") no-repeat;background-size:2880px 1800px;background-position:-1805px -936px;transform:scale(.621);}
 .qr-copy.is-hidden{display:none;}
 @media (max-width:860px){
   .editor{grid-template-columns:1fr;}
@@ -78,20 +78,21 @@ nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-con
 <body>
 <nav>
   <a href="/" class="nav-back" id="back-link">&larr; Back</a>
-  <span class="nav-ft">Temporary Placard Maker</span>
+  <span class="nav-ft">Temporary License Plate Maker</span>
   <a href="/" class="nav-home">Home</a>
 </nav>
 
 <div class="page">
   <div class="page-header">
     <div class="page-eye">Identity &amp; Vehicles</div>
-    <div class="page-title">Temporary <span>Placard</span> Maker</div>
+    <div class="page-title">Temporary <span>License Plate</span> Maker</div>
     <div class="page-rule"></div>
   </div>
 
   <div class="editor">
     <div class="panel">
-      <h3>Placard Details</h3>
+      <h3>Plate Details</h3>
+      <div class="fg"><label for="f-doc-title">Document Title</label><input id="f-doc-title" value="TEMPORARY LICENSE PLATE" autocomplete="off"></div>
       <div class="fg"><label for="f-state">State</label><input id="f-state" value="NEVADA" autocomplete="off"></div>
       <div class="fg"><label for="f-plate">Plate / Permit Number</label><input id="f-plate" value="NV-774-040" autocomplete="off"></div>
       <div class="sdiv">Expiration Date</div>
@@ -125,7 +126,7 @@ nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-con
             <div id="placard-doc" class="placard-doc">
               <div id="native-layer" class="native-layer">
                 <div class="card-clean"></div>
-                <div class="static-title">TEMPORARY PLACARD</div>
+                <div id="p-doc-title" class="static-title">TEMPORARY LICENSE PLATE</div>
                 <div id="qr-copy" class="qr-copy"><div class="qr-source"></div></div>
                 <div id="p-state" class="field state" data-key="state"></div>
                 <div id="p-vin" class="field meta vin" data-key="vin"></div>
@@ -148,14 +149,14 @@ nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-con
   </div>
 </div>
 
-<script src="../access.js"></script>
+<script src="/access.js"></script>
 <script>
 const nativeWidth=2880;
 const nativeHeight=1800;
-const templateSrc="../assets/templates/placard-original.png";
-const fieldIds=["f-state","f-plate","f-month","f-day","f-exp-year","f-vin","f-vyear","f-make","f-model"];
+const templateSrc="placard-original.png";
+const fieldIds=["f-doc-title","f-state","f-plate","f-month","f-day","f-exp-year","f-vin","f-vyear","f-make","f-model"];
 const sizeIds=["s-state","s-meta","s-plate","s-date"];
-const currentForm="forms/temporary-placard.html";
+const currentForm="temporary-placard.html";
 const crop={x:875,y:575,w:1160,h:610};
 const layout={
   state:{x:1280,y:615,w:330,h:58,drawX:1445,drawY:645,align:"center",font:"300 57px Barlow, Arial, sans-serif",letterSpacing:7},
@@ -210,6 +211,7 @@ function applyLayout(){
 }
 
 function updatePreview(){
+  document.getElementById("p-doc-title").textContent=up(val("f-doc-title"))||"TEMPORARY LICENSE PLATE";
   Object.keys(layout).forEach(key=>{
     document.querySelector(`[data-key="${key}"]`).textContent=textFor(key);
   });
@@ -286,7 +288,7 @@ function renderCanvas(){
       ctx.strokeStyle="#dedede";
       ctx.lineWidth=3;
       ctx.stroke();
-      drawText(ctx,"TEMPORARY PLACARD",1455,701,{font:"900 31px Barlow, Arial, sans-serif",align:"center",letterSpacing:.5});
+      drawText(ctx,up(val("f-doc-title"))||"TEMPORARY LICENSE PLATE",1455,701,{font:"900 31px Barlow, Arial, sans-serif",align:"center",letterSpacing:.5});
       Object.keys(layout).forEach(key=>{
         const pos=layout[key];
         drawText(ctx,textFor(key),pos.drawX,pos.drawY,{font:pos.font,align:pos.align,letterSpacing:pos.letterSpacing,color:pos.color});
@@ -308,7 +310,7 @@ async function exportFile(format){
     if(format==="pdf"){
       const win=window.open("","_blank","width=900,height=700");
       const data=canvas.toDataURL("image/png");
-      win.document.write(`<!DOCTYPE html><title>Temporary Placard</title><style>body{margin:0;background:#fff;}img{width:100%;height:auto;display:block;}@page{margin:0;}</style><img src="${data}" alt="Temporary Placard">`);
+      win.document.write(`<!DOCTYPE html><title>Temporary License Plate</title><style>body{margin:0;background:#fff;}img{width:100%;height:auto;display:block;}@page{margin:0;}</style><img src="${data}" alt="Temporary License Plate">`);
       win.document.close();
       win.focus();
       win.print();
@@ -317,7 +319,7 @@ async function exportFile(format){
     const mime=format==="jpeg"?"image/jpeg":"image/png";
     const ext=format==="jpeg"?"jpg":"png";
     const a=document.createElement("a");
-    a.download=`formporn-temporary-placard.${ext}`;
+    a.download=`formporn-temporary-license-plate.${ext}`;
     a.href=canvas.toDataURL(mime,format==="jpeg"?.96:1);
     a.click();
   });
