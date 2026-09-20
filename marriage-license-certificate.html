@@ -277,9 +277,9 @@ function update(){
   setHTML(".cert-side-copy",`${escapeHTML(val("stateText")||"Sample State").toUpperCase()}<br>${escapeHTML(val("jurisdiction")||"Sample County").toUpperCase()}<br><span style="font-size:14px">SS:</span>`);
   setHTML(".cert-copy",`This is to certify that the undersigned, <span class="cert-line">${escapeHTML(val("officiant")||"Officiant Sample")}</span>,<br>did on the <span class="cert-line" style="min-width:90px">${escapeHTML(val("ceremonyDate")||"09/12/2026")}</span> day at <span class="cert-line">${escapeHTML(val("location")||"Sample Gardens")}</span>,<br>with their mutual consent and witnessed in the presence of <span class="cert-line">${escapeHTML(val("witness1")||"Witness One")}</span>,<br>join in lawful wedlock <span class="cert-line">${escapeHTML(val("p1Name")||"Sample Person One")}</span> and <span class="cert-line">${escapeHTML(val("p2Name")||"Sample Person Two")}</span>.`);
   setText(".cert-signature",val("officiant")||"Officiant Sample");
-  setHTML(".certOfficialLines",`<div>Signature of Official Performing Marriage</div><div>${escapeHTML(val("officiantTitle")||"Ceremony Officiant")}</div><div>Address of Official Performing Marriage</div><div>City, State and Zip Code</div><div>Specimen Officiant ID Number</div>`);
-  setText(".certClerkSign",val("officiant")||"Officiant Sample");
-  setHTML(".certBottomCopy",`Couple's Mailing Address: ${escapeHTML((val("p1Info")||"100 Example Ave").split("\n")[1]||"100 Example Ave")}<br><br>This certificate must be printed in black ink and retained for specimen design preview only.`);
+  setHTML(".cert-official-lines",`<div>Signature of Official Performing Marriage</div><div>${escapeHTML(val("officiantTitle")||"Ceremony Officiant")}</div><div>Address of Official Performing Marriage</div><div>City, State and Zip Code</div><div>Specimen Officiant ID Number</div>`);
+  setText(".cert-clerk-sign",val("officiant")||"Officiant Sample");
+  setHTML(".cert-bottom-copy",`Couple's Mailing Address: ${escapeHTML((val("p1Info")||"100 Example Ave").split("\n")[1]||"100 Example Ave")}<br><br>This certificate must be printed in black ink and retained for specimen design preview only.`);
   setText(".license-footer",val("footerText")||"SPECIMEN RECORD - NOT VALID FOR VERIFICATION");
   setText(".cert-footer",val("footerText")||"SPECIMEN RECORD - NOT VALID FOR VERIFICATION");
   applyMovedPositions();
