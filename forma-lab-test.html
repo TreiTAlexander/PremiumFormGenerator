@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Forma Lab Test (Private) | Form Porn</title>
+<style>
+:root{--black:#050611;--gold:#ffd438;--gold2:#e8c96a;--blue:#1a7fff;--cyan:#40c8ff;--white:#eef2ff;--muted:#7890c5;--panel:#0d0e1f;--border:rgba(255,212,56,0.16);--bad:#ff5d6c;--good:#3ecf8e}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background:radial-gradient(circle at top,#12173a 0,#050611 45%,#02030a 100%);color:var(--white);font-family:Arial,Helvetica,sans-serif;padding:24px 16px 80px}
+.wrap{max-width:980px;margin:0 auto}
+header{text-align:center;margin-bottom:28px}
+header h1{font:900 clamp(24px,4vw,34px) Georgia,serif;color:var(--gold);margin-bottom:6px}
+header p{font:800 10px 'Courier New',monospace;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+.badge{display:inline-block;margin-top:10px;font:800 9px 'Courier New',monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--bad);border:1px solid var(--bad);border-radius:99px;padding:4px 12px}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:20px}
+.panel h2{font:900 12px 'Courier New',monospace;letter-spacing:.22em;text-transform:uppercase;color:var(--gold2);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+label{display:block;font:800 9px 'Courier New',monospace;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+input[type=password],input[type=text],select,textarea{width:100%;background:#12142a;border:1px solid rgba(255,212,56,0.2);border-radius:8px;color:#fff;padding:11px 12px;font:600 13px Arial,Helvetica,sans-serif;outline:none;resize:vertical}
+textarea{min-height:180px;line-height:1.5}
+input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{margin-bottom:16px}
+.charcount{font:700 9px 'Courier New',monospace;color:var(--muted);text-align:right;margin-top:4px}
+.charcount.over{color:var(--bad)}
+select{appearance:none;cursor:pointer}
+.btn{border:0;border-radius:8px;padding:13px 18px;font:900 11px 'Courier New',monospace;letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
+.btn-gold{background:linear-gradient(135deg,#ffd438,#ffb800);color:#050611;width:100%}
+.btn-gold:disabled{opacity:.5;cursor:not-allowed}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);font-size:9px;padding:7px 12px}
+.status{margin-top:12px;font:700 11px 'Courier New',monospace;text-align:center;min-height:16px}
+.status.error{color:var(--bad)}
+.status.ok{color:var(--good)}
+.suggestion{background:#12142a;border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px}
+.suggestion .tag{font:900 8px 'Courier New',monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.suggestion .orig{color:#9aa3c0;font-size:13px;padding:10px;background:#0a0b18;border-radius:6px;margin-bottom:8px;text-decoration:line-through;text-decoration-color:rgba(255,93,108,0.5)}
+.suggestion .sugg{color:#fff;font-size:14px;padding:10px;background:rgba(26,127,255,0.08);border-radius:6px;border-left:3px solid var(--blue);margin-bottom:8px}
+.suggestion .why{color:var(--muted);font-size:12px;font-style:italic;margin-bottom:10px}
+.suggestion .needinfo{display:inline-block;font:800 8px 'Courier New',monospace;color:var(--gold);border:1px solid var(--gold);border-radius:99px;padding:3px 10px;margin-bottom:10px;letter-spacing:.1em}
+.actions3{display:flex;gap:8px}
+.actions3 button{flex:1;padding:9px;border-radius:6px;border:1px solid var(--border);background:#0a0b18;color:var(--muted);font:800 9px 'Courier New',monospace;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.actions3 button.picked-accept{background:rgba(62,207,142,0.15);border-color:var(--good);color:var(--good)}
+.actions3 button.picked-edit{background:rgba(255,212,56,0.15);border-color:var(--gold);color:var(--gold)}
+.actions3 button.picked-skip{background:rgba(255,93,108,0.1);border-color:var(--bad);color:var(--bad)}
+.question-card{background:rgba(255,212,56,0.06);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+.question-card .qlabel{font:900 8px 'Courier New',monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.warning-line{color:var(--bad);font-size:12px;padding:8px 0;border-bottom:1px solid var(--border)}
+.warning-line:last-child{border-bottom:0}
+.meta-strip{display:flex;gap:16px;flex-wrap:wrap;font:700 10px 'Courier New',monospace;color:var(--muted);margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.meta-strip b{color:var(--cyan)}
+.hidden{display:none}
+.summary-block{font-size:15px;line-height:1.6;color:#fff;margin-bottom:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Forma Lab — Test</h1>
+    <p>Private development interface · not part of the public site</p>
+    <span class="badge">Internal Use Only</span>
+  </header>
+
+  <div class="panel" id="gatePanel">
+    <h2>Access</h2>
+    <div class="field">
+      <label for="accessCode">Forma access code</label>
+      <input type="password" id="accessCode" placeholder="Enter the development access code">
+    </div>
+    <button class="btn-ghost" id="rememberBtn" type="button">Remember on this device</button>
+    <button class="btn-ghost" id="forgetBtn" type="button">Forget code</button>
+  </div>
+
+  <div class="panel">
+    <h2>Resume</h2>
+    <div class="field">
+      <label for="resumeText">Paste the resume text</label>
+      <textarea id="resumeText" maxlength="12000" placeholder="Paste resume text here..."></textarea>
+      <div class="charcount" id="resumeCount">0 / 12000</div>
+    </div>
+    <div class="field">
+      <label for="jobDescription">Job description (optional — required for "Match Me to This Job")</label>
+      <textarea id="jobDescription" maxlength="6000" placeholder="Paste a job description here if you want Forma to match against it..."></textarea>
+      <div class="charcount" id="jobCount">0 / 6000</div>
+    </div>
+    <div class="field">
+      <label for="action">What should Forma do?</label>
+      <select id="action">
+        <option value="review_resume">Review My Resume</option>
+        <option value="fix_bullets">Fix My Bullets</option>
+        <option value="improve_summary">Improve My Summary</option>
+        <option value="match_job">Match Me to This Job</option>
+      </select>
+    </div>
+    <button class="btn btn-gold" id="askBtn">Ask Forma</button>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div class="panel hidden" id="resultsPanel">
+    <h2>Forma's Findings</h2>
+    <div class="summary-block" id="summaryText"></div>
+
+    <div id="suggestionsList"></div>
+    <div id="questionsList"></div>
+    <div id="warningsList"></div>
+
+    <div class="meta-strip" id="metaStrip"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const CODE_KEY = 'forma-poc-access-code';
+
+  const accessCodeEl = $('accessCode');
+  const stored = localStorage.getItem(CODE_KEY);
+  if (stored) accessCodeEl.value = stored;
+
+  $('rememberBtn').addEventListener('click', () => {
+    localStorage.setItem(CODE_KEY, accessCodeEl.value || '');
+    setStatus('Code remembered on this device.', 'ok');
+  });
+  $('forgetBtn').addEventListener('click', () => {
+    localStorage.removeItem(CODE_KEY);
+    accessCodeEl.value = '';
+    setStatus('Code forgotten.', 'ok');
+  });
+
+  const resumeEl = $('resumeText');
+  const jobEl = $('jobDescription');
+  const resumeCount = $('resumeCount');
+  const jobCount = $('jobCount');
+
+  function updateCount(el, counter, max) {
+    const len = el.value.length;
+    counter.textContent = `${len} / ${max}`;
+    counter.classList.toggle('over', len > max);
+  }
+  resumeEl.addEventListener('input', () => updateCount(resumeEl, resumeCount, 12000));
+  jobEl.addEventListener('input', () => updateCount(jobEl, jobCount, 6000));
+
+  function setStatus(msg, kind) {
+    const el = $('status');
+    el.textContent = msg || '';
+    el.className = 'status' + (kind ? ' ' + kind : '');
+  }
+
+  const askBtn = $('askBtn');
+  let inFlight = false;
+
+  askBtn.addEventListener('click', async () => {
+    if (inFlight) return;
+
+    const accessCode = accessCodeEl.value.trim();
+    const resumeText = resumeEl.value.trim();
+    const jobDescription = jobEl.value.trim();
+    const action = $('action').value;
+
+    if (!accessCode) { setStatus('Enter the access code first.', 'error'); return; }
+    if (!resumeText) { setStatus('Paste a resume first.', 'error'); return; }
+    if (action === 'match_job' && !jobDescription) {
+      setStatus('Match Me to This Job needs a job description.', 'error');
+      return;
+    }
+
+    inFlight = true;
+    askBtn.disabled = true;
+    askBtn.textContent = 'Forma is thinking...';
+    setStatus('Sending to Forma...', '');
+    $('resultsPanel').classList.add('hidden');
+
+    try {
+      const res = await fetch('/api/forma-resume-lab', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, resumeText, jobDescription, accessCode }),
+      });
+      const data = await res.json();
+
+      if (!data.ok) {
+        setStatus(data.error || 'Something went wrong.', 'error');
+        return;
+      }
+
+      renderResults(data.result, data.meta);
+      setStatus('Done.', 'ok');
+    } catch (err) {
+      setStatus('Network error — please try again.', 'error');
+    } finally {
+      inFlight = false;
+      askBtn.disabled = false;
+      askBtn.textContent = 'Ask Forma';
+    }
+  });
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch]));
+  }
+
+  function renderResults(result, meta) {
+    $('summaryText').textContent = result.summary || '';
+
+    const suggList = $('suggestionsList');
+    suggList.innerHTML = '';
+    (result.suggestions || []).forEach(s => {
+      const card = document.createElement('div');
+      card.className = 'suggestion';
+      card.innerHTML = `
+        <div class="tag">${esc(s.section || 'general')}</div>
+        <div class="orig">${esc(s.original)}</div>
+        <div class="sugg">${esc(s.suggestion)}</div>
+        <div class="why">${esc(s.reason)}</div>
+        ${s.requiresUserInformation ? '<div class="needinfo">Needs your input</div>' : ''}
+        <div class="actions3">
+          <button data-choice="accept">Accept</button>
+          <button data-choice="edit">Edit</button>
+          <button data-choice="skip">Skip</button>
+        </div>
+      `;
+      card.querySelectorAll('[data-choice]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          card.querySelectorAll('[data-choice]').forEach(b => b.className = '');
+          btn.className = 'picked-' + btn.dataset.choice;
+        });
+      });
+      suggList.appendChild(card);
+    });
+
+    const qList = $('questionsList');
+    qList.innerHTML = '';
+    (result.questions || []).forEach(q => {
+      const card = document.createElement('div');
+      card.className = 'question-card';
+      card.innerHTML = `<div class="qlabel">Forma has a question</div><div>${esc(q.question)}</div>`;
+      qList.appendChild(card);
+    });
+
+    const wList = $('warningsList');
+    wList.innerHTML = '';
+    (result.warnings || []).forEach(w => {
+      const line = document.createElement('div');
+      line.className = 'warning-line';
+      line.textContent = w;
+      wList.appendChild(line);
+    });
+
+    const metaStrip = $('metaStrip');
+    metaStrip.innerHTML = meta ? `
+      <span>Model: <b>${esc(meta.model)}</b></span>
+      <span>Input tokens: <b>${esc(meta.inputTokens)}</b></span>
+      <span>Output tokens: <b>${esc(meta.outputTokens)}</b></span>
+      <span>Est. cost: <b>$${esc(meta.estimatedCostUsd)}</b></span>
+      <span>Latency: <b>${esc(meta.latencyMs)}ms</b></span>
+    ` : '';
+
+    $('resultsPanel').classList.remove('hidden');
+  }
+})();
+</script>
+</body>
+</html>

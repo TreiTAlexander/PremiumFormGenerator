@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /dashboard.html
 Disallow: /checkout.html
+Disallow: /forma-lab-test.html
 
 Sitemap: https://formporn.app/sitemap.xml
