@@ -116,3 +116,9 @@ const FP = {
     }
   }
 };
+
+// `const` at top level does NOT attach to `window` — but hasAccess()/requireExportAccess()
+// on temporary-placard.html and social-security-specimen.html check `window.FP` specifically.
+// Without this line, that check is always false, so paid exports on those two pages always
+// fail with a false "couldn't verify your access" alert, even for a customer who just paid.
+window.FP = FP;
