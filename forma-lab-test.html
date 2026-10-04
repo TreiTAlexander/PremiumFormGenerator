@@ -5,65 +5,111 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
 <title>Forma Lab Test (Private) | Form Porn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{--black:#050611;--gold:#ffd438;--gold2:#e8c96a;--blue:#1a7fff;--cyan:#40c8ff;--white:#eef2ff;--muted:#7890c5;--panel:#0d0e1f;--border:rgba(255,212,56,0.16);--bad:#ff5d6c;--good:#3ecf8e}
+:root{
+  --black:#03030a;
+  --black2:#07070f;
+  --gold:#ffd438;
+  --gold2:#e8c96a;
+  --amber:#ffb020;
+  --white:#f1efe8;
+  --muted:#8d8c9c;
+  --dim:#55546a;
+  --panel:#0a0a14;
+  --panel2:#0f0f1c;
+  --border:rgba(255,212,56,0.14);
+  --border2:rgba(255,212,56,0.08);
+  --bad:#ff5d6c;
+  --good:#3ecf8e;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{min-height:100vh;background:radial-gradient(circle at top,#12173a 0,#050611 45%,#02030a 100%);color:var(--white);font-family:Arial,Helvetica,sans-serif;padding:24px 16px 80px}
-.wrap{max-width:980px;margin:0 auto}
+html,body{background:var(--black)}
+body{
+  min-height:100vh;
+  position:relative;
+  background:radial-gradient(ellipse at top,#0c0c1a 0%,var(--black) 55%,#010103 100%);
+  color:var(--white);
+  font-family:'Exo 2',Arial,sans-serif;
+  padding:24px 16px 80px;
+  overflow-x:hidden;
+}
+canvas#stars{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.wrap{max-width:980px;margin:0 auto;position:relative;z-index:1}
 header{text-align:center;margin-bottom:28px}
-header h1{font:900 clamp(24px,4vw,34px) Georgia,serif;color:var(--gold);margin-bottom:6px}
-header p{font:800 10px 'Courier New',monospace;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
-.badge{display:inline-block;margin-top:10px;font:800 9px 'Courier New',monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--bad);border:1px solid var(--bad);border-radius:99px;padding:4px 12px}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:20px}
-.panel h2{font:900 12px 'Courier New',monospace;letter-spacing:.22em;text-transform:uppercase;color:var(--gold2);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
-label{display:block;font:800 9px 'Courier New',monospace;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-input[type=password],input[type=text],select,textarea{width:100%;background:#12142a;border:1px solid rgba(255,212,56,0.2);border-radius:8px;color:#fff;padding:11px 12px;font:600 13px Arial,Helvetica,sans-serif;outline:none;resize:vertical}
+.forma-hero{display:flex;justify-content:center;margin:4px 0 14px}
+.forma-hero img{width:112px;height:auto;animation:forma-idle-sway 4.5s ease-in-out infinite;filter:drop-shadow(0 10px 26px rgba(255,212,56,0.3))}
+@keyframes forma-idle-sway{0%,100%{transform:rotate(-2deg) translateY(0)}50%{transform:rotate(2deg) translateY(-5px)}}
+header h1{font:900 clamp(24px,4vw,34px) 'Exo 2',sans-serif;letter-spacing:.01em;color:var(--gold);margin-bottom:6px;text-shadow:0 0 28px rgba(255,212,56,0.25)}
+header p{font:600 10px 'DM Mono',monospace;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+.badge{display:inline-block;margin-top:10px;font:700 9px 'DM Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--bad);border:1px solid var(--bad);border-radius:99px;padding:4px 12px}
+
+.panel{background:linear-gradient(180deg,var(--panel),var(--black2));border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:20px;box-shadow:0 20px 50px -30px rgba(0,0,0,0.9)}
+.panel h2{font:800 12px 'DM Mono',monospace;letter-spacing:.22em;text-transform:uppercase;color:var(--gold2);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+
+label{display:block;font:700 9px 'DM Mono',monospace;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+input[type=password],input[type=text],select,textarea{width:100%;background:#0c0c17;border:1px solid rgba(255,212,56,0.18);border-radius:8px;color:var(--white);padding:11px 12px;font:500 13px 'Exo 2',Arial,sans-serif;outline:none;resize:vertical}
 textarea{min-height:180px;line-height:1.5}
 input:focus,select:focus,textarea:focus{border-color:var(--gold)}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .field{margin-bottom:16px}
-.charcount{font:700 9px 'Courier New',monospace;color:var(--muted);text-align:right;margin-top:4px}
+.charcount{font:600 9px 'DM Mono',monospace;color:var(--dim);text-align:right;margin-top:4px}
 .charcount.over{color:var(--bad)}
 select{appearance:none;cursor:pointer}
-.btn{border:0;border-radius:8px;padding:13px 18px;font:900 11px 'Courier New',monospace;letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
-.btn-gold{background:linear-gradient(135deg,#ffd438,#ffb800);color:#050611;width:100%}
-.btn-gold:disabled{opacity:.5;cursor:not-allowed}
-.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);font-size:9px;padding:7px 12px}
-.status{margin-top:12px;font:700 11px 'Courier New',monospace;text-align:center;min-height:16px}
+
+.btn{border:0;border-radius:8px;padding:13px 18px;font:800 11px 'DM Mono',monospace;letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
+.btn-gold{background:linear-gradient(135deg,#ffd438,#ffb020);color:#1a1200;width:100%;box-shadow:0 10px 30px -10px rgba(255,212,56,0.5)}
+.btn-gold:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);font-size:9px;padding:7px 12px;border-radius:8px}
+.status{margin-top:12px;font:700 11px 'DM Mono',monospace;text-align:center;min-height:16px}
 .status.error{color:var(--bad)}
 .status.ok{color:var(--good)}
-.suggestion{background:#12142a;border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px}
-.suggestion .tag{font:900 8px 'Courier New',monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-.suggestion .orig{color:#9aa3c0;font-size:13px;padding:10px;background:#0a0b18;border-radius:6px;margin-bottom:8px;text-decoration:line-through;text-decoration-color:rgba(255,93,108,0.5)}
-.suggestion .sugg{color:#fff;font-size:14px;padding:10px;background:rgba(26,127,255,0.08);border-radius:6px;border-left:3px solid var(--blue);margin-bottom:8px}
-.suggestion .why{color:var(--muted);font-size:12px;font-style:italic;margin-bottom:10px}
-.suggestion .needinfo{display:inline-block;font:800 8px 'Courier New',monospace;color:var(--gold);border:1px solid var(--gold);border-radius:99px;padding:3px 10px;margin-bottom:10px;letter-spacing:.1em}
+
+/* ---- loading / working state ---- */
+.working-stage{position:relative;display:flex;flex-direction:column;align-items:center;padding:14px 10px 20px}
+.video-frame{position:relative;width:min(420px,100%);border-radius:14px;overflow:hidden;border:1px solid rgba(255,212,56,0.25);box-shadow:0 0 0 1px rgba(0,0,0,0.6),0 25px 60px -20px rgba(255,180,20,0.25)}
+.video-frame::before{content:'';position:absolute;inset:-30%;background:radial-gradient(circle,rgba(255,180,20,0.35),transparent 65%);filter:blur(30px);animation:forma-glow-pulse 2.2s ease-in-out infinite;z-index:0}
+@keyframes forma-glow-pulse{0%,100%{opacity:.35;transform:scale(.92)}50%{opacity:.7;transform:scale(1.05)}}
+.video-frame video{position:relative;z-index:1;display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#000}
+.sound-toggle{position:absolute;z-index:2;right:10px;bottom:10px;width:34px;height:34px;border-radius:99px;border:1px solid rgba(255,212,56,0.35);background:rgba(3,3,10,0.65);color:var(--gold2);font-size:14px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.sound-toggle:hover{border-color:var(--gold)}
+.working-title{font:800 15px 'Exo 2',sans-serif;color:var(--gold);margin-top:18px;text-align:center}
+.working-sub{font:600 11px 'DM Mono',monospace;color:var(--muted);margin-top:8px;text-align:center;letter-spacing:.05em;min-height:14px;transition:opacity .25s ease}
+
+/* ---- results ---- */
+.summary-card{background:var(--panel2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:10px;padding:16px 18px;margin-bottom:18px}
+.summary-card .cardlabel{font:800 8px 'DM Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--gold2);margin-bottom:8px}
+.summary-block{font-size:15px;line-height:1.65;color:var(--white)}
+
+.subsection-title{font:800 10px 'DM Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:22px 0 12px;padding-top:4px}
+.subsection-title:first-of-type{margin-top:0}
+
+.suggestion{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px}
+.suggestion .tag{font:800 8px 'DM Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--gold2);margin-bottom:10px}
+.suggestion .orig{color:var(--muted);font-size:13px;padding:10px 12px;background:#070710;border-radius:6px;margin-bottom:8px;text-decoration:line-through;text-decoration-color:rgba(141,140,156,0.5)}
+.suggestion .sugg{color:var(--white);font-size:14px;padding:10px 12px;background:rgba(255,212,56,0.07);border-radius:6px;border-left:3px solid var(--gold);margin-bottom:8px}
+.suggestion .why{color:var(--muted);font-size:12px;font-style:italic;margin-bottom:12px}
+.suggestion .needinfo{display:inline-block;font:700 8px 'DM Mono',monospace;color:var(--gold);border:1px solid var(--gold);border-radius:99px;padding:3px 10px;margin-bottom:10px;letter-spacing:.1em}
 .actions3{display:flex;gap:8px}
-.actions3 button{flex:1;padding:9px;border-radius:6px;border:1px solid var(--border);background:#0a0b18;color:var(--muted);font:800 9px 'Courier New',monospace;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
-.actions3 button.picked-accept{background:rgba(62,207,142,0.15);border-color:var(--good);color:var(--good)}
-.actions3 button.picked-edit{background:rgba(255,212,56,0.15);border-color:var(--gold);color:var(--gold)}
-.actions3 button.picked-skip{background:rgba(255,93,108,0.1);border-color:var(--bad);color:var(--bad)}
-.question-card{background:rgba(255,212,56,0.06);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px}
-.question-card .qlabel{font:900 8px 'Courier New',monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
-.warning-line{color:var(--bad);font-size:12px;padding:8px 0;border-bottom:1px solid var(--border)}
-.warning-line:last-child{border-bottom:0}
-.meta-strip{display:flex;gap:16px;flex-wrap:wrap;font:700 10px 'Courier New',monospace;color:var(--muted);margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
-.meta-strip b{color:var(--cyan)}
+.actions3 button{flex:1;padding:9px;border-radius:6px;border:1px solid var(--border);background:#070710;color:var(--muted);font:700 9px 'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.actions3 button.picked-accept{background:rgba(62,207,142,0.14);border-color:var(--good);color:var(--good)}
+.actions3 button.picked-edit{background:rgba(255,212,56,0.14);border-color:var(--gold);color:var(--gold)}
+.actions3 button.picked-skip{background:rgba(141,140,156,0.14);border-color:var(--muted);color:var(--muted)}
+
+.question-card{background:rgba(255,212,56,0.06);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.question-card .qlabel{font:800 8px 'DM Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.question-card div:last-child{font-size:14px;line-height:1.5;color:var(--white)}
+
+.advisory-card{background:rgba(255,176,32,0.06);border:1px solid rgba(255,176,32,0.22);border-left:3px solid var(--amber);border-radius:12px;padding:12px 16px;margin-bottom:10px;display:flex;gap:10px;align-items:flex-start}
+.advisory-card .ico{color:var(--amber);font-size:14px;line-height:1.5;flex:0 0 auto}
+.advisory-card .txt{font-size:13px;line-height:1.5;color:var(--white)}
+
 .hidden{display:none}
-.summary-block{font-size:15px;line-height:1.6;color:#fff;margin-bottom:6px}
-.forma-hero{display:flex;justify-content:center;margin:4px 0 14px}
-.forma-hero img{width:112px;height:auto;animation:forma-idle-sway 4.5s ease-in-out infinite;filter:drop-shadow(0 10px 24px rgba(255,212,56,0.28))}
-@keyframes forma-idle-sway{0%,100%{transform:rotate(-2deg) translateY(0)}50%{transform:rotate(2deg) translateY(-5px)}}
-.working-stage{position:relative;display:flex;flex-direction:column;align-items:center;padding:30px 10px 22px}
-.working-glow{position:absolute;width:180px;height:180px;top:14px;background:radial-gradient(circle,rgba(255,212,56,0.55),transparent 70%);filter:blur(18px);animation:forma-glow-pulse 1.3s ease-in-out infinite;z-index:0}
-@keyframes forma-glow-pulse{0%,100%{opacity:.35;transform:scale(.9)}50%{opacity:.75;transform:scale(1.1)}}
-.working-stage img{position:relative;z-index:1;width:150px;height:auto;animation:forma-dance 1.25s ease-in-out infinite;filter:drop-shadow(0 12px 26px rgba(255,212,56,0.4))}
-@keyframes forma-dance{0%{transform:translateY(0) rotate(-4deg)}20%{transform:translateY(-14px) rotate(3deg)}40%{transform:translateY(0) rotate(-3deg)}60%{transform:translateY(-10px) rotate(4deg)}80%{transform:translateY(0) rotate(-2deg)}100%{transform:translateY(0) rotate(-4deg)}}
-.working-title{font:900 15px Georgia,serif;color:var(--gold);margin-top:16px;text-align:center}
-.working-sub{font:700 11px 'Courier New',monospace;color:var(--muted);margin-top:8px;text-align:center;letter-spacing:.05em;min-height:14px;transition:opacity .25s ease}
 </style>
 </head>
 <body>
+<canvas id="stars"></canvas>
 <div class="wrap">
   <header>
     <div class="forma-hero"><img src="/forma-mascot.png" alt="Forma"></div>
@@ -109,8 +155,12 @@ select{appearance:none;cursor:pointer}
 
   <div class="panel hidden" id="formaWorking">
     <div class="working-stage">
-      <div class="working-glow"></div>
-      <img src="/forma-mascot.png" alt="Forma working">
+      <div class="video-frame">
+        <video id="workingVideo" poster="/forma-trailer-poster.jpg" muted loop playsinline preload="auto">
+          <source src="/forma-trailer.mp4" type="video/mp4">
+        </video>
+        <button class="sound-toggle" id="soundToggle" type="button" aria-label="Toggle sound">🔇</button>
+      </div>
       <div class="working-title">Forma is on it.</div>
       <div class="working-sub" id="workingSub">Reading your resume line by line...</div>
     </div>
@@ -118,17 +168,54 @@ select{appearance:none;cursor:pointer}
 
   <div class="panel hidden" id="resultsPanel">
     <h2>Forma's Findings</h2>
-    <div class="summary-block" id="summaryText"></div>
+
+    <div class="summary-card">
+      <div class="cardlabel">Overview</div>
+      <div class="summary-block" id="summaryText"></div>
+    </div>
 
     <div id="suggestionsList"></div>
     <div id="questionsList"></div>
     <div id="warningsList"></div>
-
-    <div class="meta-strip" id="metaStrip"></div>
   </div>
 </div>
 
 <script>
+(function(){
+  const c = document.getElementById('stars');
+  const ctx = c.getContext('2d');
+  function resize(){ c.width = window.innerWidth; c.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  const stars = [];
+  for (let i = 0; i < 220; i++) {
+    stars.push({
+      x: Math.random() * c.width,
+      y: Math.random() * c.height,
+      r: Math.random() * 1.3 + 0.2,
+      a: Math.random(),
+      da: (Math.random() - 0.5) * 0.004,
+      color: Math.random() < 0.12 ? '#ffd438' : '#fff'
+    });
+  }
+  function draw() {
+    ctx.clearRect(0, 0, c.width, c.height);
+    stars.forEach(s => {
+      s.a += s.da;
+      if (s.a < 0.1) s.da = Math.abs(s.da);
+      if (s.a > 1) s.da = -Math.abs(s.da);
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = s.color;
+      ctx.globalAlpha = s.a;
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
 (function(){
   const $ = id => document.getElementById(id);
   const CODE_KEY = 'forma-poc-access-code';
@@ -179,9 +266,20 @@ select{appearance:none;cursor:pointer}
   ];
   let workingTimer = null;
 
+  const workingVideo = $('workingVideo');
+  const soundToggle = $('soundToggle');
+  soundToggle.addEventListener('click', () => {
+    workingVideo.muted = !workingVideo.muted;
+    soundToggle.textContent = workingVideo.muted ? '🔇' : '🔊';
+  });
+
   function startWorkingAnimation() {
     $('resultsPanel').classList.add('hidden');
     $('formaWorking').classList.remove('hidden');
+    try {
+      workingVideo.currentTime = 0;
+      workingVideo.play().catch(() => {});
+    } catch (e) {}
     const sub = $('workingSub');
     let i = 0;
     sub.textContent = WORKING_MESSAGES[0];
@@ -200,6 +298,7 @@ select{appearance:none;cursor:pointer}
     if (workingTimer) clearInterval(workingTimer);
     workingTimer = null;
     $('formaWorking').classList.add('hidden');
+    try { workingVideo.pause(); } catch (e) {}
   }
 
   askBtn.addEventListener('click', async () => {
@@ -238,7 +337,7 @@ select{appearance:none;cursor:pointer}
         return;
       }
 
-      renderResults(data.result, data.meta);
+      renderResults(data.result);
       setStatus('Done.', 'ok');
     } catch (err) {
       stopWorkingAnimation();
@@ -254,12 +353,19 @@ select{appearance:none;cursor:pointer}
     return String(s == null ? '' : s).replace(/[&<>]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch]));
   }
 
-  function renderResults(result, meta) {
+  function renderResults(result) {
     $('summaryText').textContent = result.summary || '';
 
     const suggList = $('suggestionsList');
     suggList.innerHTML = '';
-    (result.suggestions || []).forEach(s => {
+    const suggestions = result.suggestions || [];
+    if (suggestions.length) {
+      const title = document.createElement('div');
+      title.className = 'subsection-title';
+      title.textContent = 'Suggestions';
+      suggList.appendChild(title);
+    }
+    suggestions.forEach(s => {
       const card = document.createElement('div');
       card.className = 'suggestion';
       card.innerHTML = `
@@ -285,7 +391,14 @@ select{appearance:none;cursor:pointer}
 
     const qList = $('questionsList');
     qList.innerHTML = '';
-    (result.questions || []).forEach(q => {
+    const questions = result.questions || [];
+    if (questions.length) {
+      const title = document.createElement('div');
+      title.className = 'subsection-title';
+      title.textContent = 'Forma has questions';
+      qList.appendChild(title);
+    }
+    questions.forEach(q => {
       const card = document.createElement('div');
       card.className = 'question-card';
       card.innerHTML = `<div class="qlabel">Forma has a question</div><div>${esc(q.question)}</div>`;
@@ -294,21 +407,19 @@ select{appearance:none;cursor:pointer}
 
     const wList = $('warningsList');
     wList.innerHTML = '';
-    (result.warnings || []).forEach(w => {
-      const line = document.createElement('div');
-      line.className = 'warning-line';
-      line.textContent = w;
-      wList.appendChild(line);
+    const warnings = result.warnings || [];
+    if (warnings.length) {
+      const title = document.createElement('div');
+      title.className = 'subsection-title';
+      title.textContent = 'Worth a second look';
+      wList.appendChild(title);
+    }
+    warnings.forEach(w => {
+      const card = document.createElement('div');
+      card.className = 'advisory-card';
+      card.innerHTML = `<span class="ico">◆</span><span class="txt">${esc(w)}</span>`;
+      wList.appendChild(card);
     });
-
-    const metaStrip = $('metaStrip');
-    metaStrip.innerHTML = meta ? `
-      <span>Model: <b>${esc(meta.model)}</b></span>
-      <span>Input tokens: <b>${esc(meta.inputTokens)}</b></span>
-      <span>Output tokens: <b>${esc(meta.outputTokens)}</b></span>
-      <span>Est. cost: <b>$${esc(meta.estimatedCostUsd)}</b></span>
-      <span>Latency: <b>${esc(meta.latencyMs)}ms</b></span>
-    ` : '';
 
     $('resultsPanel').classList.remove('hidden');
   }
