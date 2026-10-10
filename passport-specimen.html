@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Passport Specimen Builder | Form Porn</title>
+<script src="/access.js"></script>
+<script>
+const currentForm = "passport-specimen.html";
+function hasAccess(){
+  if(typeof FP==='undefined') return false;
+  return FP.canAccess(currentForm) || FP.canAccess("passport-specimen.html");
+}
+function requireExportAccess(onAllowed){
+  if(typeof FP==='undefined'){
+    alert("Couldn't verify your access - please refresh the page.\n\nIf this keeps happening, disable your ad blocker for formporn.app.");
+    return;
+  }
+  if(hasAccess()){ onAllowed(); return; }
+  if(confirm("This is a premium form.\n\nUnlock this form or get all forms with Premium.\n\nGo to checkout?")){
+    window.location.href = `/checkout.html?plan=single&form=${encodeURIComponent(currentForm)}`;
+  }
+}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--bg:#050711;--panel:#0d1020;--gold:#f1c957;--cyan:#4ed8ff;--muted:#7890bd}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at top,#101a38 0,#050711 48%,#02030c 100%);color:#f8f3df;font-family:Arial,Helvetica,sans-serif;padding:20px}
+.topbar{max-width:1380px;margin:0 auto 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(241,201,87,.22);padding-bottom:14px}
+.topbar a,.topbar span{color:var(--gold);text-decoration:none;text-transform:uppercase;letter-spacing:.28em;font:800 11px "Courier New",monospace}
+.hero{text-align:center;margin:0 auto 20px}.hero h1{margin:0 0 6px;color:var(--gold);font:900 clamp(26px,5vw,38px) Georgia,serif}.hero p{margin:0;color:var(--muted);font:800 10px "Courier New",monospace;text-transform:uppercase;letter-spacing:.28em}
+.workspace{max-width:1380px;margin:0 auto;display:grid;grid-template-columns:390px minmax(0,1fr);gap:24px;align-items:start}.panel{background:rgba(8,11,27,.92);border:1px solid rgba(78,216,255,.18);border-radius:10px;padding:16px;margin-bottom:14px;box-shadow:0 18px 50px rgba(0,0,0,.25);max-height:calc(100vh - 130px);overflow:auto;position:sticky;top:16px}.panel h3,.preview h3{margin:0 0 12px;padding-bottom:10px;border-bottom:1px solid rgba(78,216,255,.14);color:var(--cyan);font:900 10px "Courier New",monospace;letter-spacing:.3em;text-transform:uppercase}.group-title{margin:14px 0 9px;padding-top:12px;border-top:1px solid rgba(241,201,87,.14);color:var(--gold);font:900 9px "Courier New",monospace;letter-spacing:.24em;text-transform:uppercase}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.field{margin-bottom:9px}.field label{display:block;margin-bottom:4px;color:var(--muted);font:800 8px "Courier New",monospace;letter-spacing:.16em;text-transform:uppercase}.field input,.field select,.field textarea{width:100%;border:1px solid rgba(78,216,255,.2);border-radius:5px;background:#151827;color:#fff;padding:8px 9px;font:700 11px Arial,Helvetica,sans-serif;outline:none}.field textarea{height:58px;resize:vertical}.photo-drop{position:relative;min-height:86px;border:1px dashed rgba(241,201,87,.35);border-radius:6px;display:grid;place-items:center;text-align:center;color:#8d96b8;font:800 10px "Courier New",monospace;overflow:hidden}.photo-drop input{position:absolute;inset:0;opacity:0;cursor:pointer}.photo-drop img{display:none;width:88px;height:64px;object-fit:cover}.btn{border:1px solid rgba(78,216,255,.28);border-radius:7px;background:rgba(26,127,255,.08);color:#fff;padding:11px 10px;font:900 10px "Courier New",monospace;letter-spacing:.17em;text-transform:uppercase;cursor:pointer}.btn.gold{background:linear-gradient(135deg,#f1c957,#ffd86b);color:#050711;border:0}.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.preview{background:rgba(5,7,20,.85);border:1px solid rgba(78,216,255,.16);border-radius:12px;padding:18px;overflow:auto}.stage{min-height:720px;display:grid;place-items:center;overflow:auto;padding:26px;background:radial-gradient(circle at center,rgba(78,216,255,.08),transparent 56%)}
+.doc-wrap{transform:scale(.9);transform-origin:center;display:inline-block}.passport{position:relative;width:1000px;height:680px;background:#d8e9f3;overflow:hidden;border:1px solid rgba(40,56,86,.45);box-shadow:0 28px 80px rgba(0,0,0,.58);--body:"Arial",Helvetica,sans-serif;--data:"Courier New",monospace}.passport:before{content:"SPECIMEN";position:absolute;left:50%;top:47%;transform:translate(-50%,-50%) rotate(-24deg);font:900 92px Arial,sans-serif;letter-spacing:.14em;color:rgba(158,31,47,.22);-webkit-text-stroke:1px rgba(158,31,47,.22);z-index:80;pointer-events:none}.passport.hide-specimen:before{display:none}.passport:after{content:"NOT VALID FOR IDENTIFICATION";position:absolute;left:0;right:0;bottom:0;text-align:center;background:rgba(247,250,252,.94);color:#9e1f2f;font:900 10px "Courier New",monospace;letter-spacing:.24em;padding:5px 0;z-index:120}.bg{position:absolute;inset:0;background:linear-gradient(140deg,#b7d6eb 0,#e7f2f5 30%,#cbddec 61%,#eef4ef 100%);z-index:1}.bg:before{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(34,73,130,.13) 0 1px,transparent 1px 4px),repeating-linear-gradient(90deg,rgba(34,73,130,.12) 0 1px,transparent 1px 5px),repeating-radial-gradient(ellipse at 64% 47%,transparent 0 7px,rgba(52,101,154,.17) 8px 9px);opacity:.95}.bg:after{content:"";position:absolute;left:-90px;top:5px;width:1120px;height:470px;background:linear-gradient(136deg,rgba(168,44,65,.34) 0 16%,rgba(255,255,255,.34) 17% 30%,rgba(36,75,138,.29) 31% 52%,transparent 53%);transform:skewY(-5deg);opacity:.9}.eagle{position:absolute;right:145px;top:105px;width:390px;height:330px;opacity:.34;z-index:2;background:radial-gradient(circle at 58% 31%,#25324b 0 7px,#fff 8px 18px,transparent 19px),radial-gradient(ellipse at 57% 40%,rgba(255,255,255,.95) 0 21%,transparent 22%),linear-gradient(137deg,transparent 0 22%,rgba(248,248,243,.95) 23% 58%,rgba(171,112,82,.58) 59% 69%,transparent 70%),repeating-radial-gradient(ellipse at 58% 45%,transparent 0 8px,rgba(42,91,142,.22) 9px 10px);clip-path:polygon(14% 9%,68% 0,100% 22%,84% 62%,65% 54%,48% 96%,14% 100%,29% 58%,0 40%)}.wave{position:absolute;left:0;right:0;bottom:86px;height:82px;background:repeating-radial-gradient(ellipse at 50% 0,transparent 0 14px,rgba(50,83,126,.2) 15px 17px);z-index:3;opacity:.75}
+.piece{position:absolute;z-index:30;cursor:move;touch-action:none;white-space:pre-wrap;font-family:var(--body);color:#111820;text-shadow:0 0 1px rgba(255,255,255,.55)}.piece.is-moving{outline:2px solid #4ed8ff;outline-offset:2px;z-index:130}.label{font:700 13px Arial,Helvetica,sans-serif;color:#1d2b48;line-height:1.05}.value{font:900 24px var(--data);letter-spacing:.04em;text-transform:uppercase}.small-value{font-size:18px}.heading{font:900 46px Georgia,serif;color:#203062;text-transform:uppercase;text-shadow:0 1px rgba(255,255,255,.65)}.doc-label{left:38px;top:42px;width:160px;font:900 25px Arial,sans-serif;line-height:1.12;color:#243065;text-transform:uppercase}.seal-word{left:72px;top:118px;width:145px;font:900 48px Georgia,serif;color:#253263;letter-spacing:.02em}.country-title{left:308px;top:24px;width:600px;text-align:center}.top-type-label{left:386px;top:85px;width:130px}.top-code-label{left:540px;top:85px;width:160px}.top-number-label{left:710px;top:85px;width:252px}.type-value{left:430px;top:112px;width:40px}.code-value{left:585px;top:112px;width:80px}.number-value{left:790px;top:112px;width:150px}.photo{left:31px;top:178px;width:280px;height:344px;background:rgba(229,236,242,.72);overflow:hidden;display:grid;place-items:center;border:1px solid rgba(58,82,110,.24);color:#698098;font:900 15px "Courier New",monospace;text-align:center}.photo img{width:100%;height:100%;object-fit:cover}.ghost{right:92px;top:170px;width:120px;height:150px;border-radius:45%;overflow:hidden;opacity:.62;background:rgba(246,250,250,.28);display:grid;place-items:center}.ghost img{width:100%;height:100%;object-fit:cover;filter:grayscale(1);opacity:.82}.surname-label{left:350px;top:150px;width:350px}.surname-value{left:350px;top:174px;width:340px}.given-label{left:350px;top:218px;width:420px}.given-value{left:350px;top:242px;width:420px}.nationality-label{left:350px;top:286px;width:390px}.nationality-value{left:350px;top:310px;width:430px}.dob-label{left:350px;top:354px;width:430px}.dob-value{left:350px;top:378px;width:260px}.birth-label{left:350px;top:422px;width:430px}.birth-value{left:350px;top:446px;width:360px}.sex-label{right:110px;top:354px;width:180px}.sex-value{right:150px;top:383px;width:50px}.issue-label{left:350px;top:490px;width:360px}.issue-value{left:350px;top:514px;width:240px}.expiry-label{left:350px;top:558px;width:360px}.expiry-value{left:350px;top:582px;width:240px}.authority-label{right:60px;top:422px;width:250px;text-align:center}.authority-value{right:48px;top:470px;width:270px;text-align:center;line-height:1.15}.endorse-label{left:350px;top:626px;width:380px}.endorse-value{left:350px;top:648px;width:300px}.usa-mark{right:76px;top:540px;width:210px;font:900 46px Georgia,serif;color:rgba(87,82,66,.7);letter-spacing:.06em}.holo{right:224px;top:422px;width:190px;height:118px;opacity:.45;background:linear-gradient(140deg,rgba(69,59,148,.78),rgba(157,86,159,.42));clip-path:polygon(0 50%,34% 28%,58% 0,52% 35%,100% 42%,56% 57%,54% 100%,33% 66%)}.legal-chip{right:22px;bottom:96px;background:rgba(255,255,255,.78);color:#9e1f2f;border:1px solid rgba(158,31,47,.45);font:900 10px "Courier New",monospace;letter-spacing:.18em;padding:4px 7px}.mrz{left:28px;right:26px;bottom:32px;background:rgba(222,235,242,.62);border-top:2px solid rgba(39,72,106,.35);padding-top:12px;font:900 24px "Courier New",monospace;letter-spacing:.12em;line-height:1.5;color:rgba(14,20,28,.76)}
+@media(max-width:1080px){.workspace{grid-template-columns:1fr}.panel{position:static;max-height:none}.stage{justify-content:flex-start}.doc-wrap{transform:scale(.72);transform-origin:top left;margin-bottom:-150px}}@media(max-width:560px){body{padding:12px}.topbar span{display:none}.grid2,.grid3{grid-template-columns:1fr}.doc-wrap{transform:scale(.38);margin-bottom:-405px}.actions{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="topbar"><a href="/index.html">&larr; Form Porn</a><span>Passport Specimen Builder</span><a href="/checkout.html?plan=single&amp;form=passport-specimen.html">Premium</a></header>
+<section class="hero"><h1>Passport Specimen Builder</h1><p>editable fictional specimen credential</p></section>
+<main class="workspace">
+<section class="panel"><h3>Editor</h3>
+<div class="grid2"><div class="field"><label for="showSpecimen">Specimen Mark</label><select id="showSpecimen"><option value="show" selected>Show</option><option value="hide">Hide</option></select></div><div class="field"><label for="dataFont">Data Font</label><select id="dataFont"><option value="'Courier New', monospace">Courier</option><option value="Arial, Helvetica, sans-serif">Arial</option><option value="'Times New Roman', Times, serif">Times</option><option value="Verdana, Geneva, sans-serif">Verdana</option></select></div></div>
+<div class="group-title">Header</div><div class="field"><label for="countryTitle">Jurisdiction Title</label><input id="countryTitle" value="UNITED REGIONS OF FORMA"></div><div class="grid2"><div class="field"><label for="docLabel">Document Label</label><textarea id="docLabel">PASSPORT&#10;PASSEPORT&#10;PASAPORTE</textarea></div><div class="field"><label for="sealWord">Seal Word</label><input id="sealWord" value="URF"></div></div><div class="grid3"><div class="field"><label for="typeValue">Type</label><input id="typeValue" value="P"></div><div class="field"><label for="codeValue">Code</label><input id="codeValue" value="URF"></div><div class="field"><label for="docNumber">Specimen No.</label><input id="docNumber" value="S00000000"></div></div>
+<div class="group-title">Labels</div><div class="grid2"><div class="field"><label for="typeLabel">Type Label</label><input id="typeLabel" value="Type / Type / Tipo"></div><div class="field"><label for="codeLabel">Code Label</label><input id="codeLabel" value="Code / Code / Codigo"></div></div><div class="field"><label for="numberLabel">Number Label</label><input id="numberLabel" value="Passport No. / No. du Passeport / No. de Pasaporte"></div><div class="grid2"><div class="field"><label for="surnameLabel">Surname Label</label><input id="surnameLabel" value="Surname / Nom / Apellidos"></div><div class="field"><label for="givenLabel">Given Label</label><input id="givenLabel" value="Given Names / Prenoms / Nombres"></div></div><div class="grid2"><div class="field"><label for="nationalityLabel">Nationality Label</label><input id="nationalityLabel" value="Nationality / Nationalite / Nacionalidad"></div><div class="field"><label for="dobLabel">Birth Date Label</label><input id="dobLabel" value="Date of birth / Fecha de nacimiento"></div></div><div class="grid2"><div class="field"><label for="birthLabel">Birth Place Label</label><input id="birthLabel" value="Place of birth / Lugar de nacimiento"></div><div class="field"><label for="sexLabel">Sex Label</label><input id="sexLabel" value="Sex / Sexe / Sexo"></div></div><div class="grid2"><div class="field"><label for="issueLabel">Issue Label</label><input id="issueLabel" value="Date of issue / Fecha de expedicion"></div><div class="field"><label for="expiryLabel">Expiry Label</label><input id="expiryLabel" value="Date of expiration / Fecha de caducidad"></div></div><div class="grid2"><div class="field"><label for="authorityLabel">Authority Label</label><input id="authorityLabel" value="Authority / Autorite / Autoridad"></div><div class="field"><label for="endorseLabel">Endorsement Label</label><input id="endorseLabel" value="Endorsements / Anotaciones"></div></div>
+<div class="group-title">Personal Details</div><div class="grid2"><div class="field"><label for="surname">Surname</label><input id="surname" value="SPECIMEN"></div><div class="field"><label for="given">Given Names</label><input id="given" value="SAMPLE HOLDER"></div></div><div class="grid3"><div class="field"><label for="nationality">Nationality</label><input id="nationality" value="URF SPECIMEN"></div><div class="field"><label for="sex">Sex</label><select id="sex"><option>F</option><option>M</option><option>X</option></select></div><div class="field"><label for="birthplace">Place of Birth</label><input id="birthplace" value="SAMPLE CITY"></div></div><div class="grid3"><div class="field"><label for="dob">Date of Birth</label><input id="dob" value="01 JAN 1990"></div><div class="field"><label for="issued">Issue Date</label><input id="issued" value="10 JAN 2022"></div><div class="field"><label for="expiry">Expiry Date</label><input id="expiry" value="09 JAN 2032"></div></div><div class="grid2"><div class="field"><label for="authority">Authority</label><textarea id="authority">United Regions&#10;Specimen Office</textarea></div><div class="field"><label for="endorsements">Endorsements</label><input id="endorsements" value="SEE PAGE 27"></div></div>
+<div class="group-title">MRZ</div><div class="field"><label for="mrzLine1">MRZ Line 1</label><input id="mrzLine1" value="P&lt;URFSPECIMEN&lt;&lt;SAMPLE&lt;HOLDER&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;"></div><div class="field"><label for="mrzLine2">MRZ Line 2</label><input id="mrzLine2" value="S00000000URF9001019F3201090SPECIMEN&lt;&lt;&lt;&lt;00"></div>
+<div class="group-title">Photo</div><label class="photo-drop"><input id="photoInput" type="file" accept="image/*"><img id="photoThumb" alt="Uploaded portrait"><span id="photoText">Click to upload specimen portrait</span></label>
+</section>
+<section class="preview"><h3>Live Preview</h3><div class="stage"><div class="doc-wrap"><article id="passport" class="passport"><div class="bg"></div><div class="eagle"></div><div class="wave"></div><div class="piece doc-label" data-piece="docLabel" data-field="docLabel"></div><div class="piece seal-word" data-piece="sealWord" data-field="sealWord"></div><div class="piece heading country-title" data-piece="countryTitle" data-field="countryTitle"></div><div class="piece label top-type-label" data-piece="typeLabel" data-field="typeLabel"></div><div class="piece label top-code-label" data-piece="codeLabel" data-field="codeLabel"></div><div class="piece label top-number-label" data-piece="numberLabel" data-field="numberLabel"></div><div class="piece value type-value" data-piece="typeValue" data-field="typeValue"></div><div class="piece value code-value" data-piece="codeValue" data-field="codeValue"></div><div class="piece value number-value" data-piece="docNumber" data-field="docNumber"></div><div id="pvPhoto" class="piece photo" data-piece="photo">PHOTO<br>HERE</div><div id="pvGhost" class="piece ghost" data-piece="ghost"></div><div class="piece label surname-label" data-piece="surnameLabel" data-field="surnameLabel"></div><div class="piece value surname-value" data-piece="surname" data-field="surname"></div><div class="piece label given-label" data-piece="givenLabel" data-field="givenLabel"></div><div class="piece value given-value" data-piece="given" data-field="given"></div><div class="piece label nationality-label" data-piece="nationalityLabel" data-field="nationalityLabel"></div><div class="piece value nationality-value" data-piece="nationality" data-field="nationality"></div><div class="piece label dob-label" data-piece="dobLabel" data-field="dobLabel"></div><div class="piece value dob-value" data-piece="dob" data-field="dob"></div><div class="piece label birth-label" data-piece="birthLabel" data-field="birthLabel"></div><div class="piece value birth-value" data-piece="birthplace" data-field="birthplace"></div><div class="piece label sex-label" data-piece="sexLabel" data-field="sexLabel"></div><div class="piece value sex-value" data-piece="sex" data-field="sex"></div><div class="piece label issue-label" data-piece="issueLabel" data-field="issueLabel"></div><div class="piece value issue-value" data-piece="issued" data-field="issued"></div><div class="piece label expiry-label" data-piece="expiryLabel" data-field="expiryLabel"></div><div class="piece value expiry-value" data-piece="expiry" data-field="expiry"></div><div class="piece label authority-label" data-piece="authorityLabel" data-field="authorityLabel"></div><div class="piece value small-value authority-value" data-piece="authority" data-field="authority"></div><div class="piece label endorse-label" data-piece="endorseLabel" data-field="endorseLabel"></div><div class="piece value endorse-value" data-piece="endorsements" data-field="endorsements"></div><div class="piece holo" data-piece="holo"></div><div class="piece usa-mark" data-piece="sampleMark">URF</div><div class="piece legal-chip" data-piece="legalChip">SPECIMEN ONLY</div><div id="mrz" class="piece mrz" data-piece="mrz"></div></article></div></div><div class="actions"><button class="btn gold" data-export="png">PNG</button><button class="btn" data-export="jpeg">JPEG</button><button class="btn" data-export="pdf">PDF</button></div></section>
+</main>
+<script>
+const passport=document.getElementById("passport");
+const inputIds=["showSpecimen","dataFont","countryTitle","docLabel","sealWord","typeValue","codeValue","docNumber","typeLabel","codeLabel","numberLabel","surnameLabel","givenLabel","nationalityLabel","dobLabel","birthLabel","sexLabel","issueLabel","expiryLabel","authorityLabel","endorseLabel","surname","given","nationality","sex","birthplace","dob","issued","expiry","authority","endorsements","mrzLine1","mrzLine2"];
+const moved={};
+function val(id){return (document.getElementById(id).value||"").trim();}
+function esc(s){return String(s).replace(/[&<>]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[ch]));}
+function htmlLines(s){return esc(s).replace(/\n/g,"<br>");}
+function render(){
+  passport.classList.toggle("hide-specimen",val("showSpecimen")==="hide");
+  passport.style.setProperty("--data",val("dataFont")||"'Courier New', monospace");
+  passport.querySelectorAll("[data-field]").forEach(el=>{
+    const id=el.dataset.field;
+    el.innerHTML=htmlLines(val(id));
+  });
+  document.getElementById("mrz").innerHTML=`${htmlLines(val("mrzLine1"))}<br>${htmlLines(val("mrzLine2"))}`;
+  applyMoved();
+}
+function applyMoved(){
+  passport.querySelectorAll(".piece").forEach(el=>{
+    el.style.left="";el.style.top="";el.style.right="";el.style.bottom="";
+    const pos=moved[el.dataset.piece];
+    if(pos){el.style.left=`${pos.left}px`;el.style.top=`${pos.top}px`;el.style.right="auto";el.style.bottom="auto";}
+  });
+}
+function makeMoveable(){
+  passport.querySelectorAll(".piece").forEach(el=>{
+    el.addEventListener("pointerdown",event=>{
+      if(event.button!==0)return;
+      event.preventDefault();
+      const docRect=passport.getBoundingClientRect();
+      const rect=el.getBoundingClientRect();
+      const startX=event.clientX,startY=event.clientY;
+      const originLeft=rect.left-docRect.left,originTop=rect.top-docRect.top;
+      el.classList.add("is-moving");
+      el.setPointerCapture(event.pointerId);
+      function move(e){
+        const left=originLeft+(e.clientX-startX);
+        const top=originTop+(e.clientY-startY);
+        el.style.left=`${left}px`;el.style.top=`${top}px`;el.style.right="auto";el.style.bottom="auto";
+        moved[el.dataset.piece]={left,top};
+      }
+      function done(){
+        el.classList.remove("is-moving");
+        el.removeEventListener("pointermove",move);
+        el.removeEventListener("pointerup",done);
+        el.removeEventListener("pointercancel",done);
+      }
+      el.addEventListener("pointermove",move);
+      el.addEventListener("pointerup",done);
+      el.addEventListener("pointercancel",done);
+    });
+  });
+}
+document.getElementById("photoInput").addEventListener("change",event=>{
+  const file=event.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    const img=document.getElementById("photoThumb");
+    img.src=reader.result;img.style.display="block";document.getElementById("photoText").style.display="none";
+    document.getElementById("pvPhoto").innerHTML=`<img src="${reader.result}" alt="Specimen portrait">`;
+    document.getElementById("pvGhost").innerHTML=`<img src="${reader.result}" alt="Ghost portrait">`;
+  };
+  reader.readAsDataURL(file);
+});
+inputIds.forEach(id=>{document.getElementById(id).addEventListener("input",render);document.getElementById(id).addEventListener("change",render);});
+async function exportFile(format){
+  await document.fonts.ready;
+  const canvas=await html2canvas(passport,{scale:3,backgroundColor:"#d8e9f3",useCORS:true});
+  const stamp="passport-specimen";
+  if(format==="pdf"){
+    const{jsPDF}=window.jspdf;
+    const pdf=new jsPDF({orientation:"landscape",unit:"pt",format:"letter"});
+    const pageW=pdf.internal.pageSize.getWidth(),pageH=pdf.internal.pageSize.getHeight();
+    const ratio=Math.min((pageW-48)/canvas.width,(pageH-48)/canvas.height);
+    const w=canvas.width*ratio,h=canvas.height*ratio;
+    pdf.addImage(canvas.toDataURL("image/jpeg",.95),"JPEG",(pageW-w)/2,(pageH-h)/2,w,h);
+    pdf.save(`${stamp}.pdf`);
+    return;
+  }
+  const link=document.createElement("a");
+  const type=format==="jpeg"?"image/jpeg":"image/png";
+  link.href=canvas.toDataURL(type,.95);
+  link.download=`${stamp}.${format==="jpeg"?"jpg":"png"}`;
+  link.click();
+}
+document.querySelectorAll("[data-export]").forEach(btn=>btn.addEventListener("click",()=>requireExportAccess(()=>exportFile(btn.dataset.export))));
+makeMoveable();render();
+</script>
+</body>
+</html>

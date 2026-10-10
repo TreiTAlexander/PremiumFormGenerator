@@ -697,12 +697,12 @@ Sample record for editing only</textarea>
     const currentForm = "forms/unofficial-transcript-builder.html";
 
     function hasAccess() {
-      if (!window.FP) return false;
+      if (typeof FP === 'undefined') return false;
       return FP.canAccess(currentForm) || FP.canAccess("unofficial-transcript-builder.html");
     }
 
     function requireExportAccess(onAllowed) {
-      if (!window.FP) {
+      if (typeof FP === 'undefined') {
         alert("Couldn't verify your access \u2014 please refresh the page.\n\nIf this keeps happening, disable your ad blocker for formporn.app.");
         return;
       }

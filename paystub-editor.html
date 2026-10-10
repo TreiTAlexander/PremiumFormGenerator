@@ -46,11 +46,7 @@ nav{position:sticky;top:0;z-index:500;display:flex;align-items:center;justify-co
 /* Preview */
 .preview-panel{background:rgba(4,6,20,0.85);border:1px solid rgba(26,127,255,0.16);border-radius:12px;padding:18px;backdrop-filter:blur(16px);}
 .preview-panel h3{font-size:9px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--blue);margin-bottom:14px;}
-.ps-scroll{position:relative;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;}
-.fp-wm-overlay{position:absolute;inset:0;background-image:url('/forma-watermark-tile.png');background-repeat:repeat;pointer-events:none;z-index:7;}
-.fp-wm-overlay.is-hidden{display:none;}
-.fp-wm-note{margin-top:6px;font-size:12px;color:rgba(255,255,255,.55);text-align:center;}
-.fp-wm-note.is-hidden{display:none;}
+.ps-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;}
 
 /* ═══ PAYSTUB ═══ */
 .paystub{width:580px;min-width:580px;background:#fff;border-radius:4px;padding:0;font-family:'DM Mono',monospace;color:#111;box-shadow:0 16px 60px rgba(0,0,0,0.7),0 4px 12px rgba(0,0,0,0.4);overflow:hidden;font-size:9px;position:relative;}
@@ -140,7 +136,7 @@ nav{position:sticky;top:0;z-index:500;display:flex;align-items:center;justify-co
   .doc-scroll { overflow: visible !important; }
 }
 </style>
-</head>
+<script src="/access.js"></script></head>
 <body>
 <canvas id="space-canvas"></canvas>
 <nav>
@@ -235,14 +231,12 @@ nav{position:sticky;top:0;z-index:500;display:flex;align-items:center;justify-co
       <h3>Live Preview</h3>
       <div class="ps-scroll">
         <div id="paystub" class="paystub ps-classic"></div>
-        <div class="fp-wm-overlay" id="fp-wm"></div>
       </div>
-      <div class="fp-wm-note" id="fp-wm-note">Preview shown with a Forma watermark &mdash; your paid download won't have it.</div>
       <div class="action-row">
   <button class="btn-print" onclick="requireAccess(function(){window.print();})">🖨 Print</button>
   <button class="btn-dl" onclick="dlPDF()">⬇ PDF</button>
-  <button class="btn-img" onclick="downloadPNG('paystub')">🖼 PNG</button>
-  <button class="btn-img" onclick="downloadJPEG('paystub')">📷 JPEG</button>
+  <button class="btn-img" onclick="downloadPNG('doc-out')">🖼 PNG</button>
+  <button class="btn-img" onclick="downloadJPEG('doc-out')">📷 JPEG</button>
 </div>
     </div>
   </div>
@@ -379,16 +373,13 @@ function update(){
 }
 
 
+var currentForm = "paystub-editor.html";
 function checkAccess(){
-  var exp=localStorage.getItem('fp_premium_exp');
-  if(exp && parseInt(exp)>Date.now()) return true;
-  return false;
+  return typeof FP!=='undefined' && FP.canAccess(currentForm);
 }
 function requireAccess(action){
-  if(checkAccess()){ action(); return; }
-  if(confirm('This feature requires a Form Porn account.\n\nClick OK to sign up or use a promo code — from $3 per form!')){
-    window.location.href='/pricing.html';
-  }
+  if(typeof FP==='undefined'){ alert("Couldn't verify your access \u2014 please refresh the page."); return; }
+  FP.requireAccess(currentForm, action);
 }
 
 function dlPDF(id){
@@ -449,15 +440,21 @@ function downloadJPEG(id){ dlJPEG(id); }
 
 update();
 
-function fpApplyWatermark(){
-  var unlocked = checkAccess();
-  var wm = document.getElementById("fp-wm");
-  var note = document.getElementById("fp-wm-note");
-  if(wm) wm.classList.toggle("is-hidden", unlocked);
-  if(note) note.classList.toggle("is-hidden", unlocked);
+function downloadPDF(id) { window.print(); }
+function downloadPNG(docId) {
+  const el = document.getElementById(docId);
+  if(!el){alert('Generate a document first.');return;}
+  html2canvas(el,{scale:3,useCORS:true,backgroundColor:'#ffffff',logging:false}).then(c=>{
+    const a=document.createElement('a');a.download='formporn.png';a.href=c.toDataURL('image/png',1.0);a.click();
+  }).catch(()=>alert('Try PDF instead.'));
 }
-fpApplyWatermark();
-window.addEventListener("pageshow", fpApplyWatermark);
+function downloadJPEG(docId) {
+  const el = document.getElementById(docId);
+  if(!el){alert('Generate a document first.');return;}
+  html2canvas(el,{scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false}).then(c=>{
+    const a=document.createElement('a');a.download='formporn.jpg';a.href=c.toDataURL('image/jpeg',0.95);a.click();
+  }).catch(()=>alert('Try PDF instead.'));
+}
 </script>
 </body>
-</html>
+</html>

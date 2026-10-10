@@ -6,6 +6,7 @@
 <title>Neon Resume — Form Porn</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="/access.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:#06070f;color:#fff;font-family:'DM Mono',monospace;padding:24px 16px 80px;display:flex;flex-direction:column;align-items:center;}
@@ -207,9 +208,24 @@ function r(){
   document.getElementById('d_es').textContent=g('es');
   document.getElementById('d_ey').textContent=g('ey');
 }
-async function exp(){
+async function doExport(){
   const c=await html2canvas(document.getElementById('rdoc'),{scale:3,backgroundColor:'#0a0a14',logging:false});
   const l=document.createElement('a');l.download='forma-resume-neon.png';l.href=c.toDataURL('image/png');l.click();
+}
+const currentForm = "resume-neon.html";
+function hasAccess(){
+  if (typeof FP === 'undefined') return false;
+  return FP.canAccess(currentForm);
+}
+function exp(){
+  if (typeof FP === 'undefined') {
+    alert("Couldn't verify your access \u2014 please refresh the page.\n\nIf this keeps happening, disable your ad blocker for formporn.app.");
+    return;
+  }
+  if (hasAccess()) { doExport(); return; }
+  if (confirm("This is a premium form.\n\nUnlock this form or get all forms with Premium.\n\nGo to checkout?")) {
+    window.location.href = `/checkout.html?plan=single&form=${encodeURIComponent(currentForm)}`;
+  }
 }
 r();
 </script>
